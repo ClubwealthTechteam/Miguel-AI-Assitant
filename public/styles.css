@@ -93,7 +93,7 @@ form {
   padding: 40px 0 36px;
   border-bottom: 1px solid var(--line);
 }
-.intro p { margin: 0 0 12px; color: var(--ink-2); font-size: 14.5px; }
+.intro p { margin: 0 0 12px; color: var(--ink-2); font-size: 14.5px; text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
 .kicker {
   margin: 0 0 12px;
   font-family: var(--mono);
@@ -549,7 +549,7 @@ input.invalid, textarea.invalid { border-color: var(--danger); background: var(-
 .option-body { display: grid; gap: 4px; }
 .option-kicker { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
 .option-title { font-weight: 600; font-size: 15px; color: var(--ink); }
-.option-desc { font-size: 13.5px; color: var(--ink-2); line-height: 1.5; }
+.option-desc { font-size: 13.5px; color: var(--ink-2); line-height: 1.5; text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
 
 .compare-btn {
   display: inline-flex;
