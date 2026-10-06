@@ -13,17 +13,37 @@ const str = (v, max = MAX_TEXT) => (typeof v === 'string' ? v.trim().slice(0, ma
 const list = (v) => (Array.isArray(v) ? v.slice(0, MAX_ITEMS) : []);
 const obj = (v) => (v && typeof v === 'object' && !Array.isArray(v) ? v : {});
 
+const subLabel = (x) => (x.description ? `${x.tool || 'Step'} (${x.description})` : x.tool);
+
+function cleanSubs(v) {
+  return list(v).map((x) => ({
+    tool: str(obj(x).tool, 300),
+    description: str(obj(x).description, 2000),
+  })).filter((x) => x.tool || x.description);
+}
+
+// Each main step may branch into YES / NO sub steps. `outcomes` is the flattened
+// form the deployed Apps Script writes to the "Outcomes / Branches" column.
 function cleanFlow(tasks) {
   return list(tasks).map((t) => ({
     title: str(obj(t).title, 300),
-    steps: list(obj(t).steps).map((s) => ({
-      tool: str(obj(s).tool, 300),
-      description: str(obj(s).description),
-      outcomes: list(obj(s).outcomes).map((o) => ({
-        label: str(obj(o).label, 500),
-        result: str(obj(o).result, 1000),
-      })).filter((o) => o.label || o.result),
-    })).filter((s) => s.tool || s.description || s.outcomes.length),
+    steps: list(obj(t).steps).map((s) => {
+      const step = {
+        tool: str(obj(s).tool, 300),
+        description: str(obj(s).description),
+        decision: str(obj(s).decision, 500),
+        yes: cleanSubs(obj(s).yes),
+        no: cleanSubs(obj(s).no),
+      };
+      // The decision question is shown once, on the first branch: "Qualifies? YES -> ..., NO -> ...".
+      step.outcomes = [['YES', step.yes], ['NO', step.no]]
+        .filter(([, subs]) => subs.length)
+        .map(([branch, subs], i) => ({
+          label: step.decision && i === 0 ? `${step.decision} ${branch}` : branch,
+          result: subs.map(subLabel).join(' > '),
+        }));
+      return step;
+    }).filter((s) => s.tool || s.description || s.yes.length || s.no.length),
   })).filter((t) => t.title || t.steps.length);
 }
 

@@ -56,8 +56,6 @@
     const wrap = $(`[data-flow="${flow}"].flows`, form);
     const task = tpl('tpl-task');
     $('[data-field="title"]', task).value = data?.title || '';
-    const steps = $('[data-steps]', task);
-    steps.appendChild(tpl('tpl-add-step'));
     const stepData = data?.steps?.length ? data.steps : [{}, {}];
     stepData.forEach((s) => addStep(task, s));
     wrap.appendChild(task);
@@ -65,24 +63,43 @@
     return task;
   }
 
+  // A main step carries its own YES/NO lanes plus the junction that follows it.
   function addStep(task, data = {}) {
     const steps = $('[data-steps]', task);
     const step = tpl('tpl-step');
-    $('[data-field="tool"]', step).value = data.tool || '';
-    $('[data-field="description"]', step).value = data.description || '';
-    (data.outcomes || []).forEach((o) => addOutcome(step, o));
-    steps.insertBefore(step, $('.step-add', steps));
+    step.appendChild(tpl('tpl-junction'));
+    const card = $('.step-card', step);
+    $('[data-field="tool"]', card).value = data.tool || '';
+    $('[data-field="description"]', card).value = data.description || '';
+    $('[data-field="decision"]', card).value = data.decision || '';
+    (data.yes || []).forEach((sub) => addSub(step, 'yes', sub));
+    (data.no || []).forEach((sub) => addSub(step, 'no', sub));
+    steps.appendChild(step);
     renumberSteps(steps);
+    syncBranches(step);
     return step;
   }
 
-  function addOutcome(step, data = {}) {
-    const box = $('[data-outcomes]', step);
-    const el = tpl('tpl-outcome');
-    $('[data-field="label"]', el).value = data.label || '';
-    $('[data-field="result"]', el).value = data.result || '';
-    box.appendChild(el);
+  function addSub(step, branch, data = {}) {
+    const lane = $(`[data-branch="${branch}"].lane-items`, step);
+    const el = tpl('tpl-sub');
+    $('[data-field="tool"]', el).value = data.tool || '';
+    $('[data-field="description"]', el).value = data.description || '';
+    lane.appendChild(el);
+    syncBranches(step);
     return el;
+  }
+
+  // Show a lane only when it has sub steps; show the decision field once any branch exists.
+  function syncBranches(step) {
+    let any = false;
+    ['yes', 'no'].forEach((b) => {
+      const items = $$(`[data-branch="${b}"].lane-items > .sub-step`, step);
+      items.forEach((it, i) => { $('[data-sub-num]', it).textContent = `${b.toUpperCase()} ${i + 1}`; });
+      $(`[data-lane="${b}"]`, step).classList.toggle('has-items', items.length > 0);
+      if (items.length) any = true;
+    });
+    $('[data-decision]', step).hidden = !any;
   }
 
   function addRow(table, data = {}) {
@@ -119,10 +136,10 @@
   }
 
   function renumberSteps(steps) {
-    const list = $$('.step:not(.step-add)', steps);
+    const list = $$(':scope > .step', steps);
     list.forEach((s, i) => { $('[data-step-num]', s).textContent = String(i + 1).padStart(2, '0'); });
     // Never let a task drop below one step.
-    list.forEach((s) => { $(':scope > .step-card [data-remove]', s).hidden = list.length <= 1; });
+    list.forEach((s) => { $('.step-top [data-remove]', s).hidden = list.length <= 1; });
   }
 
   // The first item in each repeating group stays; extras get a remove button.
@@ -145,7 +162,7 @@
       if (kind === 'tool') created = addTool(add.dataset.group);
       else if (kind === 'task') created = addTask(add.dataset.flow);
       else if (kind === 'step') created = addStep(add.closest('.task'));
-      else if (kind === 'outcome') created = addOutcome(add.closest('.step'));
+      else if (kind === 'sub') created = addSub(add.closest('.step'), add.dataset.branch);
       else if (kind === 'row') created = addRow(add.dataset.table);
       created?.querySelector('input, textarea, select')?.focus();
       afterChange();
@@ -154,11 +171,13 @@
     const rm = e.target.closest('[data-remove]');
     if (rm) {
       e.preventDefault();
-      const item = rm.closest('.outcome, .step, .task, .tool-item, .t-row');
+      const item = rm.closest('.sub-step, .step, .task, .tool-item, .t-row');
       if (!item) return;
       const parent = item.parentElement;
+      const owner = item.matches('.sub-step') ? item.closest('.step') : null;
       item.remove();
-      if (item.matches('.step')) renumberSteps(parent);
+      if (owner) syncBranches(owner);
+      else if (item.matches('.step')) renumberSteps(parent);
       else if (item.matches('.task')) renumberTasks(parent);
       else if (item.matches('.tool-item')) syncRemovable(parent, '.tool-item');
       else if (item.matches('.t-row')) syncRemovable(parent, '.t-row');
@@ -199,14 +218,20 @@
 
     const flow = (name) => $$(`[data-flow="${name}"] .task`, form).map((t) => ({
       title: clean($('[data-field="title"]', t).value),
-      steps: $$('.step:not(.step-add)', t).map((s) => ({
-        tool: clean($('[data-field="tool"]', s).value),
-        description: clean($('[data-field="description"]', s).value),
-        outcomes: $$('.outcome', s).map((o) => ({
-          label: clean($('[data-field="label"]', o).value),
-          result: clean($('[data-field="result"]', o).value),
-        })).filter((o) => o.label || o.result),
-      })).filter((s) => s.tool || s.description || s.outcomes.length),
+      steps: $$('.flow > .step', t).map((s) => {
+        const card = $('.step-card', s);
+        const branch = (b) => $$(`[data-branch="${b}"].lane-items > .sub-step`, s).map((el) => ({
+          tool: clean($('[data-field="tool"]', el).value),
+          description: clean($('[data-field="description"]', el).value),
+        })).filter((x) => x.tool || x.description);
+        return {
+          tool: clean($('[data-field="tool"]', card).value),
+          description: clean($('[data-field="description"]', card).value),
+          decision: clean($('[data-field="decision"]', card).value),
+          yes: branch('yes'),
+          no: branch('no'),
+        };
+      }).filter((s) => s.tool || s.description || s.yes.length || s.no.length),
     })).filter((t) => t.title || t.steps.length);
 
     const table = (name) => $$(`[data-table="${name}"] .t-row`, form).map((r) => {
