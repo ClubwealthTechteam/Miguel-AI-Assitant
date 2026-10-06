@@ -557,6 +557,19 @@
     reveals.forEach((el) => el.classList.add('in'));
   }
 
+  // Phone/tablet notice: show the link and let people copy it to open on a computer.
+  const gateUrl = location.origin + location.pathname;
+  $('#gateUrl').textContent = gateUrl;
+  $('#copyLink').addEventListener('click', async (e) => {
+    const btn = e.currentTarget;
+    try {
+      await navigator.clipboard.writeText(gateUrl);
+      btn.textContent = 'Link copied';
+    } catch {
+      window.prompt('Copy this link:', gateUrl);
+    }
+  });
+
   const draft = loadDraft();
   render(draft);
   if (draft) $('#draftNote').textContent = 'We restored the answers you saved in this browser. Pick up where you left off.';

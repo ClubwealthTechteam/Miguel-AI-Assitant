@@ -13,6 +13,20 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
+  <!-- Shown instead of the form on phones and tablets (see .device-gate in styles.css). -->
+  <section class="device-gate" aria-labelledby="gateTitle">
+    <div class="gate-card">
+      <div class="gate-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48" width="40" height="40"><rect x="5" y="9" width="38" height="25" rx="3" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M17 40h14M24 34v6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+      </div>
+      <p class="eyebrow eyebrow-light">Clubwealth <span>|</span> Homexa <span>|</span> PFL</p>
+      <h1 id="gateTitle">Please open this form on your computer</h1>
+      <p>The Workflow Process Form includes a process map builder that needs a larger screen and a mouse. Open this same link in a browser on your work computer to fill it in.</p>
+      <button type="button" class="gate-copy" id="copyLink">Copy link</button>
+      <p class="gate-url" id="gateUrl"></p>
+    </div>
+  </section>
+
   <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
 
   <header class="masthead">
