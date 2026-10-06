@@ -134,7 +134,7 @@
     if (path.yes || path.no) {
       const fork = tpl('tpl-fork');
       ['yes', 'no'].forEach((branch) => {
-        const slot = $(`.branch-${branch}`, fork);
+        const slot = $(`:scope > .fork-branches > .branch-${branch}`, fork); // :scope keeps nested splits from matching
         if (path[branch]) {
           slot.appendChild(renderPath(task, path[branch], { path, branch }, depth + 1, focus));
         } else {
