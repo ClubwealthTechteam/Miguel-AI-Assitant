@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Workflow Process Form | Club Wealth</title>
+  <meta name="description" content="Universal workflow process form for Club Wealth, Homexa and PFL admins. Helps identify manual, repetitive and complex work that AI and automation can improve.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <p class="eyebrow eyebrow-light">Clubwealth <span>|</span> Homexa <span>|</span> PFL</p>
+      <div class="logo" role="img" aria-label="Club Wealth">
+        <!-- To use the original logo file instead: save it as public/logo.png and replace this svg with
+             <img src="/logo.png" alt="Club Wealth" width="320" height="85"> -->
+        <svg viewBox="0 0 640 170" aria-hidden="true">
+          <defs>
+            <linearGradient id="chrome" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#ffffff"/><stop offset="0.55" stop-color="#eef0f4"/><stop offset="1" stop-color="#aeb6c4"/>
+            </linearGradient>
+          </defs>
+          <text x="20" y="152" textLength="600" lengthAdjust="spacingAndGlyphs" font-family="Anton, Impact, 'Arial Narrow', sans-serif" font-size="112" fill="url(#chrome)">CLUBWEALTH</text>
+          <g transform="translate(404 50)" fill="none" stroke="#ffffff">
+            <circle r="19" stroke-width="2.5"/><circle r="12.5" stroke-width="2"/>
+            <line x1="-30" y1="-12" x2="30" y2="12" stroke-width="1.6"/><line x1="12" y1="-30" x2="-12" y2="30" stroke-width="1.6"/>
+            <text x="0" y="5.5" text-anchor="middle" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#ffffff" stroke="none">S</text>
+            <g font-family="Georgia, serif" font-size="11" fill="#ffffff" stroke="none" text-anchor="middle">
+              <text x="-36" y="-12">H</text><text x="16" y="-33">F</text><text x="38" y="20">B</text><text x="-14" y="43">F</text>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <h1>Workflow Process Form</h1>
+      <p class="masthead-sub">A universal form for documenting the work you do by hand, so we can find where AI and automation can take it off your plate.</p>
+    </div>
+  </header>
+
+  <main class="shell">
+    <form id="intakeForm" novalidate autocomplete="on">
+
+      <section class="intro reveal">
+        <div class="intro-col">
+          <h2 class="kicker">Purpose of the form</h2>
+          <p>This form is designed to help identify manual, repetitive, time-consuming, and complex work processes within each department. The information collected will be used to understand how tasks are currently performed, what tools and systems are involved, where bottlenecks occur, and which steps can potentially be improved through AI and automation.</p>
+          <p>The goal is to reduce manual work, simplify complex processes, eliminate unnecessary repetitive tasks, improve workflow efficiency, and create smarter systems while keeping appropriate human review and decision-making where needed.</p>
+        </div>
+        <div class="intro-col">
+          <h2 class="kicker">Understanding the workaround</h2>
+          <p>Please answer the questions below based on one of your regular or repetitive work processes. The goal is to understand the current workflow, identify bottlenecks, and determine where AI or automation could help.</p>
+          <p class="callout"><strong>Important:</strong> Please be specific about the process and how you use each app. "I update the CRM" tells us little. "I copy the applicant's phone number from the Jotform email into Recruit CRM and change their stage to Screening" tells us exactly what can be automated.</p>
+          <p class="draft-note" id="draftNote">Your answers are saved in this browser as you type, so you can close the tab and come back.</p>
+        </div>
+      </section>
+
+      <!-- Identity -->
+      <section class="card reveal" aria-labelledby="sec-you">
+        <h2 class="visually-hidden" id="sec-you">Your details</h2>
+        <div class="grid-3">
+          <label class="field">
+            <span class="label">Name <em>*</em></span>
+            <input type="text" name="name" required autocomplete="name" placeholder="Full name">
+          </label>
+          <label class="field">
+            <span class="label">CW / HX / PFL Email <em>*</em></span>
+            <input type="email" name="email" required autocomplete="email" placeholder="you@clubwealth.com">
+          </label>
+          <label class="field">
+            <span class="label">Date <em>*</em></span>
+            <input type="date" name="date" required>
+          </label>
+        </div>
+      </section>
+
+      <!-- Q1 -->
+      <section class="question reveal" aria-labelledby="q1-title">
+        <header class="q-head">
+          <span class="q-num">01</span>
+          <h2 id="q1-title">List all the web tools, apps and spreadsheets you use for repeated and manual processes.</h2>
+        </header>
+        <p class="hint">Add one tool per box. Include the specific sheet or workspace name when it helps (for example "Daily Productivity Tracker" rather than just "Google Sheets").</p>
+        <div class="grid-3 tool-cols">
+          <div class="tool-col" data-list="web">
+            <h3 class="col-title">Web tools</h3>
+            <div class="stack" data-items></div>
+            <button type="button" class="add-btn" data-add="tool" data-group="web"><span class="plus" aria-hidden="true"></span>Add another tool</button>
+          </div>
+          <div class="tool-col" data-list="apps">
+            <h3 class="col-title">Apps</h3>
+            <div class="stack" data-items></div>
+            <button type="button" class="add-btn" data-add="tool" data-group="apps"><span class="plus" aria-hidden="true"></span>Add another tool</button>
+          </div>
+          <div class="tool-col" data-list="spreadsheets">
+            <h3 class="col-title">Spreadsheets</h3>
+            <div class="stack" data-items></div>
+            <button type="button" class="add-btn" data-add="tool" data-group="spreadsheets"><span class="plus" aria-hidden="true"></span>Add another tool</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Q2 -->
+      <section class="question reveal" aria-labelledby="q2-title">
+        <header class="q-head">
+          <span class="q-num">02</span>
+          <h2 id="q2-title">Walk us through the complete process from start to finish. <span class="tag">The manual way</span></h2>
+        </header>
+        <label class="field">
+          <span class="visually-hidden">Process walkthrough</span>
+          <textarea name="q2_overview" rows="5" required placeholder="Describe the whole process in your own words, from what starts it to what finishes it."></textarea>
+        </label>
+        <p class="example"><span>Example</span> When we receive a new applicant, I first check the application in Recruit CRM. Then I review their resume, check whether they meet the requirements, and update their status. If they qualify, I copy their details into the tracking sheet, send an interview invite through Gmail, and create the event in Google Calendar. After the interview I update the candidate record and add them to the weekly report.</p>
+        <h3 class="sub">Map each step as Tool &rarr; What you do in it</h3>
+        <p class="hint">Each box is one step: the tool you use and what you do there. If a step can end in different ways (approved or rejected, replied or no reply), add an outcome for each path.</p>
+        <div class="flows" data-flow="current"></div>
+        <button type="button" class="add-btn add-task" data-add="task" data-flow="current"><span class="plus" aria-hidden="true"></span>Add another task</button>
+      </section>
+
+      <!-- Q3 -->
+      <section class="question reveal" aria-labelledby="q3-title">
+        <header class="q-head">
+          <span class="q-num">03</span>
+          <h2 id="q3-title">What information do you need to complete the process?</h2>
+        </header>
+        <label class="field">
+          <span class="visually-hidden">Information needed</span>
+          <textarea name="q3_overview" rows="4" placeholder="What do you need in front of you before you can do the work?"></textarea>
+        </label>
+        <p class="example"><span>Example</span> I need the applicant's name, resume, contact information, position applied for, years of experience, work availability, and the job's requirements. Most of it comes from the Jotform submission and Recruit CRM.</p>
+        <h3 class="sub">List the information each task needs, and where it comes from</h3>
+        <div class="table" data-table="q3">
+          <div class="t-head" aria-hidden="true">
+            <span>Task title</span><span>Information / data needed</span><span>Information source</span><span>Required / optional</span><span></span>
+          </div>
+          <div class="t-body" data-items></div>
+        </div>
+        <button type="button" class="add-btn" data-add="row" data-table="q3"><span class="plus" aria-hidden="true"></span>Add another task</button>
+      </section>
+
+      <!-- Q4 -->
+      <section class="question reveal" aria-labelledby="q4-title">
+        <header class="q-head">
+          <span class="q-num">04</span>
+          <h2 id="q4-title">What steps are completely manual? Which tasks are repetitive or time-consuming?</h2>
+        </header>
+        <label class="field">
+          <span class="visually-hidden">Manual and repetitive steps</span>
+          <textarea name="q4_overview" rows="4" placeholder="Which parts do you do by hand, over and over?"></textarea>
+        </label>
+        <p class="example"><span>Example</span> I manually copy applicant details from email into the spreadsheet, then re-type the same details into Recruit CRM. I also send each interview invite one at a time and update every candidate's status by hand after each call.</p>
+        <h3 class="sub">List each repetitive step, how often it happens, and how long it takes</h3>
+        <div class="table" data-table="q4">
+          <div class="t-head" aria-hidden="true">
+            <span>Task title</span><span>Repetitive step</span><span>How often?</span><span>Approx. time spent</span><span></span>
+          </div>
+          <div class="t-body" data-items></div>
+        </div>
+        <button type="button" class="add-btn" data-add="row" data-table="q4"><span class="plus" aria-hidden="true"></span>Add another task</button>
+      </section>
+
+      <!-- Q5 -->
+      <section class="question reveal" aria-labelledby="q5-title">
+        <header class="q-head">
+          <span class="q-num">05</span>
+          <h2 id="q5-title">Which parts require your judgment or approval?</h2>
+        </header>
+        <label class="field">
+          <span class="visually-hidden">Judgment and approval points</span>
+          <textarea name="q5_overview" rows="4" placeholder="Where do you have to decide something, or wait for someone to sign off?"></textarea>
+        </label>
+        <p class="example"><span>Example</span> I decide whether the applicant meets the requirements, whether they are a good fit for the role, and whether to move them forward. Final hiring decisions need the manager's approval.</p>
+        <h3 class="sub">List each decision, what you base it on, and whether AI could prepare it</h3>
+        <div class="table" data-table="q5">
+          <div class="t-head" aria-hidden="true">
+            <span>Task title</span><span>Decision or approval</span><span>Info used for the decision</span><span>Can AI prepare it?</span><span></span>
+          </div>
+          <div class="t-body" data-items></div>
+        </div>
+        <button type="button" class="add-btn" data-add="row" data-table="q5"><span class="plus" aria-hidden="true"></span>Add another task</button>
+      </section>
+
+      <!-- Q6 -->
+      <section class="question reveal" aria-labelledby="q6-title">
+        <header class="q-head">
+          <span class="q-num">06</span>
+          <h2 id="q6-title">Where do you run into bottlenecks or delays, and what workarounds do you use?</h2>
+        </header>
+        <label class="field">
+          <span class="visually-hidden">Bottlenecks and workarounds</span>
+          <textarea name="q6_overview" rows="4" placeholder="What slows you down, and how do you get around it today?"></textarea>
+        </label>
+        <p class="example"><span>Example</span> Candidates often don't reply to interview invites, so I keep a separate sheet of who I need to chase and re-send emails manually every two days. Waiting for the manager's approval can hold a candidate for a week.</p>
+        <h3 class="sub">List each bottleneck, your current workaround, and the impact</h3>
+        <div class="table" data-table="q6">
+          <div class="t-head" aria-hidden="true">
+            <span>Task title</span><span>Bottleneck or delay</span><span>Current workaround</span><span>Impact</span><span></span>
+          </div>
+          <div class="t-body" data-items></div>
+        </div>
+        <button type="button" class="add-btn" data-add="row" data-table="q6"><span class="plus" aria-hidden="true"></span>Add another task</button>
+      </section>
+
+      <!-- Q7 -->
+      <section class="question reveal" aria-labelledby="q7-title">
+        <header class="q-head">
+          <span class="q-num">07</span>
+          <h2 id="q7-title">What would the ideal automated version of this process look like?</h2>
+        </header>
+        <label class="field">
+          <span class="visually-hidden">Ideal automated process</span>
+          <textarea name="q7_overview" rows="4" placeholder="If this process ran itself, what would happen, and where would you still step in?"></textarea>
+        </label>
+        <p class="example"><span>Example</span> When an application comes in, the system scores it against the role's requirements, fills in the candidate record and the tracking sheet, and drafts the interview invite with open calendar slots. I review the shortlist and approve the invites in one click.</p>
+        <h3 class="sub">Map the ideal flow as Tool &rarr; What should happen</h3>
+        <div class="flows" data-flow="ideal"></div>
+        <button type="button" class="add-btn add-task" data-add="task" data-flow="ideal"><span class="plus" aria-hidden="true"></span>Add another task</button>
+      </section>
+
+      <!-- Platform preference -->
+      <section class="question platform reveal" aria-labelledby="pf-title">
+        <header class="q-head">
+          <span class="q-num">08</span>
+          <h2 id="pf-title">Which AI Task Hub option would you prefer?</h2>
+        </header>
+        <p class="hint">This is your individual opinion. Please don't share, compare, or discuss your choice with other team members before submitting. Pick what you believe would work best for your own workflow.</p>
+
+        <fieldset class="options">
+          <legend class="label">Please choose your preferred option <em>*</em></legend>
+          <label class="option">
+            <input type="radio" name="platform" value="AI Task Hub - Software APP" required>
+            <span class="option-body">
+              <span class="option-kicker">Option 1</span>
+              <span class="option-title">AI Task Hub: Software App</span>
+              <span class="option-desc">A standalone software application dedicated to Club Wealth AI tasks and automations. It works as a separate tool that you open whenever you need to perform an AI-assisted task, and it can stay open next to your CRM, email and spreadsheets.</span>
+            </span>
+          </label>
+          <label class="option">
+            <input type="radio" name="platform" value="AI Task Hub Webpage - Clubwealth to IFS Extension">
+            <span class="option-body">
+              <span class="option-kicker">Option 2</span>
+              <span class="option-title">AI Task Hub: Club Wealth University website</span>
+              <span class="option-desc">An AI Task Hub tab built directly into the Club Wealth University website, added as another page. You would access AI tasks and automations from the existing University platform without opening a separate application.</span>
+            </span>
+          </label>
+        </fieldset>
+
+        <label class="field">
+          <span class="label">Why does this option work better for you?</span>
+          <textarea name="platform_reason" rows="5" placeholder="Tell us how you work day to day and why this option fits."></textarea>
+        </label>
+      </section>
+
+      <!-- Acknowledgement -->
+      <section class="card ack reveal" aria-labelledby="ack-title">
+        <h2 class="kicker" id="ack-title">What happens next</h2>
+        <p>Once this form is completed, please expect to be invited to <strong>Room 10</strong> via the CW Helpdesk Zoom meeting with Miguel and Camille. You will be asked to show how you do the process, and Miguel may sit in for a shadow session.</p>
+        <label class="field ack-field">
+          <span class="label">Please type in <code>ACKNOWLEDGED</code> <em>*</em></span>
+          <input type="text" name="acknowledged" required autocomplete="off" spellcheck="false" placeholder="ACKNOWLEDGED">
+        </label>
+      </section>
+
+      <!-- Honeypot: leave empty -->
+      <div class="hp" aria-hidden="true">
+        <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+      </div>
+
+      <div class="submit-bar">
+        <p class="form-error" id="formError" role="alert" hidden></p>
+        <button type="submit" class="btn-primary" id="submitBtn">
+          <span class="btn-label">Submit form</span>
+          <span class="btn-icon" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+      </div>
+    </form>
+
+    <section class="done" id="doneState" hidden tabindex="-1" aria-live="polite">
+      <div class="done-mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h2>Thank you, your form is in.</h2>
+      <p>We'll send your Room 10 Zoom invite through the CW Helpdesk. Have the process ready to walk through on screen.</p>
+      <p class="done-ref">Reference <code id="doneRef"></code></p>
+      <button type="button" class="btn-ghost" id="newResponse">Submit another process</button>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Club Wealth&reg; AI Task Hub &middot; Workflow discovery</p>
+  </footer>
+
+  <datalist id="taskTitles"></datalist>
+
+  <!-- Templates -->
+  <template id="tpl-tool">
+    <div class="tool-item">
+      <input type="text" data-field="value" placeholder="Tool name" aria-label="Tool name">
+      <button type="button" class="icon-btn" data-remove aria-label="Remove tool"><svg viewBox="0 0 16 16" width="14" height="14"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    </div>
+  </template>
+
+  <template id="tpl-task">
+    <div class="task">
+      <div class="task-head">
+        <span class="task-label" data-task-label>Task 1</span>
+        <input type="text" class="task-title" data-field="title" placeholder="Provide a task title, e.g. New applicant screening" aria-label="Task title">
+        <button type="button" class="icon-btn" data-remove aria-label="Remove task"><svg viewBox="0 0 16 16" width="14" height="14"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      </div>
+      <ol class="steps" data-steps></ol>
+    </div>
+  </template>
+
+  <template id="tpl-step">
+    <li class="step">
+      <div class="step-card">
+        <div class="step-top">
+          <span class="step-num" data-step-num>1</span>
+          <button type="button" class="icon-btn" data-remove aria-label="Remove step"><svg viewBox="0 0 16 16" width="12" height="12"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        </div>
+        <input type="text" class="step-tool" data-field="tool" placeholder="Tool used" aria-label="Tool used">
+        <textarea data-field="description" rows="3" placeholder="Task description" aria-label="Task description"></textarea>
+        <div class="outcomes" data-outcomes></div>
+        <button type="button" class="link-btn" data-add="outcome">+ Add outcome / branch</button>
+      </div>
+      <span class="step-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </li>
+  </template>
+
+  <template id="tpl-add-step">
+    <li class="step step-add">
+      <button type="button" class="add-step" data-add="step"><span class="plus" aria-hidden="true"></span><span>Add another step</span></button>
+    </li>
+  </template>
+
+  <template id="tpl-outcome">
+    <div class="outcome">
+      <input type="text" data-field="label" placeholder="If..." aria-label="Outcome condition">
+      <input type="text" data-field="result" placeholder="Then..." aria-label="What happens">
+      <button type="button" class="icon-btn" data-remove aria-label="Remove outcome"><svg viewBox="0 0 16 16" width="12" height="12"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    </div>
+  </template>
+
+  <template id="tpl-row">
+    <div class="t-row">
+      <label class="cell"><span class="cell-label"></span><input type="text" data-field="c0" list="taskTitles"></label>
+      <label class="cell"><span class="cell-label"></span><textarea data-field="c1" rows="2"></textarea></label>
+      <label class="cell"><span class="cell-label"></span><textarea data-field="c2" rows="2"></textarea></label>
+      <label class="cell"><span class="cell-label"></span><input type="text" data-field="c3"></label>
+      <button type="button" class="icon-btn" data-remove aria-label="Remove row"><svg viewBox="0 0 16 16" width="14" height="14"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    </div>
+  </template>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>

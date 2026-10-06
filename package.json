@@ -1,0 +1,14 @@
+{
+  "name": "clubwealth-workflow-intake",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Self-hosted workflow process intake form for Club Wealth, Homexa and PFL admins. Submissions are relayed to Google Sheets.",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "check": "node --check api/submit.js && node --check public/app.js && node --check scripts/dev.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
