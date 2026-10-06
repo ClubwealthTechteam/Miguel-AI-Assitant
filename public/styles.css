@@ -113,6 +113,20 @@ form {
 .callout strong { color: var(--ink); }
 .draft-note { font-size: 13px !important; color: var(--muted) !important; }
 
+/* ---------- how-to (spans both intro columns) ---------- */
+.howto { grid-column: 1 / -1; padding: 20px 22px; border: 1px solid #d6dcea; border-radius: 12px; background: var(--navy-tint); }
+.howto-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 20px; margin-bottom: 14px; }
+.howto-head .kicker { margin: 0; }
+.howto-links { display: flex; flex-wrap: wrap; gap: 16px; }
+.howto-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 600; color: var(--navy); text-decoration: none; }
+.howto-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+.howto-link-quiet { font-weight: 500; color: var(--navy-2); }
+.howto-steps { counter-reset: h; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 22px; }
+.howto-steps li { counter-increment: h; position: relative; padding-left: 32px; font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
+.howto-steps li::before { content: counter(h); position: absolute; left: 0; top: 0; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 6px; background: var(--navy); color: #fff; font-size: 12px; font-weight: 700; }
+.howto-steps strong { color: var(--ink); }
+.howto-steps code { font-size: 0.85em; }
+
 /* ---------- generic blocks ---------- */
 .card { padding: 32px 0; border-bottom: 1px solid var(--line); }
 

@@ -23,6 +23,10 @@ A self-hosted intake form where admins across Clubwealth, Homexa and PFL documen
 
 Task titles entered in Q2 are suggested in the "Task title" cells of Q3–Q6.
 
+## SOP
+
+`/sop` (`public/sop.html`) is the step-by-step guide for admins: before you start, each section, how to use the process map, do's and don'ts, troubleshooting, and a full worked example ("New client welcome posts") with its map images in `public/sop/`. It prints cleanly to PDF. The form links to it from the "How to fill out this form" box under the Important note.
+
 ## Google Sheet layout
 
 | Tab | One row per |

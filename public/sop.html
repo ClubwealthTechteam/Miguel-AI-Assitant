@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SOP: Workflow Process Form | Club Wealth</title>
+  <meta name="description" content="Step-by-step guide to completing the Club Wealth Workflow Process Form, with a worked example.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --canvas: #f6f5f1; --surface: #ffffff; --surface-2: #fbfaf7;
+      --ink: #14181f; --ink-2: #2b313c; --muted: #50565f;
+      --line: #e6e3dc; --line-strong: #d6d2c8;
+      --navy: #0b1b3d; --navy-2: #13285a; --navy-tint: #eef1f8;
+      --accent: #b08d4a; --ok: #2f6a3c; --ok-tint: #edf4ec; --danger: #a3322c; --danger-tint: #fcefee;
+      --sans: 'Geist', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      --heading: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      --mono: 'Geist Mono', ui-monospace, monospace;
+      color-scheme: light;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-padding-top: 24px; }
+    body { margin: 0; background: var(--canvas); color: var(--ink); font-family: var(--sans); font-size: 15.5px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+
+    .doc-head { background: var(--navy); color: #fff; padding: 48px 16px 104px; }
+    .doc-head-inner { max-width: 960px; margin: 0 auto; }
+    .doc-eyebrow { margin: 0 0 10px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.75); }
+    .doc-head h1 { margin: 0; font-family: var(--heading); font-weight: 700; font-size: clamp(30px, 4.6vw, 44px); line-height: 1.1; letter-spacing: -0.03em; }
+    .doc-head p { max-width: 640px; margin: 14px 0 0; color: rgba(255,255,255,0.86); font-size: 16px; }
+    .doc-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+    .doc-meta span { padding: 5px 11px; border-radius: 999px; background: rgba(255,255,255,0.1); font-size: 12.5px; color: rgba(255,255,255,0.9); }
+    .doc-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 8px; font: inherit; font-size: 14px; font-weight: 600; text-decoration: none; cursor: pointer; border: 0; }
+    .btn-light { background: #fff; color: var(--navy); }
+    .btn-ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.35); }
+
+    .doc-body { max-width: 960px; margin: -64px auto 0; padding: 0 16px 64px; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 28px; align-items: start; }
+    .toc { position: sticky; top: 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; font-size: 13.5px; }
+    .toc p { margin: 0 0 10px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+    .toc ol { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+    .toc a { color: var(--ink-2); text-decoration: none; }
+    .toc a:hover { color: var(--navy); text-decoration: underline; text-underline-offset: 3px; }
+
+    .paper { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: clamp(22px, 4vw, 48px); box-shadow: 0 24px 60px -32px rgba(11,27,61,0.18); }
+    .paper section { padding: 30px 0; border-bottom: 1px solid var(--line); }
+    .paper section:first-child { padding-top: 0; }
+    .paper section:last-child { border-bottom: 0; padding-bottom: 0; }
+    h2 { margin: 0 0 12px; font-family: var(--heading); font-weight: 700; font-size: 24px; letter-spacing: -0.02em; line-height: 1.2; }
+    h2 .num { display: inline-block; min-width: 34px; font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--accent); letter-spacing: 0.04em; vertical-align: 3px; }
+    h3 { margin: 22px 0 8px; font-family: var(--heading); font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+    p { margin: 0 0 12px; color: var(--ink-2); }
+    ul, ol { margin: 0 0 12px; padding-left: 22px; color: var(--ink-2); }
+    li { margin-bottom: 6px; }
+    li::marker { color: var(--muted); }
+    strong { color: var(--ink); }
+    code, .kbd { font-family: var(--mono); font-size: 0.88em; padding: 1px 6px; border-radius: 4px; background: var(--canvas); border: 1px solid var(--line); white-space: nowrap; }
+
+    .note { padding: 14px 16px; margin: 14px 0; border-radius: 10px; background: var(--surface-2); border-left: 3px solid var(--accent); }
+    .note p:last-child { margin: 0; }
+    .note-blue { border-left-color: var(--navy-2); background: var(--navy-tint); }
+
+    .steps { counter-reset: s; list-style: none; padding: 0; display: grid; gap: 12px; }
+    .steps > li { counter-increment: s; position: relative; padding: 14px 16px 14px 56px; margin: 0; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+    .steps > li::before { content: counter(s); position: absolute; left: 16px; top: 14px; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 7px; background: var(--navy); color: #fff; font-size: 13px; font-weight: 700; }
+    .steps > li p:last-child, .steps > li ul:last-child { margin-bottom: 0; }
+
+    .do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .do-dont > div { border-radius: 10px; padding: 16px 18px; }
+    .do { background: var(--ok-tint); }
+    .dont { background: var(--danger-tint); }
+    .do h3, .dont h3 { margin-top: 0; font-size: 15px; }
+    .do h3 { color: var(--ok); }
+    .dont h3 { color: var(--danger); }
+    .do ul, .dont ul { margin: 0; }
+
+    table { width: 100%; border-collapse: collapse; margin: 10px 0 14px; font-size: 14px; }
+    th, td { text-align: left; vertical-align: top; padding: 10px 12px; border: 1px solid var(--line); }
+    th { background: var(--surface-2); font-weight: 600; color: var(--ink); }
+    td { color: var(--ink-2); }
+    .compare-good td:first-child { color: var(--danger); }
+    .compare-good td:last-child { color: var(--ok); }
+
+    .ex { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 14px 0; }
+    .ex-label { padding: 8px 14px; background: var(--surface-2); border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .ex-body { padding: 14px 16px; }
+    .ex-body p:last-child, .ex-body ul:last-child { margin-bottom: 0; }
+    figure { margin: 14px 0; }
+    figure a { display: block; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: #fff; }
+    figure img { display: block; width: 100%; height: auto; }
+    figcaption { margin-top: 8px; font-size: 13px; color: var(--muted); }
+
+    .map-legend { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 12px 0; }
+    .map-legend div { padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); font-size: 14px; color: var(--ink-2); }
+    .map-legend b { display: block; margin-bottom: 2px; color: var(--ink); }
+
+    .doc-foot { text-align: center; padding: 8px 16px 48px; color: var(--muted); font-size: 12.5px; }
+
+    @media (max-width: 860px) {
+      .doc-body { grid-template-columns: 1fr; }
+      .toc { position: static; }
+      .do-dont, .map-legend { grid-template-columns: 1fr; }
+    }
+    @media print {
+      body { background: #fff; font-size: 12pt; }
+      .doc-head { padding: 0 0 16px; background: #fff; color: var(--ink); }
+      .doc-head p, .doc-eyebrow, .doc-meta span { color: var(--ink-2); background: none; }
+      .doc-actions, .toc { display: none; }
+      .doc-body { display: block; margin: 0; padding: 0; }
+      .paper { border: 0; box-shadow: none; padding: 0; }
+      section, .steps > li, figure, table { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header class="doc-head">
+    <div class="doc-head-inner">
+      <p class="doc-eyebrow">SOP · Clubwealth | Homexa | PFL</p>
+      <h1>How to fill out the Workflow Process Form</h1>
+      <p>A step-by-step guide for admins documenting one of their manual or repetitive processes, with a complete worked example at the end.</p>
+      <div class="doc-meta">
+        <span>Time needed: 20–30 minutes</span>
+        <span>Device: computer only</span>
+        <span>One form per process</span>
+      </div>
+      <div class="doc-actions">
+        <a class="btn btn-light" href="/">Open the form</a>
+        <button type="button" class="btn btn-ghost" onclick="window.print()">Print / save as PDF</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="doc-body">
+    <nav class="toc" aria-label="Contents">
+      <p>Contents</p>
+      <ol>
+        <li><a href="#purpose">Purpose</a></li>
+        <li><a href="#before">Before you start</a></li>
+        <li><a href="#steps">Filling out the form</a></li>
+        <li><a href="#map">Using the process map</a></li>
+        <li><a href="#specific">Being specific</a></li>
+        <li><a href="#submit">Submitting and what's next</a></li>
+        <li><a href="#trouble">Troubleshooting</a></li>
+        <li><a href="#example">Worked example</a></li>
+      </ol>
+    </nav>
+
+    <article class="paper">
+      <section id="purpose">
+        <h2><span class="num">01</span>Purpose</h2>
+        <p>The Workflow Process Form captures how one of your regular processes is done today: the tools you use, every step, where it slows down, and where you make decisions. The AI Tech team uses your answers to decide what AI and automation can take off your plate, while keeping you in control of the decisions that need a person.</p>
+        <p><strong>Who fills it out:</strong> admins and team members across Clubwealth, Homexa and PFL who were sent the form link.</p>
+        <p><strong>How many forms:</strong> one form per process. If you have three processes to document, submit the form three times. Use <em>Submit another process</em> on the thank-you screen to start the next one.</p>
+      </section>
+
+      <section id="before">
+        <h2><span class="num">02</span>Before you start</h2>
+        <ul>
+          <li><strong>Use your computer.</strong> The form doesn't open on phones or tablets because the process map needs a large screen and a mouse.</li>
+          <li><strong>Pick one process</strong> you do often, by hand, and that takes real time, for example "New client welcome posts" or "Applicant screening".</li>
+          <li><strong>Walk through it once in your head (or for real)</strong> and note each tool you touch, in order.</li>
+          <li><strong>Have rough numbers ready:</strong> how often it happens (daily, weekly) and about how long each part takes.</li>
+          <li><strong>Block 20–30 minutes.</strong> Your answers save in the browser as you type, so you can close the tab and come back later on the same computer and browser.</li>
+        </ul>
+      </section>
+
+      <section id="steps">
+        <h2><span class="num">03</span>Filling out the form, section by section</h2>
+        <ol class="steps">
+          <li>
+            <p><strong>Your details.</strong> Enter your full name and your CW / HX / PFL work email. The date fills in automatically.</p>
+          </li>
+          <li>
+            <p><strong>Q1. Tools, apps and spreadsheets.</strong> List every tool used in this process, one per box. Click <span class="kbd">+ Add another tool</span> for more.</p>
+            <ul>
+              <li><em>Web tools:</em> anything in a browser (Infusionsoft/Keap, Recruit CRM, Canva, Meta Business Suite).</li>
+              <li><em>Apps:</em> installed or chat apps (Slack, Zoom, Messenger).</li>
+              <li><em>Spreadsheets:</em> name the actual sheet, e.g. "Posting Calendar", not just "Google Sheets".</li>
+            </ul>
+          </li>
+          <li>
+            <p><strong>Q2. Walk us through the process (the manual way).</strong> First, describe the whole process in your own words in the text box: what starts it, what you do, and what "done" looks like. Then build the <strong>process map</strong> below it. See <a href="#map">Using the process map</a>.</p>
+          </li>
+          <li>
+            <p><strong>Q3. Information you need.</strong> For each task, list the information you need and where it comes from, and mark it Required or Optional. Task titles you typed in Q2 are suggested automatically.</p>
+          </li>
+          <li>
+            <p><strong>Q4. Manual and repetitive steps.</strong> List the steps you do by hand, how often they happen, and roughly how long they take. These numbers help us choose what to automate first.</p>
+          </li>
+          <li>
+            <p><strong>Q5. Judgment and approvals.</strong> List every point where you or someone else has to decide or sign off, what that decision is based on, and whether AI could prepare it for you to review.</p>
+          </li>
+          <li>
+            <p><strong>Q6. Bottlenecks and workarounds.</strong> What slows the process down, what you currently do to get around it, and the impact (delays, rework, missed items).</p>
+          </li>
+          <li>
+            <p><strong>Q7. The ideal automated version.</strong> Describe how the process would run if it ran itself, and where you would still want to review or approve. Map it the same way as Q2. It's fine to name tools you don't use yet, or to write "automatically" where you don't know the tool.</p>
+          </li>
+          <li>
+            <p><strong>Q8. AI Task Hub preference.</strong> Click <span class="kbd">View comparison</span> to read the pros, neutral points and cons of the Software App and the Club Wealth University webpage. Choose the one that suits <strong>your own</strong> workflow and explain why.</p>
+            <div class="note"><p>This is your individual opinion. Please don't share, compare or discuss your choice with other team members before submitting.</p></div>
+          </li>
+          <li>
+            <p><strong>Acknowledge.</strong> Type <code>ACKNOWLEDGED</code> to confirm you'll be invited to the Room 10 Zoom follow-up, then click <span class="kbd">Submit form</span>.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section id="map">
+        <h2><span class="num">04</span>Using the process map (Q2 and Q7)</h2>
+        <p>The map shows your process as boxes from left to right. Each step is two boxes: the <strong>Tool</strong> on top and the <strong>Task description</strong> underneath.</p>
+        <div class="map-legend">
+          <div><b>Add another step</b>The large plus at the end of a row adds the next step in that row.</div>
+          <div><b>Add a sub step: YES / NO</b>The small plus above (YES) or below (NO) splits the process at a decision into two paths.</div>
+          <div><b>Decision</b>Once a step splits, a Decision box appears under it. Type the yes/no question, e.g. "Qualified?"</div>
+          <div><b>Add YES / NO path</b>If you've only added one side of a split, the other side shows a button to add it.</div>
+          <div><b>Remove a step</b>Hover over a step and click the small ✕ in its corner. Removing the last step of a YES/NO path removes that path.</div>
+          <div><b>Move around</b>Click and drag the dotted background to pan, use <span class="kbd">Full screen</span> for big maps, or drag the canvas's bottom-right corner to make it taller.</div>
+        </div>
+        <h3>How to map a process</h3>
+        <ol>
+          <li>Give the task a title, e.g. "New client welcome posts".</li>
+          <li>Fill in the first step: the tool, and what you do in it.</li>
+          <li>Click <strong>Add another step</strong> for each next action, in order.</li>
+          <li>When the process depends on an answer (photo found? approved? replied?), use the YES plus above and the NO plus below. Then type the question in the Decision box.</li>
+          <li>Continue each path until it ends. Paths can split again.</li>
+          <li>If the same process has a clearly separate part, click <strong>+ Add another task</strong> below the map for a second map.</li>
+        </ol>
+        <div class="note note-blue"><p><strong>Rule of thumb:</strong> one box = one action in one tool. If you switch tools, start a new box.</p></div>
+      </section>
+
+      <section id="specific">
+        <h2><span class="num">05</span>Being specific</h2>
+        <p>Specific answers are what make automation possible. Vague answers lead to follow-up questions.</p>
+        <table class="compare-good">
+          <thead><tr><th>Too vague</th><th>Specific (what we need)</th></tr></thead>
+          <tbody>
+            <tr><td>I update the CRM.</td><td>I copy the applicant's phone number from the Jotform email into Recruit CRM and change their stage to Screening.</td></tr>
+            <tr><td>I make the post.</td><td>I duplicate the welcome template in Canva and drop in the client's photo, name and city.</td></tr>
+            <tr><td>It takes a while.</td><td>About 15 minutes per client, 8–12 clients a week.</td></tr>
+            <tr><td>Approval is slow.</td><td>Approval sits in Slack for about a day each round; I ping the manager again at end of day.</td></tr>
+          </tbody>
+        </table>
+        <div class="do-dont">
+          <div class="do">
+            <h3>Do</h3>
+            <ul>
+              <li>Name the exact tool, sheet or saved search.</li>
+              <li>Describe what you copy, check, decide or send.</li>
+              <li>Include how often and how long.</li>
+              <li>Map the real process, including the messy parts and workarounds.</li>
+            </ul>
+          </div>
+          <div class="dont">
+            <h3>Don't</h3>
+            <ul>
+              <li>Combine several tools in one box.</li>
+              <li>Leave the map with only one step.</li>
+              <li>Describe the ideal version in Q2. Save that for Q7.</li>
+              <li>Paste passwords, client payment details or other sensitive data.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="submit">
+        <h2><span class="num">06</span>Submitting and what happens next</h2>
+        <ol>
+          <li>Click <strong>Submit form</strong>. If anything required is missing, it's highlighted in red and the form scrolls to it.</li>
+          <li>You'll see <strong>"Thank you, your form is in."</strong> with a reference number like <code>CW-20261006-CB80F7</code>. Keep it in case you need to refer to your submission.</li>
+          <li>Your process maps are saved as images automatically. You don't need to screenshot anything.</li>
+          <li>Expect an invite to <strong>Room 10</strong> on the CW Helpdesk Zoom with Miguel and Camille. Be ready to show the process on screen; Miguel may sit in on a shadow session.</li>
+          <li>Documenting another process? Click <strong>Submit another process</strong>.</li>
+        </ol>
+      </section>
+
+      <section id="trouble">
+        <h2><span class="num">07</span>Troubleshooting</h2>
+        <table>
+          <thead><tr><th>What you see</th><th>What to do</th></tr></thead>
+          <tbody>
+            <tr><td>"Please open this form on your computer"</td><td>You're on a phone or tablet. Tap <em>Copy link</em> and open it in a browser on your computer.</td></tr>
+            <tr><td>Your answers are gone</td><td>Drafts are saved per browser. Use the same computer and browser you started on, and don't use a private/incognito window.</td></tr>
+            <tr><td>The map doesn't fit</td><td>Drag the dotted background to move around, or click <em>Full screen</em> (press Esc to exit).</td></tr>
+            <tr><td>A field is highlighted in red</td><td>It's required or incomplete. Fill it in and submit again. You must type <code>ACKNOWLEDGED</code> exactly.</td></tr>
+            <tr><td>"We could not save your form right now"</td><td>Wait a minute and click Submit again. Your answers are kept. If it keeps happening, message Miguel with a screenshot.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="example">
+        <h2><span class="num">08</span>Worked example: New client welcome posts (Marketing)</h2>
+        <p>This is a complete, realistic submission for one marketing process. Use it as a model for the level of detail we're looking for.</p>
+
+        <div class="ex">
+          <div class="ex-label">Q1 · Tools</div>
+          <div class="ex-body">
+            <ul>
+              <li><strong>Web tools:</strong> Facebook (Page + Groups), Meta Business Suite, Canva, Infusionsoft (Keap)</li>
+              <li><strong>Apps:</strong> Slack, Messenger</li>
+              <li><strong>Spreadsheets:</strong> Posting Calendar, New Client Tracker</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="ex">
+          <div class="ex-label">Q2 · Walkthrough (the manual way)</div>
+          <div class="ex-body">
+            <p>Every Monday I pull last week's new clients from Infusionsoft and add them to the Posting Calendar. For each client I look for a headshot on Facebook. If there is one, I build the welcome graphic in Canva, write the caption in Google Docs and send both to the marketing manager in Slack; once approved I schedule it in Meta Business Suite for the Page and the Group. If there's no photo I message the client on Messenger and wait up to 2 days; if they don't reply I use the no-photo template. About 8–12 clients a week, roughly 25–30 minutes each.</p>
+          </div>
+        </div>
+        <figure>
+          <a href="/sop/example-current-map.png" target="_blank" rel="noopener"><img src="/sop/example-current-map.png" alt="Process map of the current manual process: Infusionsoft, Google Sheets and Facebook Group steps, then a split on 'Usable photo found?' into a YES path (Canva, Google Docs, Slack, then 'Approved?') and a NO path (Messenger, Google Sheets, then 'Reply within 2 days?')." loading="lazy"></a>
+          <figcaption>Q2 process map, as saved with the submission. Click to open full size.</figcaption>
+        </figure>
+
+        <div class="ex">
+          <div class="ex-label">Q3 · Information needed</div>
+          <div class="ex-body">
+            <table>
+              <thead><tr><th>Task</th><th>Information</th><th>Source</th><th>Req.</th></tr></thead>
+              <tbody>
+                <tr><td>New client welcome posts</td><td>Client name, business, city, coach</td><td>Infusionsoft (Keap) new client saved search</td><td>Required</td></tr>
+                <tr><td>New client welcome posts</td><td>Headshot photo</td><td>Facebook profile or client via Messenger</td><td>Optional</td></tr>
+                <tr><td>New client welcome posts</td><td>Open posting slots</td><td>Posting Calendar</td><td>Required</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="ex">
+          <div class="ex-label">Q4 · Manual and repetitive steps</div>
+          <div class="ex-body">
+            <table>
+              <thead><tr><th>Repetitive step</th><th>How often</th><th>Time</th></tr></thead>
+              <tbody>
+                <tr><td>Copy client details from Keap into the Posting Calendar</td><td>Weekly</td><td>~20 min per batch</td></tr>
+                <tr><td>Search Facebook for each client headshot</td><td>Daily</td><td>5–10 min per client</td></tr>
+                <tr><td>Build graphic + write 2 captions</td><td>Daily</td><td>15 min per client</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="ex">
+          <div class="ex-label">Q5 · Judgment and approvals</div>
+          <div class="ex-body">
+            <table>
+              <thead><tr><th>Decision</th><th>Based on</th><th>Can AI prepare it?</th></tr></thead>
+              <tbody>
+                <tr><td>Is the photo usable (clear, professional)?</td><td>Photo quality, brand guidelines</td><td>Partly, I review it</td></tr>
+                <tr><td>Approve graphic and caption</td><td>Brand voice, accuracy of client details</td><td>Partly, I review it</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="ex">
+          <div class="ex-label">Q6 · Bottlenecks</div>
+          <div class="ex-body">
+            <table>
+              <thead><tr><th>Bottleneck</th><th>Workaround</th><th>Impact</th></tr></thead>
+              <tbody>
+                <tr><td>Clients take days to send a headshot</td><td>"Waiting on photo" column + manual reminders</td><td>Posts delayed 2–5 days</td></tr>
+                <tr><td>Approval sits in Slack</td><td>Ping the manager again at end of day</td><td>~1 day delay per round</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="ex">
+          <div class="ex-label">Q7 · Ideal automated version</div>
+          <div class="ex-body">
+            <p>When the New Client tag is applied in Keap, everything is drafted automatically: captions by Claude, the graphic filled in Canva, and a preview sent to Slack. I only approve or edit, and the post schedules itself and logs to the calendar. Missing photos are requested and chased automatically.</p>
+          </div>
+        </div>
+        <figure>
+          <a href="/sop/example-ideal-map.png" target="_blank" rel="noopener"><img src="/sop/example-ideal-map.png" alt="Process map of the ideal automated process: Keap tag triggers n8n, client data is pulled, then a split on 'Photo on file?' into a YES path (Claude API captions, Canva API graphic, Slack approval, then 'Approved?') and a NO path (automatic photo request, no-photo version, one-click approval)." loading="lazy"></a>
+          <figcaption>Q7 ideal process map. Click to open full size.</figcaption>
+        </figure>
+
+        <div class="ex">
+          <div class="ex-label">Q8 · Preference</div>
+          <div class="ex-body">
+            <p><strong>AI Task Hub: Software App.</strong> "I work across Canva, Meta Business Suite, Slack and Keap all day; an app that stays open next to them would save a lot of tab switching."</p>
+          </div>
+        </div>
+      </section>
+    </article>
+  </main>
+
+  <footer class="doc-foot">Club Wealth&reg; AI Task Hub · Workflow discovery · Questions? Message Miguel.</footer>
+</body>
+</html>

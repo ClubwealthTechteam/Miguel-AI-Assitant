@@ -46,7 +46,9 @@ const server = http.createServer(async (req, res) => {
   }
 
   const rel = url.pathname === '/' ? 'index.html' : decodeURIComponent(url.pathname).replace(/^\/+/, '');
-  const file = path.join(pub, rel);
+  let file = path.join(pub, rel);
+  // Mirror Vercel's cleanUrls: /sop serves sop.html.
+  if (!path.extname(file) && fs.existsSync(`${file}.html`)) file = `${file}.html`;
   if (!file.startsWith(pub) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) {
     res.statusCode = 404;
     return res.end('Not found');
