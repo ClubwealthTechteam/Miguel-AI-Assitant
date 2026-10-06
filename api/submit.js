@@ -102,6 +102,8 @@ export function normalize(body) {
     q7: { overview: str(section('q7').overview), tasks: cleanFlow(section('q7').tasks) },
     platform: { choice: str(section('platform').choice, 200), reason: str(section('platform').reason) },
     acknowledged: str(b.acknowledged, 40).toUpperCase(),
+    // Set when the person used "Edit my response": the reference of the submission this one replaces.
+    editOf: /^CW-\d{8}-[A-F0-9]{6}$/.test(str(b.editOf, 40)) ? str(b.editOf, 40) : '',
   };
 }
 

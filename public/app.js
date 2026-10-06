@@ -491,6 +491,7 @@
       return;
     }
     data.acknowledged = 'ACKNOWLEDGED';
+    if (editingOf) data.editOf = editingOf;
     data.maps = await buildMapImages(data);
 
     showError('');
@@ -506,8 +507,15 @@
       const out = await res.json().catch(() => ({}));
       if (!res.ok || !out.ok) throw new Error(out.error || `Submission failed (${res.status}).`);
       clearDraft();
+      // Keep the submitted answers so "Edit my response" can reopen them.
+      lastSubmitted = { ...data };
+      delete lastSubmitted.maps;
+      delete lastSubmitted.website;
+      lastRef = out.submissionId || '';
+      editingOf = '';
+      $('#editBanner').hidden = true;
       form.hidden = true;
-      $('#doneRef').textContent = out.submissionId || '';
+      $('#doneRef').textContent = lastRef;
       doneState.hidden = false;
       window.scrollTo({ top: 0, behavior: 'smooth' });
       doneState.focus({ preventScroll: true });
@@ -520,11 +528,22 @@
     }
   });
 
-  $('#newResponse').addEventListener('click', () => {
+  // Reopen the answers just submitted; resubmitting sends an updated copy tagged with the original reference.
+  let lastSubmitted = null;
+  let lastRef = '';
+  let editingOf = '';
+  $('#editResponse').addEventListener('click', () => {
     form.reset();
-    render(null);
+    render(lastSubmitted);
+    editingOf = lastRef;
+    const banner = $('#editBanner');
+    banner.textContent = lastRef
+      ? `You're editing your response ${lastRef}. Make your changes and submit again; we'll use your latest version.`
+      : "You're editing your response. Make your changes and submit again; we'll use your latest version.";
+    banner.hidden = false;
     doneState.hidden = true;
     form.hidden = false;
+    saveDraft();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 

@@ -75,6 +75,7 @@ function createMockAppsScript() {
     const rows = book[name];
     return {
       getLastRow: () => rows.length,
+      getLastColumn: () => (rows[0] ? rows[0].length : 0),
       setFrozenRows() {},
       getRange: (r, c, nr) => {
         const chain = {
