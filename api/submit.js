@@ -4,7 +4,8 @@
 
 import { randomUUID } from 'node:crypto';
 
-const MAX_BYTES = 200_000;
+const MAX_BYTES = 4_300_000; // Vercel caps request bodies at 4.5 MB; map PNGs make up most of it
+const MAX_MAP_CHARS = 3_500_000;
 const MAX_TEXT = 5_000;
 const MAX_ITEMS = 60;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -104,6 +105,23 @@ export function normalize(body) {
   };
 }
 
+// PNG snapshots of the process maps, drawn in the browser at submit time.
+export function cleanMaps(v) {
+  let budget = MAX_MAP_CHARS;
+  return list(v).slice(0, 20).map((m) => {
+    const png = typeof obj(m).png === 'string' ? obj(m).png : '';
+    const match = png.match(/^data:image\/png;base64,([A-Za-z0-9+/=]+)$/);
+    if (!match || match[1].length > budget) return null;
+    budget -= match[1].length;
+    return {
+      flow: obj(m).flow === 'ideal' ? 'ideal' : 'current',
+      task: Math.max(1, Math.min(99, Number(obj(m).task) || 1)),
+      title: str(obj(m).title, 120),
+      base64: match[1],
+    };
+  }).filter(Boolean);
+}
+
 export function validate(d) {
   const errors = [];
   if (!d.name) errors.push('Name is required.');
@@ -171,6 +189,7 @@ export default async function handler(req, res) {
     submittedAt: new Date().toISOString(),
     userAgent: str(req.headers['user-agent'], 300),
     data,
+    maps: cleanMaps(obj(body).maps),
   };
 
   try {

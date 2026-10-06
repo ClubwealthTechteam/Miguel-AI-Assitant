@@ -8,7 +8,13 @@
  *   3. Run `setup` once from the editor to create the tabs and headers.
  *   4. Deploy > New deployment > Web app. Execute as: Me. Who has access: Anyone.
  *      Copy the /exec URL into the Vercel env var SHEETS_WEBHOOK_URL.
+ *
+ * Updating this file later: paste it in, run `setup` once (approves Drive access
+ * for the map images), then Deploy > Manage deployments > Edit > Version: New version.
+ * The /exec URL stays the same.
  */
+
+var MAP_FOLDER_NAME = 'AI Task Hub – Process Maps';
 
 var TABS = {
   submissions: {
@@ -18,7 +24,8 @@ var TABS = {
       'Q2 Process (Manual Way)', 'Q2 Process Map',
       'Q3 Information Needed', 'Q4 Manual / Repetitive Steps', 'Q5 Judgment / Approval',
       'Q6 Bottlenecks & Workarounds', 'Q7 Ideal Automated Version', 'Q7 Ideal Process Map',
-      'Preferred Platform', 'Platform Reason', 'Acknowledged', 'Raw JSON']
+      'Preferred Platform', 'Platform Reason', 'Acknowledged', 'Raw JSON',
+      'Q2 Map Images', 'Q7 Map Images']
   },
   steps: {
     name: 'Process Steps',
@@ -70,9 +77,10 @@ function doGet() {
   return json_({ ok: true, service: 'cw-workflow-intake' });
 }
 
-/** Run once from the editor to create tabs + headers. */
+/** Run once from the editor to create tabs + headers and the Drive folder for map images. */
 function setup() {
   ensureTabs_(SpreadsheetApp.getActiveSpreadsheet());
+  mapFolder_();
 }
 
 function writeSubmission_(ss, body) {
@@ -80,6 +88,7 @@ function writeSubmission_(ss, body) {
   var id = body.submissionId;
   var name = d.name || '';
   var at = body.submittedAt ? new Date(body.submittedAt) : new Date();
+  var images = saveMaps_(id, name, body.maps);
 
   append_(ss, TABS.submissions.name, [[
     at, id, name, d.email, d.date,
@@ -90,7 +99,8 @@ function writeSubmission_(ss, body) {
     d.q3 && d.q3.overview, d.q4 && d.q4.overview, d.q5 && d.q5.overview,
     d.q6 && d.q6.overview, d.q7 && d.q7.overview, flowText_(d.q7 && d.q7.tasks),
     d.platform && d.platform.choice, d.platform && d.platform.reason,
-    d.acknowledged, JSON.stringify(d).slice(0, 49000)
+    d.acknowledged, JSON.stringify(d).slice(0, 49000),
+    images.current.join('\n'), images.ideal.join('\n')
   ]]);
 
   var stepRows = []
@@ -132,10 +142,47 @@ function flowRows_(id, name, flow, tasks) {
   return rows;
 }
 
+/** Saves each map PNG to Drive; returns file links grouped by flow. */
+function saveMaps_(id, name, maps) {
+  var links = { current: [], ideal: [] };
+  if (!maps || !maps.length) return links;
+  var folder = mapFolder_();
+  maps.forEach(function (m) {
+    try {
+      var label = m.flow === 'ideal' ? 'Ideal' : 'Current';
+      var fileName = [id, name, 'Task ' + m.task + (m.title ? ' – ' + m.title : ''), label].join(' – ') + '.png';
+      var blob = Utilities.newBlob(Utilities.base64Decode(m.base64), 'image/png', fileName.replace(/[\\/:*?"<>|]/g, '-'));
+      var file = folder.createFile(blob);
+      links[m.flow === 'ideal' ? 'ideal' : 'current'].push(file.getUrl());
+    } catch (err) {
+      console.error('Map image not saved', err);
+    }
+  });
+  return links;
+}
+
+function mapFolder_() {
+  var props = PropertiesService.getScriptProperties();
+  var folderId = props.getProperty('MAP_FOLDER_ID');
+  if (folderId) {
+    try { return DriveApp.getFolderById(folderId); } catch (ignore) {}
+  }
+  var folder = DriveApp.createFolder(MAP_FOLDER_NAME);
+  props.setProperty('MAP_FOLDER_ID', folder.getId());
+  return folder;
+}
+
 function ensureTabs_(ss) {
   Object.keys(TABS).forEach(function (k) {
     var tab = TABS[k];
     var sh = ss.getSheetByName(tab.name) || ss.insertSheet(tab.name);
+    if (sh.getLastRow() > 0 && sh.getLastColumn() < tab.headers.length) {
+      // Columns added in a later version: extend the existing header row.
+      var start = sh.getLastColumn() + 1;
+      sh.getRange(1, start, 1, tab.headers.length - start + 1)
+        .setValues([tab.headers.slice(start - 1)])
+        .setFontWeight('bold').setBackground('#0b1b3d').setFontColor('#ffffff');
+    }
     if (sh.getLastRow() === 0) {
       sh.getRange(1, 1, 1, tab.headers.length).setValues([tab.headers])
         .setFontWeight('bold').setBackground('#0b1b3d').setFontColor('#ffffff');

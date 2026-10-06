@@ -449,6 +449,31 @@
     return problems;
   }
 
+  // PNG snapshots of every Q2/Q7 map, sent with the submission and saved to Drive.
+  // A drawing failure never blocks the submission itself.
+  const MAP_BUDGET = 3_200_000; // stays under Vercel's 4.5 MB request limit with the rest of the form
+  async function buildMapImages(data) {
+    if (typeof window.renderMapPNG !== 'function') return [];
+    try { await document.fonts?.ready; } catch { /* fonts are a nicety */ }
+    const maps = [];
+    let used = 0;
+    [['q2', 'current', 'Current process (the manual way)'], ['q7', 'ideal', 'Ideal automated process']].forEach(([key, flow, flowLabel]) => {
+      data[key].tasks.forEach((t, i) => {
+        if (!t.path) return;
+        try {
+          const title = t.title || `Task ${i + 1}`;
+          const png = window.renderMapPNG(t.path, { title, flowLabel, name: data.name, date: data.date });
+          if (!png || used + png.length > MAP_BUDGET) return;
+          used += png.length;
+          maps.push({ flow, task: i + 1, title, png });
+        } catch (err) {
+          console.warn('Map image skipped', err);
+        }
+      });
+    });
+    return maps;
+  }
+
   function showError(msg) {
     errorBox.textContent = msg;
     errorBox.hidden = !msg;
@@ -466,6 +491,7 @@
       return;
     }
     data.acknowledged = 'ACKNOWLEDGED';
+    data.maps = await buildMapImages(data);
 
     showError('');
     submitBtn.disabled = true;

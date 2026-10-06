@@ -31,6 +31,8 @@ Task titles entered in Q2 are suggested in the "Task title" cells of Q3–Q6.
 | `Process Steps` | Main-path step from Q2 (Current) and Q7 (Ideal); a YES/NO split is written into the Outcomes column of the step it follows, e.g. `Qualified? YES -> Gmail (Send invite) > Calendar` |
 | `Q3 Information Needed`, `Q4 Manual Steps`, `Q5 Judgment & Approvals`, `Q6 Bottlenecks` | Table row |
 
+**Map images:** on submit, the form draws every Q2 and Q7 map as a PNG (`public/map-image.js`). The Apps Script saves each one to the Drive folder **"AI Task Hub – Process Maps"** and puts the file links in the `Q2 Map Images` and `Q7 Map Images` columns at the end of `Submissions`. Files are named `<Submission ID> – <Name> – Task N – <Title> – Current|Ideal.png`. The folder is private to the script owner; share it with anyone who needs to open the images.
+
 Every row carries the **Submission ID** (e.g. `CW-20261006-A1B2C3`), so the tabs join back to the submission.
 
 ## Setup
@@ -42,7 +44,7 @@ Every row carries the **Submission ID** (e.g. `CW-20261006-A1B2C3`), so the tabs
 4. In the editor, pick `setup` from the function dropdown and click **Run**. Approve the permissions; this creates the tabs and headers.
 5. Click **Deploy → New deployment → Web app**. Set Execute as **Me** and Who has access **Anyone**. Then **Deploy** and copy the URL that ends in `/exec`.
 
-> After editing `Code.gs` later, use **Deploy → Manage deployments → Edit → Version: New version**. That keeps the same URL.
+> After editing `Code.gs` later, run `setup` once (it asks for any new permissions, such as Drive for map images), then use **Deploy → Manage deployments → Edit → Version: New version**. That keeps the same URL.
 
 ### 2. Vercel
 1. Import this GitHub repo in Vercel (**Add New → Project**). Framework preset: **Other**. Leave the build settings empty, because `vercel.json` serves `public/`.

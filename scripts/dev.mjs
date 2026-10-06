@@ -93,7 +93,30 @@ function createMockAppsScript() {
     Date,
     String,
     SpreadsheetApp: { getActiveSpreadsheet: () => ss },
-    PropertiesService: { getScriptProperties: () => ({ getProperty: () => 'dev-secret' }) },
+    PropertiesService: {
+      getScriptProperties: () => ({
+        getProperty: (k) => (k === 'SHARED_SECRET' ? 'dev-secret' : null),
+        setProperty() {},
+      }),
+    },
+    // Map images land in .dev-submissions/maps/ instead of Google Drive.
+    Utilities: {
+      base64Decode: (b64) => Buffer.from(b64, 'base64'),
+      newBlob: (bytes, type, name) => ({ bytes, type, name }),
+    },
+    DriveApp: {
+      getFolderById: () => { throw new Error('no folder'); },
+      createFolder: () => ({
+        getId: () => 'dev-folder',
+        createFile: (blob) => {
+          const dir = path.join(outDir, 'maps');
+          fs.mkdirSync(dir, { recursive: true });
+          const file = path.join(dir, blob.name);
+          fs.writeFileSync(file, blob.bytes);
+          return { getUrl: () => `file://${file}` };
+        },
+      }),
+    },
     LockService: { getScriptLock: () => ({ waitLock() {}, releaseLock() {} }) },
     ContentService: { MimeType: { JSON: 'json' }, createTextOutput: (t) => ({ text: t, setMimeType() { return this; } }) },
   };
