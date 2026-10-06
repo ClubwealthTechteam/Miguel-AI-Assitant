@@ -13,38 +13,63 @@ const str = (v, max = MAX_TEXT) => (typeof v === 'string' ? v.trim().slice(0, ma
 const list = (v) => (Array.isArray(v) ? v.slice(0, MAX_ITEMS) : []);
 const obj = (v) => (v && typeof v === 'object' && !Array.isArray(v) ? v : {});
 
-const subLabel = (x) => (x.description ? `${x.tool || 'Step'} (${x.description})` : x.tool);
+const MAX_DEPTH = 6;
+const MAX_NODES = 200;
+const stepLabel = (x) => (x.description ? `${x.tool || 'Step'} (${x.description})` : x.tool);
 
-function cleanSubs(v) {
-  return list(v).map((x) => ({
+// A path is a row of steps that may end in a YES/NO split into two more paths.
+function cleanPath(p, depth, budget) {
+  const src = obj(p);
+  const steps = list(src.steps).map((x) => ({
     tool: str(obj(x).tool, 300),
-    description: str(obj(x).description, 2000),
-  })).filter((x) => x.tool || x.description);
+    description: str(obj(x).description),
+  })).filter((x) => (x.tool || x.description) && budget.left-- > 0);
+  const deeper = depth < MAX_DEPTH;
+  const out = {
+    steps,
+    decision: str(src.decision, 500),
+    yes: deeper && src.yes ? cleanPath(src.yes, depth + 1, budget) : null,
+    no: deeper && src.no ? cleanPath(src.no, depth + 1, budget) : null,
+  };
+  return out.steps.length || out.yes || out.no ? out : null;
 }
 
-// Each main step may branch into YES / NO sub steps. `outcomes` is the flattened
-// form the deployed Apps Script writes to the "Outcomes / Branches" column.
+// "Gmail (Send invite) > Calendar [Replied? YES -> ...; NO -> ...]"
+function pathText(p) {
+  if (!p) return '';
+  const text = p.steps.map(stepLabel).join(' > ');
+  const split = splitOutcomes(p).map((o) => `${o.label} -> ${o.result}`).join('; ');
+  return split ? `${text}${text ? ' ' : ''}[${split}]` : text;
+}
+
+function splitOutcomes(p) {
+  return [['YES', p.yes], ['NO', p.no]]
+    .filter(([, child]) => child)
+    .map(([branch, child], i) => ({
+      label: p.decision && i === 0 ? `${p.decision} ${branch}` : branch,
+      result: pathText(child),
+    }));
+}
+
+// The deployed Apps Script reads task.steps[] with outcomes on each step, so the
+// main path is flattened into that shape and the split is attached to its last step.
+function flattenForSheet(path) {
+  if (!path) return [];
+  const steps = path.steps.map((x) => ({ ...x, outcomes: [] }));
+  const outcomes = splitOutcomes(path);
+  if (outcomes.length) {
+    if (!steps.length) steps.push({ tool: '', description: path.decision || 'Decision', outcomes: [] });
+    steps[steps.length - 1].outcomes = outcomes;
+  }
+  return steps;
+}
+
 function cleanFlow(tasks) {
-  return list(tasks).map((t) => ({
-    title: str(obj(t).title, 300),
-    steps: list(obj(t).steps).map((s) => {
-      const step = {
-        tool: str(obj(s).tool, 300),
-        description: str(obj(s).description),
-        decision: str(obj(s).decision, 500),
-        yes: cleanSubs(obj(s).yes),
-        no: cleanSubs(obj(s).no),
-      };
-      // The decision question is shown once, on the first branch: "Qualifies? YES -> ..., NO -> ...".
-      step.outcomes = [['YES', step.yes], ['NO', step.no]]
-        .filter(([, subs]) => subs.length)
-        .map(([branch, subs], i) => ({
-          label: step.decision && i === 0 ? `${step.decision} ${branch}` : branch,
-          result: subs.map(subLabel).join(' > '),
-        }));
-      return step;
-    }).filter((s) => s.tool || s.description || s.yes.length || s.no.length),
-  })).filter((t) => t.title || t.steps.length);
+  const budget = { left: MAX_NODES };
+  return list(tasks).map((t) => {
+    const path = cleanPath(obj(t).path, 0, budget);
+    return { title: str(obj(t).title, 300), path, steps: flattenForSheet(path) };
+  }).filter((t) => t.title || t.path);
 }
 
 function cleanRows(rows, keys) {
@@ -85,7 +110,7 @@ export function validate(d) {
   if (!EMAIL_RE.test(d.email)) errors.push('A valid email is required.');
   if (!/^\d{4}-\d{2}-\d{2}$/.test(d.date)) errors.push('Date is required.');
   if (!d.q2.overview) errors.push('Question 2 (process walkthrough) is required.');
-  if (!d.q2.tasks.some((t) => t.steps.length)) errors.push('Map at least one process step in question 2.');
+  if (!d.q2.tasks.some((t) => t.path)) errors.push('Map at least one process step in question 2.');
   if (!d.platform.choice) errors.push('Choose your preferred AI Task Hub option.');
   if (d.acknowledged !== 'ACKNOWLEDGED') errors.push('Type ACKNOWLEDGED to confirm.');
   return errors;

@@ -52,54 +52,196 @@
     return el;
   }
 
+  /* ---------- flow map (Q2 / Q7) ----------
+   * Each task holds a tree: a path is a row of steps that ends either in a
+   * junction (add step / start a YES or NO path) or in a split whose YES and
+   * NO paths are themselves paths. The map is re-rendered from the tree after
+   * every structural change; typing only updates the tree.
+   */
+
+  const MAX_DEPTH = 6;
+  const newStep = (d = {}) => ({ tool: d.tool || '', description: d.description || '' });
+  const newPath = (d = {}) => ({
+    steps: (d.steps && d.steps.length ? d.steps : [{}]).map(newStep),
+    decision: d.decision || '',
+    yes: d.yes ? newPath(d.yes) : null,
+    no: d.no ? newPath(d.no) : null,
+  });
+
+  // Drafts saved before the tree existed stored a flat list of steps.
+  function pathFromTask(data) {
+    if (data?.path) return newPath(data.path);
+    if (data?.steps?.length) return newPath({ steps: data.steps });
+    return newPath();
+  }
+
   function addTask(flow, data) {
     const wrap = $(`[data-flow="${flow}"].flows`, form);
     const task = tpl('tpl-task');
     $('[data-field="title"]', task).value = data?.title || '';
-    const stepData = data?.steps?.length ? data.steps : [{}];
-    stepData.forEach((s) => addStep(task, s));
+    task._path = pathFromTask(data);
     wrap.appendChild(task);
+    renderMap(task);
     renumberTasks(wrap);
     return task;
   }
 
-  // A main step carries its own YES/NO lanes plus the junction that follows it.
-  function addStep(task, data = {}) {
-    const steps = $('[data-steps]', task);
-    const step = tpl('tpl-step');
-    step.appendChild(tpl('tpl-junction'));
-    const card = $('.step-card', step);
-    $('[data-field="tool"]', card).value = data.tool || '';
-    $('[data-field="description"]', card).value = data.description || '';
-    $('[data-field="decision"]', card).value = data.decision || '';
-    (data.yes || []).forEach((sub) => addSub(step, 'yes', sub));
-    (data.no || []).forEach((sub) => addSub(step, 'no', sub));
-    steps.appendChild(step);
-    renumberSteps(steps);
-    syncBranches(step);
-    return step;
+  function renderMap(task, focus) {
+    const map = $('[data-map]', task);
+    const keepScroll = map.parentElement.scrollLeft;
+    map.innerHTML = '';
+    map.appendChild(renderPath(task, task._path, null, 0, focus));
+    map.parentElement.scrollLeft = keepScroll;
+    const target = focus && map.querySelector('[data-focus]');
+    if (target) {
+      target.focus({ preventScroll: true });
+      target.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+      target.removeAttribute('data-focus');
+    }
   }
 
-  function addSub(step, branch, data = {}) {
-    const lane = $(`[data-branch="${branch}"].lane-items`, step);
-    const el = tpl('tpl-sub');
-    $('[data-field="tool"]', el).value = data.tool || '';
-    $('[data-field="description"]', el).value = data.description || '';
-    lane.appendChild(el);
-    syncBranches(step);
+  // parent = { path, branch } when this path is a YES/NO path of a split.
+  function renderPath(task, path, parent, depth, focus) {
+    const el = tpl('tpl-path');
+    const rerender = (f) => { renderMap(task, f); afterChange(); };
+
+    path.steps.forEach((step, i) => {
+      if (i > 0) el.appendChild(tpl('tpl-arrow'));
+      const node = tpl('tpl-node');
+      bind(node, step);
+      const isLast = i === path.steps.length - 1;
+      if (isLast && (path.yes || path.no)) {
+        const dec = tpl('tpl-decision');
+        bind(dec, path);
+        node.appendChild(dec);
+      }
+      const rm = $('[data-act="remove-step"]', node);
+      // The first path must keep one step; a YES/NO path disappears with its last step.
+      rm.hidden = !parent && path.steps.length === 1;
+      rm.addEventListener('click', () => {
+        if (path.steps.length > 1) {
+          path.steps.splice(i, 1);
+        } else if (parent) {
+          if ((path.yes || path.no) && !confirm('Remove this path and everything after it?')) return;
+          parent.path[parent.branch] = null;
+        }
+        rerender();
+      });
+      if (focus === step) $('.node-tool', node).dataset.focus = '';
+      el.appendChild(node);
+    });
+
+    if (path.yes || path.no) {
+      const fork = tpl('tpl-fork');
+      ['yes', 'no'].forEach((branch) => {
+        const slot = $(`.branch-${branch}`, fork);
+        if (path[branch]) {
+          slot.appendChild(renderPath(task, path[branch], { path, branch }, depth + 1, focus));
+        } else {
+          const empty = tpl('tpl-branch-empty');
+          $('[data-label]', empty).textContent = `Add ${branch.toUpperCase()} path`;
+          empty.addEventListener('click', () => {
+            path[branch] = newPath();
+            rerender(path[branch].steps[0]);
+          });
+          slot.classList.add('is-empty');
+          slot.appendChild(empty);
+        }
+      });
+      el.appendChild(fork);
+    } else {
+      el.appendChild(tpl('tpl-arrow'));
+      const j = tpl('tpl-junction');
+      $('[data-act="add-step"]', j).addEventListener('click', () => {
+        const step = newStep();
+        path.steps.push(step);
+        rerender(step);
+      });
+      ['yes', 'no'].forEach((branch) => {
+        const btn = $(`[data-act="add-${branch}"]`, j);
+        if (depth >= MAX_DEPTH) { btn.hidden = true; return; }
+        btn.addEventListener('click', () => {
+          path[branch] = newPath();
+          rerender(path[branch].steps[0]);
+        });
+      });
+      el.appendChild(j);
+    }
     return el;
   }
 
-  // Show a lane only when it has sub steps; show the decision field once any branch exists.
-  function syncBranches(step) {
-    let any = false;
-    ['yes', 'no'].forEach((b) => {
-      const items = $$(`[data-branch="${b}"].lane-items > .sub-step`, step);
-      items.forEach((it, i) => { $('[data-sub-num]', it).textContent = `${b.toUpperCase()} ${i + 1}`; });
-      $(`[data-lane="${b}"]`, step).classList.toggle('has-items', items.length > 0);
-      if (items.length) any = true;
+  // Inputs write straight into the tree object they belong to.
+  function bind(root, obj) {
+    $$('[data-bind]', root).forEach((input) => {
+      const key = input.dataset.bind;
+      input.value = obj[key] || '';
+      input.addEventListener('input', () => { obj[key] = input.value; });
     });
-    $('[data-decision]', step).hidden = !any;
+  }
+
+  /* ---------- map canvas: drag to pan + full screen ---------- */
+
+  // Mouse drag on empty canvas pans it; touch devices keep native scrolling.
+  form.addEventListener('pointerdown', (e) => {
+    const scroller = e.target.closest('.map-scroll');
+    if (!scroller || e.pointerType !== 'mouse' || e.button !== 0) return;
+    if (e.target.closest('input, textarea, button, label, select')) return;
+    e.preventDefault();
+    const start = { x: e.clientX, y: e.clientY, left: scroller.scrollLeft, top: scroller.scrollTop };
+    scroller.setPointerCapture(e.pointerId);
+    scroller.classList.add('is-dragging');
+    const move = (ev) => {
+      scroller.scrollLeft = start.left - (ev.clientX - start.x);
+      scroller.scrollTop = start.top - (ev.clientY - start.y);
+    };
+    const end = () => {
+      scroller.classList.remove('is-dragging');
+      scroller.removeEventListener('pointermove', move);
+      scroller.removeEventListener('pointerup', end);
+      scroller.removeEventListener('pointercancel', end);
+    };
+    scroller.addEventListener('pointermove', move);
+    scroller.addEventListener('pointerup', end);
+    scroller.addEventListener('pointercancel', end);
+  });
+
+  let fullTask = null;
+  function setFullscreen(task, on) {
+    if (on && fullTask && fullTask !== task) setFullscreen(fullTask, false);
+    task.classList.toggle('is-full', on);
+    const btn = $('[data-act="fullscreen"]', task);
+    btn.setAttribute('aria-pressed', String(on));
+    $('span', btn).textContent = on ? 'Exit full screen' : 'Full screen';
+    document.documentElement.classList.toggle('no-scroll', on);
+    $('.map-backdrop')?.remove();
+    if (on) {
+      const shade = document.createElement('div');
+      shade.className = 'map-backdrop';
+      shade.addEventListener('click', () => setFullscreen(task, false));
+      document.body.appendChild(shade);
+    }
+    fullTask = on ? task : null;
+  }
+  form.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-act="fullscreen"]');
+    if (btn) setFullscreen(btn.closest('.task'), !btn.closest('.task').classList.contains('is-full'));
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && fullTask) setFullscreen(fullTask, false);
+  });
+
+  const countSteps = (p) => (p ? p.steps.filter((s) => s.tool.trim() || s.description.trim()).length + countSteps(p.yes) + countSteps(p.no) : 0);
+
+  // Trimmed copy of a path for saving/submitting; empty steps and empty paths are dropped.
+  function cleanPath(p) {
+    if (!p) return null;
+    const out = {
+      steps: p.steps.map((s) => ({ tool: s.tool.trim(), description: s.description.trim() })).filter((s) => s.tool || s.description),
+      decision: p.decision.trim(),
+      yes: cleanPath(p.yes),
+      no: cleanPath(p.no),
+    };
+    return out.steps.length || out.yes || out.no ? out : null;
   }
 
   function addRow(table, data = {}) {
@@ -135,13 +277,6 @@
     syncRemovable(wrap, '.task');
   }
 
-  function renumberSteps(steps) {
-    const list = $$(':scope > .step', steps);
-    list.forEach((s, i) => { $('[data-step-num]', s).textContent = String(i + 1).padStart(2, '0'); });
-    // Never let a task drop below one step.
-    list.forEach((s) => { $('.step-top [data-remove]', s).hidden = list.length <= 1; });
-  }
-
   // The first item in each repeating group stays; extras get a remove button.
   function syncRemovable(container, itemSel) {
     const items = $$(`:scope > ${itemSel}`, container);
@@ -161,8 +296,6 @@
       let created;
       if (kind === 'tool') created = addTool(add.dataset.group);
       else if (kind === 'task') created = addTask(add.dataset.flow);
-      else if (kind === 'step') created = addStep(add.closest('.task'));
-      else if (kind === 'sub') created = addSub(add.closest('.step'), add.dataset.branch);
       else if (kind === 'row') created = addRow(add.dataset.table);
       created?.querySelector('input, textarea, select')?.focus();
       afterChange();
@@ -171,14 +304,12 @@
     const rm = e.target.closest('[data-remove]');
     if (rm) {
       e.preventDefault();
-      const item = rm.closest('.sub-step, .step, .task, .tool-item, .t-row');
+      const item = rm.closest('.task, .tool-item, .t-row');
       if (!item) return;
+      if (item === fullTask) setFullscreen(item, false);
       const parent = item.parentElement;
-      const owner = item.matches('.sub-step') ? item.closest('.step') : null;
       item.remove();
-      if (owner) syncBranches(owner);
-      else if (item.matches('.step')) renumberSteps(parent);
-      else if (item.matches('.task')) renumberTasks(parent);
+      if (item.matches('.task')) renumberTasks(parent);
       else if (item.matches('.tool-item')) syncRemovable(parent, '.tool-item');
       else if (item.matches('.t-row')) syncRemovable(parent, '.t-row');
       afterChange();
@@ -218,21 +349,8 @@
 
     const flow = (name) => $$(`[data-flow="${name}"] .task`, form).map((t) => ({
       title: clean($('[data-field="title"]', t).value),
-      steps: $$('.flow > .step', t).map((s) => {
-        const card = $('.step-card', s);
-        const branch = (b) => $$(`[data-branch="${b}"].lane-items > .sub-step`, s).map((el) => ({
-          tool: clean($('[data-field="tool"]', el).value),
-          description: clean($('[data-field="description"]', el).value),
-        })).filter((x) => x.tool || x.description);
-        return {
-          tool: clean($('[data-field="tool"]', card).value),
-          description: clean($('[data-field="description"]', card).value),
-          decision: clean($('[data-field="decision"]', card).value),
-          yes: branch('yes'),
-          no: branch('no'),
-        };
-      }).filter((s) => s.tool || s.description || s.yes.length || s.no.length),
-    })).filter((t) => t.title || t.steps.length);
+      path: cleanPath(t._path),
+    })).filter((t) => t.title || t.path);
 
     const table = (name) => $$(`[data-table="${name}"] .t-row`, form).map((r) => {
       const obj = {};
@@ -323,7 +441,7 @@
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) mark(form.elements.email, 'Enter a valid email address.');
     if (!data.date) mark(form.elements.date, 'Pick a date.');
     if (!data.q2.overview) mark(form.elements.q2_overview, 'Walk us through the process in question 2.');
-    if (!data.q2.tasks.some((t) => t.steps.length)) {
+    if (!$$('[data-flow="current"] .task', form).some((t) => countSteps(t._path) > 0)) {
       mark($('[data-flow="current"].flows', form), 'Map at least one step of your process in question 2.');
     }
     if (!data.platform.choice) mark(form.querySelector('input[name="platform"]'), 'Choose your preferred AI Task Hub option.');

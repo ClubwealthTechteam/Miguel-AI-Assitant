@@ -117,7 +117,7 @@
         </label>
         <p class="example"><span>Example</span> When we receive a new applicant, I first check the application in Recruit CRM. Then I review their resume, check whether they meet the requirements, and update their status. If they qualify, I copy their details into the tracking sheet, send an interview invite through Gmail, and create the event in Google Calendar. After the interview I update the candidate record and add them to the weekly report.</p>
         <h3 class="sub">Map each step as Tool &rarr; What you do in it</h3>
-        <p class="hint">Each box is one main step: the tool you use and what you do there. Use the center plus to add the next main step. If a step depends on a yes/no decision (qualified or not, replied or no reply), use the plus <strong>above</strong> for what happens on YES and the plus <strong>below</strong> for what happens on NO.</p>
+        <p class="hint">Each step is a tool and what you do in it. At the end of the flow, <strong>Add another step</strong> continues it. If the process splits on a yes/no decision (qualified or not, replied or no reply), use the plus <strong>above</strong> to map what happens on YES and the plus <strong>below</strong> for NO. Each path can keep going and split again.</p>
         <div class="flows" data-flow="current"></div>
         <button type="button" class="add-btn add-task" data-add="task" data-flow="current"><span class="plus" aria-hidden="true"></span>Add another task</button>
       </section>
@@ -363,71 +363,64 @@
       <div class="task-head">
         <span class="task-label" data-task-label>Task 1</span>
         <input type="text" class="task-title" data-field="title" placeholder="Provide a task title, e.g. New applicant screening" aria-label="Task title">
+        <div class="task-tools">
+          <button type="button" class="map-btn" data-act="fullscreen" aria-pressed="false"><svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Full screen</span></button>
+        </div>
         <button type="button" class="icon-btn" data-remove aria-label="Remove task"><svg viewBox="0 0 16 16" width="14" height="14"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
       </div>
-      <div class="flow-scroll">
-        <div class="flow" data-steps></div>
+      <div class="map-scroll">
+        <div class="map" data-map></div>
       </div>
-      <p class="flow-legend"><span class="dot dot-yes"></span>Plus above a step: add a <strong>YES</strong> sub step <span class="dot dot-no"></span>Plus below: add a <strong>NO</strong> sub step</p>
+      <p class="map-hint">Drag the dotted area or scroll to move around the map.</p>
     </div>
   </template>
 
-  <!-- One main step = YES lane (top) + main card (middle) + NO lane (bottom), followed by a junction. -->
-  <template id="tpl-step">
-    <div class="step">
-      <div class="lane lane-yes" data-lane="yes">
-        <span class="lane-tag">If yes</span>
-        <div class="lane-items" data-branch="yes"></div>
-      </div>
-      <div class="step-card">
-        <div class="step-top">
-          <span class="step-num" data-step-num>01</span>
-          <button type="button" class="icon-btn" data-remove aria-label="Remove step"><svg viewBox="0 0 16 16" width="12" height="12"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
-        </div>
-        <input type="text" class="step-tool" data-field="tool" placeholder="Tool used" aria-label="Tool used">
-        <textarea data-field="description" rows="3" placeholder="Task description" aria-label="Task description"></textarea>
-        <label class="decision" data-decision hidden>
-          <span class="decision-label">Decision (yes / no question)</span>
-          <input type="text" data-field="decision" placeholder="e.g. Does the applicant qualify?">
-        </label>
-      </div>
-      <div class="lane lane-no" data-lane="no">
-        <span class="lane-tag">If no</span>
-        <div class="lane-items" data-branch="no"></div>
-      </div>
+  <!-- Flow map pieces. A path is a row of steps that ends in either a junction or a YES/NO split. -->
+  <template id="tpl-path"><div class="path"></div></template>
+
+  <template id="tpl-arrow"><span class="link" aria-hidden="true"><svg class="arrow" viewBox="0 0 40 16" aria-hidden="true"><path d="M2 8h34M30 2l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></template>
+
+  <template id="tpl-node">
+    <div class="node">
+      <button type="button" class="node-remove" data-act="remove-step" aria-label="Remove step"><svg viewBox="0 0 16 16" width="10" height="10"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+      <input type="text" class="node-tool" data-bind="tool" placeholder="Tool" aria-label="Tool used">
+      <textarea class="node-desc" data-bind="description" rows="4" placeholder="Task description" aria-label="Task description"></textarea>
     </div>
+  </template>
+
+  <template id="tpl-decision">
+    <label class="node-decision">
+      <span>Decision</span>
+      <input type="text" data-bind="decision" placeholder="Yes / no question, e.g. Qualified?" aria-label="Decision question">
+    </label>
   </template>
 
   <template id="tpl-junction">
     <div class="junction">
-      <div class="j-up">
-        <button type="button" class="branch-btn" data-add="sub" data-branch="yes" aria-label="Add a YES sub step">
-          <span class="mini-plus" aria-hidden="true"></span><span class="branch-text">Add a sub step <em>YES</em></span>
-        </button>
-        <svg class="curve" viewBox="0 0 40 46" aria-hidden="true"><path d="M4 44 C4 22 12 12 30 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M24 3 L31 8 L25 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="jx jx-up">
+        <svg class="jx-curve" viewBox="0 0 44 40" aria-hidden="true"><path d="M6 38 C6 18 14 9 34 9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M28 3 L35 9 L28 15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <button type="button" class="sub-add sub-add-yes" data-act="add-yes"><span class="sq" aria-hidden="true"></span><span class="sub-add-text">Add a sub step<em>Yes</em></span></button>
       </div>
-      <div class="j-mid">
-        <span class="j-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M3 12h16M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        <button type="button" class="add-step" data-add="step"><span class="plus plus-lg" aria-hidden="true"></span><span>Add another step</span></button>
-      </div>
-      <div class="j-down">
-        <svg class="curve" viewBox="0 0 40 46" aria-hidden="true"><path d="M4 2 C4 24 12 34 30 38" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M24 32 L31 38 L25 43" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <button type="button" class="branch-btn" data-add="sub" data-branch="no" aria-label="Add a NO sub step">
-          <span class="mini-plus" aria-hidden="true"></span><span class="branch-text">Add a sub step <em>NO</em></span>
-        </button>
+      <button type="button" class="step-add" data-act="add-step"><span class="sq sq-lg" aria-hidden="true"></span><span>Add another step</span></button>
+      <div class="jx jx-down">
+        <svg class="jx-curve" viewBox="0 0 44 40" aria-hidden="true"><path d="M6 2 C6 22 14 31 34 31" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M28 25 L35 31 L28 37" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <button type="button" class="sub-add sub-add-no" data-act="add-no"><span class="sq" aria-hidden="true"></span><span class="sub-add-text">Add a sub step<em>No</em></span></button>
       </div>
     </div>
   </template>
 
-  <template id="tpl-sub">
-    <div class="sub-step">
-      <div class="sub-top">
-        <span class="sub-num" data-sub-num>Y1</span>
-        <button type="button" class="icon-btn" data-remove aria-label="Remove sub step"><svg viewBox="0 0 16 16" width="12" height="12"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+  <template id="tpl-fork">
+    <div class="fork">
+      <span class="fork-stem" aria-hidden="true"></span>
+      <div class="fork-branches">
+        <div class="branch branch-yes"><span class="branch-tag">Yes</span></div>
+        <div class="branch branch-no"><span class="branch-tag">No</span></div>
       </div>
-      <input type="text" data-field="tool" placeholder="Tool used" aria-label="Sub step tool">
-      <textarea data-field="description" rows="2" placeholder="What happens" aria-label="Sub step description"></textarea>
     </div>
+  </template>
+
+  <template id="tpl-branch-empty">
+    <button type="button" class="branch-empty" data-act="add-branch"><span class="sq" aria-hidden="true"></span><span data-label>Add a path</span></button>
   </template>
 
   <template id="tpl-row">

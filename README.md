@@ -12,12 +12,12 @@ A self-hosted intake form where admins across Clubwealth, Homexa and PFL documen
 |---|---|---|
 | — | Name, CW/HX/PFL email, date | Required fields |
 | 01 | Web tools / apps / spreadsheets | Three repeatable lists |
-| 02 | Process from start to finish (the manual way) | Free text plus a flow map per task: **Tool → What you do**, with optional outcome branches |
+| 02 | Process from start to finish (the manual way) | Free text plus a flow map per task on a draggable canvas: **Tool → What you do** steps that can split into YES / NO paths, which can continue and split again |
 | 03 | Information needed | Task · Information · Source · Required/Optional |
 | 04 | Manual / repetitive steps | Task · Step · How often · Time spent |
 | 05 | Judgment / approval | Task · Decision · Info used · Can AI prepare it? |
 | 06 | Bottlenecks & workarounds | Task · Bottleneck · Workaround · Impact |
-| 07 | Ideal automated version | Free text plus a flow map of the ideal process |
+| 07 | Ideal automated version | Free text plus a flow map of the ideal process (same canvas) |
 | 08 | AI Task Hub preference | Software App vs. Club Wealth University page, plus the reason |
 | — | Room 10 Zoom acknowledgement | Must type `ACKNOWLEDGED` |
 
@@ -28,7 +28,7 @@ Task titles entered in Q2 are suggested in the "Task title" cells of Q3–Q6.
 | Tab | One row per |
 |---|---|
 | `Submissions` | Submission: identity, tools, every overview answer, a one-line process map (`Task: Recruit CRM (Check application) > Gmail (Send invite)`), platform choice, raw JSON |
-| `Process Steps` | Flow step from Q2 (Current) and Q7 (Ideal) |
+| `Process Steps` | Main-path step from Q2 (Current) and Q7 (Ideal); a YES/NO split is written into the Outcomes column of the step it follows, e.g. `Qualified? YES -> Gmail (Send invite) > Calendar` |
 | `Q3 Information Needed`, `Q4 Manual Steps`, `Q5 Judgment & Approvals`, `Q6 Bottlenecks` | Table row |
 
 Every row carries the **Submission ID** (e.g. `CW-20261006-A1B2C3`), so the tabs join back to the submission.
