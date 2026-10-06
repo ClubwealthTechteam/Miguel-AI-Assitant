@@ -229,6 +229,10 @@
           <h2 id="pf-title">Which AI Task Hub option would you prefer?</h2>
         </header>
         <p class="hint">This is your individual opinion. Please don't share, compare, or discuss your choice with other team members before submitting. Pick what you believe would work best for your own workflow.</p>
+        <button type="button" class="compare-btn" data-open-compare>
+          <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><rect x="2.5" y="3.5" width="6" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="11.5" y="3.5" width="6" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+          View comparison
+        </button>
 
         <fieldset class="options">
           <legend class="label">Please choose your preferred option <em>*</em></legend>
@@ -292,6 +296,57 @@
   <footer class="foot">
     <p>Club Wealth&reg; AI Task Hub &middot; Workflow discovery</p>
   </footer>
+
+
+  <dialog class="compare" id="compareDialog" aria-labelledby="compareTitle">
+    <div class="compare-inner">
+      <header class="compare-head">
+        <div>
+          <p class="compare-eyebrow">Question 08</p>
+          <h2 id="compareTitle">AI Task Hub: Software vs. CWU Web Integration</h2>
+        </div>
+        <button type="button" class="icon-btn compare-close" data-close-compare aria-label="Close comparison"><svg viewBox="0 0 16 16" width="16" height="16"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+      </header>
+      <div class="compare-body">
+        <div class="compare-note">
+          <p>Please note that this choice is intended to reflect <strong>your personal opinion and preference only</strong>. Please do not base your selection on the preferences or opinions of other team members.</p>
+          <p>To ensure that we receive honest and independent feedback, please do not share, compare, or discuss your choice with other members before submitting your response.</p>
+          <p>Please review the advantages, neutral points, and limitations of both options carefully, and choose the option that you personally believe would work best for your own workflow and day-to-day use.</p>
+          <p class="compare-strong">Choose wisely, as your individual feedback will help guide the direction of the AI Task Hub.</p>
+        </div>
+        <table class="compare-table">
+          <thead>
+            <tr><th scope="col">Category</th><th scope="col">Downloadable CW Software App</th><th scope="col">Club Wealth University Webpage</th></tr>
+          </thead>
+          <tbody>
+            <tr class="row-pro">
+              <th scope="row"><span class="cat cat-pro">Pros</span></th>
+              <td data-col="Downloadable CW Software App"><ul><li>Dedicated AI Task Hub for Club Wealth&reg;</li><li>Can stay open while working in other applications or browser windows</li><li>Reduces the need to switch browser tabs when using AI alongside CRM, email, spreadsheets, etc.</li><li>Better suited for using AI as an always-available work assistant with a floating AI assistant on your PC while the app is open</li><li>Can be designed specifically around department workflows</li><li>Can potentially integrate more directly with desktop-level workflows and tools</li><li>Centralized platform for department-specific AI tasks</li></ul></td>
+              <td data-col="Club Wealth University Webpage"><ul><li>No software installation required</li><li>Accessible directly through Club Wealth University</li><li>Familiar web-based environment for existing users</li><li>Easy to access from a browser</li></ul></td>
+            </tr>
+            <tr class="row-neu">
+              <th scope="row"><span class="cat cat-neu">Neutral</span></th>
+              <td data-col="Downloadable CW Software App"><ul><li>Cloud/server-based data and information sharing</li><li>Requires user authentication/access</li><li>Requires initial installation</li><li>Requires ongoing development and maintenance</li><li>Requires internet access for cloud-based AI functions</li></ul></td>
+              <td data-col="Club Wealth University Webpage"><ul><li>Cloud/server-based data and information sharing</li><li>Requires internet access</li><li>Requires Club Wealth University access</li><li>Requires ongoing development and maintenance</li></ul></td>
+            </tr>
+            <tr class="row-con">
+              <th scope="row"><span class="cat cat-con">Cons</span></th>
+              <td data-col="Downloadable CW Software App"><ul><li>Requires an application/package to be installed on the user's computer</li><li>Will use some computer RAM and CPU while running</li><li>Requires deployment and updates across user computers</li><li>Requires technical support for installation or software issues</li></ul></td>
+              <td data-col="Club Wealth University Webpage"><ul><li>Requires users to access the Club Wealth University website first</li><li>May require switching browser tabs between the AI Task Hub and the actual work being performed</li><li>Can interrupt the user's workflow when moving between CRM, email, spreadsheets, and the AI Task Hub</li><li>Depends on the University webpage and browser environment</li><li>May be less convenient for users who need AI assistance continuously while working in another system</li></ul></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="compare-summary">
+          <p><strong>Downloadable Software App:</strong> AI is available alongside the user's workflow.</p>
+          <p><strong>University Webpage:</strong> AI is accessed within the user's browser workflow and may require tab switching.</p>
+          <p class="compare-quote">Convenience is answering the question: &ldquo;How easily can the admin use the automated workflow while they're actually doing their job?&rdquo;</p>
+        </div>
+      </div>
+      <footer class="compare-foot">
+        <button type="button" class="btn-primary btn-sm" data-close-compare>Back to my answer</button>
+      </footer>
+    </div>
+  </dialog>
 
   <datalist id="taskTitles"></datalist>
 

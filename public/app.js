@@ -56,7 +56,7 @@
     const wrap = $(`[data-flow="${flow}"].flows`, form);
     const task = tpl('tpl-task');
     $('[data-field="title"]', task).value = data?.title || '';
-    const stepData = data?.steps?.length ? data.steps : [{}, {}];
+    const stepData = data?.steps?.length ? data.steps : [{}];
     stepData.forEach((s) => addStep(task, s));
     wrap.appendChild(task);
     renumberTasks(wrap);
@@ -382,6 +382,25 @@
     doneState.hidden = true;
     form.hidden = false;
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  /* ---------- comparison dialog (Q8) ---------- */
+
+  const compare = document.getElementById('compareDialog');
+  let compareOpener = null;
+  document.querySelectorAll('[data-open-compare]').forEach((btn) => btn.addEventListener('click', () => {
+    compareOpener = btn;
+    compare.showModal();
+    document.documentElement.classList.add('no-scroll');
+    $('.compare-body', compare).scrollTop = 0;
+  }));
+  compare.addEventListener('click', (e) => {
+    // Close on the X / footer button, or a click on the backdrop outside the panel.
+    if (e.target.closest('[data-close-compare]') || e.target === compare) compare.close();
+  });
+  compare.addEventListener('close', () => {
+    document.documentElement.classList.remove('no-scroll');
+    compareOpener?.focus();
   });
 
   /* ---------- helpers + chrome ---------- */
