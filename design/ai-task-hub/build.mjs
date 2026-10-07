@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execSync } from 'node:child_process';
 import { createRequire } from 'node:module';
+import cwuScreens from './cwu-screens.mjs';
 
 const dir = path.dirname(new URL(import.meta.url).pathname);
 const require = createRequire(import.meta.url);
@@ -143,11 +144,14 @@ screens['08-run-log'] = shell('Data & Trackers', 'Automation Runs', 'All tasks',
   ].map(([id, name, flow, t, cls, res, who]) => `<tr><td style="font-family:var(--mono);font-size:12px;color:var(--faint)">${id}</td><td><b>${name}</b></td><td><span class="flow">${flow.split(' → ').map((x) => `<em>${x}</em>`).join(' → ')}</span></td><td>${t}</td><td><span class="pill ${cls}">${res}</span></td><td>${who}</td></tr>`).join('')}
   </tbody></table></div>`, { tabs: tabs(['All runs', 'Needs review', 'Failed', 'Scheduled', 'Connections'], 0), rail: 2 });
 
+Object.assign(screens, cwuScreens({ ic, botIc }));
+const only = process.argv[2] ? new RegExp(process.argv[2]) : null;
 const outDir = path.join(dir, 'out');
 fs.mkdirSync(outDir, { recursive: true });
 const browser = await chromium.launch();
 const pg = await browser.newPage({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 });
 for (const [name, body] of Object.entries(screens)) {
+  if (only && !only.test(name)) continue;
   const file = path.join(dir, `${name}.html`);
   fs.writeFileSync(file, page(body));
   await pg.goto('file://' + file, { waitUntil: 'networkidle' });

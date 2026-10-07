@@ -551,7 +551,19 @@
 
   const compare = document.getElementById('compareDialog');
   let compareOpener = null;
+  // Side-by-side table vs. the visual guide for each option.
+  const showView = (view) => {
+    $$('.vg-tab', compare).forEach((t) => {
+      const on = t.dataset.vg === view;
+      t.classList.toggle('on', on);
+      t.setAttribute('aria-selected', String(on));
+    });
+    $$('.vg-panel', compare).forEach((p) => { p.hidden = p.dataset.panel !== view; });
+    $('.compare-body', compare).scrollTop = 0;
+  };
+  $$('.vg-tab', compare).forEach((t) => t.addEventListener('click', () => showView(t.dataset.vg)));
   document.querySelectorAll('[data-open-compare]').forEach((btn) => btn.addEventListener('click', () => {
+    showView('compare');
     compareOpener = btn;
     compare.showModal();
     document.documentElement.classList.add('no-scroll');

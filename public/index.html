@@ -341,7 +341,13 @@
         </div>
         <button type="button" class="icon-btn compare-close" data-close-compare aria-label="Close comparison"><svg viewBox="0 0 16 16" width="16" height="16"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
       </header>
+      <div class="vg-tabs" role="tablist" aria-label="Comparison views">
+        <button type="button" class="vg-tab on" role="tab" aria-selected="true" data-vg="compare">Side-by-side</button>
+        <button type="button" class="vg-tab" role="tab" aria-selected="false" data-vg="app">Option 1: Software App</button>
+        <button type="button" class="vg-tab" role="tab" aria-selected="false" data-vg="cwu">Option 2: CW University</button>
+      </div>
       <div class="compare-body">
+        <section class="vg-panel" data-panel="compare">
         <div class="compare-note">
           <p>Please note that this choice is intended to reflect <strong>your personal opinion and preference only</strong>. Please do not base your selection on the preferences or opinions of other team members.</p>
           <p>To ensure that we receive honest and independent feedback, please do not share, compare, or discuss your choice with other members before submitting your response.</p>
@@ -375,6 +381,63 @@
           <p><strong>University Webpage:</strong> AI is accessed within the user's browser workflow and may require tab switching.</p>
           <p class="compare-quote">Convenience is answering the question: &ldquo;How easily can the admin use the automated workflow while they're actually doing their job?&rdquo;</p>
         </div>
+        </section>
+
+        <section class="vg-panel" data-panel="app" hidden>
+          <div class="vg-intro">
+            <span class="option-kicker">Option 1 · Visual guide</span>
+            <h3>If most of the team chooses the Software App</h3>
+            <p>Here is what a typical workday would look like. Click any screen to see it full size.</p>
+          </div>
+          <ol class="vg-steps">
+            <li class="vg-step">
+              <a class="vg-shot" href="/compare/app-1.webp" target="_blank" rel="noopener" aria-label="Open full-size screen 1"><img src="/compare/app-1-thumb.webp" alt="" loading="lazy" width="800" height="500"></a>
+              <div class="vg-text"><span class="vg-n">1</span><div><b>Open the app and pick your workspace</b><p>The AI Task Hub is installed on your computer. Open it and choose the department workspace you are assigned to.</p></div></div>
+            </li>
+            <li class="vg-step">
+              <a class="vg-shot" href="/compare/app-2.webp" target="_blank" rel="noopener" aria-label="Open full-size screen 2"><img src="/compare/app-2-thumb.webp" alt="" loading="lazy" width="800" height="500"></a>
+              <div class="vg-text"><span class="vg-n">2</span><div><b>Each automated task works like a chat</b><p>Pick a task on the left, describe what you need, and AI drafts it in your tone. Nothing goes out until you review it.</p></div></div>
+            </li>
+            <li class="vg-step">
+              <a class="vg-shot" href="/compare/app-3.webp" target="_blank" rel="noopener" aria-label="Open full-size screen 3"><img src="/compare/app-3-thumb.webp" alt="" loading="lazy" width="800" height="500"></a>
+              <div class="vg-text"><span class="vg-n">3</span><div><b>It floats beside the tools you already use</b><p>While you work in Keap, Gmail or Sheets, the assistant stays on top of your screen, even when the main app is minimized.</p></div></div>
+            </li>
+            <li class="vg-step">
+              <a class="vg-shot" href="/compare/app-4.webp" target="_blank" rel="noopener" aria-label="Open full-size screen 4"><img src="/compare/app-4-thumb.webp" alt="" loading="lazy" width="800" height="500"></a>
+              <div class="vg-text"><span class="vg-n">4</span><div><b>Data comes from Keap; you approve the action</b><p>Client details are read from Keap, and the approved message or update is sent back through Keap.</p></div></div>
+            </li>
+          </ol>
+          <p class="vg-keap"><strong>Either option keeps Keap as the main database.</strong> Contacts, tags, campaigns and history stay in Keap; the AI Task Hub prepares the work and you approve it.</p>
+          <p class="vg-disclaimer">Mockups for illustration only. Final design may change. Please choose based on your own workflow.</p>
+        </section>
+
+        <section class="vg-panel" data-panel="cwu" hidden>
+          <div class="vg-intro">
+            <span class="option-kicker">Option 2 · Visual guide</span>
+            <h3>If most of the team chooses the Club Wealth University webpage</h3>
+            <p>Here is what a typical workday would look like. Click any screen to see it full size.</p>
+          </div>
+          <ol class="vg-steps">
+            <li class="vg-step">
+              <a class="vg-shot" href="/compare/cwu-1.webp" target="_blank" rel="noopener" aria-label="Open full-size screen 1"><img src="/compare/cwu-1-thumb.webp" alt="" loading="lazy" width="800" height="500"></a>
+              <div class="vg-text"><span class="vg-n">1</span><div><b>Log in to Club Wealth University as usual</b><p>The AI Task Hub is a new tab in the University menu, with a dashboard card showing what needs your review.</p></div></div>
+            </li>
+            <li class="vg-step">
+              <a class="vg-shot" href="/compare/cwu-2.webp" target="_blank" rel="noopener" aria-label="Open full-size screen 2"><img src="/compare/cwu-2-thumb.webp" alt="" loading="lazy" width="800" height="500"></a>
+              <div class="vg-text"><span class="vg-n">2</span><div><b>Each automated task opens inside the University</b><p>Pick a task, and the AI drafts the work with the Keap contact shown beside it, including what Keap will do when you approve.</p></div></div>
+            </li>
+            <li class="vg-step">
+              <a class="vg-shot" href="/compare/cwu-3.webp" target="_blank" rel="noopener" aria-label="Open full-size screen 3"><img src="/compare/cwu-3-thumb.webp" alt="" loading="lazy" width="800" height="500"></a>
+              <div class="vg-text"><span class="vg-n">3</span><div><b>Automations run through Keap</b><p>Approving applies a Keap tag and runs the matching Keap campaign, so all automations live in Keap.</p></div></div>
+            </li>
+            <li class="vg-step">
+              <a class="vg-shot" href="/compare/cwu-4.webp" target="_blank" rel="noopener" aria-label="Open full-size screen 4"><img src="/compare/cwu-4-thumb.webp" alt="" loading="lazy" width="800" height="500"></a>
+              <div class="vg-text"><span class="vg-n">4</span><div><b>Switch tabs between Keap and the University</b><p>While working in Keap or Gmail, click over to the University tab to use the assistant, then switch back.</p></div></div>
+            </li>
+          </ol>
+          <p class="vg-keap"><strong>Either option keeps Keap as the main database.</strong> Contacts, tags, campaigns and history stay in Keap; the AI Task Hub prepares the work and you approve it.</p>
+          <p class="vg-disclaimer">Mockups for illustration only. Final design may change. Please choose based on your own workflow.</p>
+        </section>
       </div>
       <footer class="compare-foot">
         <button type="button" class="btn-primary btn-sm" data-close-compare>Back to my answer</button>
