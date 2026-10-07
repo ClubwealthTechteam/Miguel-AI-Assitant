@@ -93,6 +93,10 @@
     figure img { display: block; width: 100%; height: auto; }
     figcaption { margin-top: 8px; font-size: 13px; color: var(--muted); }
 
+    .cg-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 6px 0 10px; }
+    .cg-pair figure { margin: 0; }
+    .cg-pair img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px; }
+    .cg-pair figcaption { margin-top: 6px; font-size: 12.5px; color: var(--muted); }
     .map-legend { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 12px 0; }
     .map-legend div { padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); font-size: 14px; color: var(--ink-2); }
     .map-legend b { display: block; margin-bottom: 2px; color: var(--ink); }
@@ -200,7 +204,18 @@
             <p><strong>Q7. The ideal automated version.</strong> Describe how the process would run if it ran itself, and where you would still want to review or approve. Map it the same way as Q2. It's fine to name tools you don't use yet, or to write "automatically" where you don't know the tool.</p>
           </li>
           <li>
-            <p><strong>Q8. AI Task Hub preference.</strong> Click <span class="kbd">View comparison</span> to read the pros, neutral points and cons of the Software App and the Club Wealth University webpage. Choose the one that suits <strong>your own</strong> workflow and explain why.</p>
+            <p><strong>Q8. AI Task Hub preference.</strong> Click <span class="kbd">View comparison</span> to open the comparison guide. It has three tabs:</p>
+            <ul>
+              <li><strong>Side-by-side:</strong> the pros, neutral points and cons of each option.</li>
+              <li><strong>Option 1: Software App:</strong> a 4-step visual walkthrough of a typical workday if most of the team chooses the installed app.</li>
+              <li><strong>Option 2: CW University:</strong> the same 4-step walkthrough if most of the team chooses an AI Task Hub tab inside Club Wealth University.</li>
+            </ul>
+            <p>Click any screen in the walkthroughs to see it full size. Both options keep <strong>Keap as the main database</strong>. Then choose the option that suits <strong>your own</strong> workflow and explain why in the box below.</p>
+            <div class="cg-pair">
+              <figure><img src="/compare/app-3-thumb.webp" alt="Option 1 mockup: the AI Task Hub app floating beside Keap" loading="lazy"><figcaption>Option 1: the app floats beside Keap, Gmail or Sheets.</figcaption></figure>
+              <figure><img src="/compare/cwu-1-thumb.webp" alt="Option 2 mockup: an AI Task Hub tab inside Club Wealth University" loading="lazy"><figcaption>Option 2: an AI Task Hub tab inside Club Wealth University.</figcaption></figure>
+            </div>
+            <p style="font-size:13px;color:var(--muted)">The screens are mockups to help you picture each option; the final design may change.</p>
             <div class="note"><p>This is your individual opinion. Please don't share, compare or discuss your choice with other team members before submitting.</p></div>
           </li>
           <li>
