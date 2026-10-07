@@ -1,4 +1,4 @@
-// Local dev server: serves public/ and runs api/submit.js like Vercel does.
+// Local dev server: serves public/ and runs api/submit.js and api/assist.js like Vercel does.
 //
 //   npm run dev                -> uses SHEETS_WEBHOOK_URL / SHEETS_WEBHOOK_SECRET from .env if set,
 //                                 otherwise runs google-apps-script/Code.gs against an in-memory
@@ -31,6 +31,7 @@ if (!process.env.SHEETS_WEBHOOK_URL) {
 }
 
 const { default: handler } = await import(path.join(root, 'api/submit.js'));
+const { default: assist } = await import(path.join(root, 'api/assist.js'));
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.png': 'image/png', '.ico': 'image/x-icon', '.webp': 'image/webp' };
 
@@ -39,10 +40,11 @@ const server = http.createServer(async (req, res) => {
 
   if (url.pathname === '/__mock-sheets' && mock) return mock(req, res);
 
-  if (url.pathname === '/api/submit') {
+  const api = { '/api/submit': handler, '/api/assist': assist }[url.pathname];
+  if (api) {
     res.status = (code) => { res.statusCode = code; return res; };
     res.json = (obj) => { res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)); return res; };
-    try { return await handler(req, res); } catch (err) { console.error(err); res.statusCode = 500; return res.end('{"ok":false}'); }
+    try { return await api(req, res); } catch (err) { console.error(err); res.statusCode = 500; return res.end('{"ok":false}'); }
   }
 
   const rel = url.pathname === '/' ? 'index.html' : decodeURIComponent(url.pathname).replace(/^\/+/, '');

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Amrissa's Workspace | AI Task Hub</title>
+  <meta name="description" content="Amrissa's AI Task Hub workspace: recruiting, property, data and process tools powered by Claude.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/amrissa.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="side" aria-label="Tools">
+      <div class="brand">
+        <img src="/logo.svg" alt="Club Wealth" class="logo">
+        <strong>Recruiting &amp; Admin</strong>
+        <span>Amrissa · AI Task Hub</span>
+      </div>
+      <nav id="toolNav" class="tool-nav"></nav>
+      <p class="side-note">Drafts only. Review every result before you send it.</p>
+    </aside>
+
+    <main class="main">
+      <header class="top">
+        <div>
+          <p class="crumb" id="crumb">Recruiting</p>
+          <h1 id="toolName">Loading tools…</h1>
+          <p class="desc" id="toolDesc"></p>
+        </div>
+        <span class="status" id="status" hidden></span>
+      </header>
+
+      <section class="panel" aria-labelledby="inLabel">
+        <div class="give" id="give"></div>
+        <form id="form" novalidate>
+          <label id="inLabel" for="input" class="label">Your details</label>
+          <textarea id="input" rows="9" placeholder="Paste the details here…"></textarea>
+
+          <div class="files" id="fileZone" hidden>
+            <label class="file-btn" for="fileInput">Attach files</label>
+            <input type="file" id="fileInput" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,.txt,.csv">
+            <span class="hint">PDF, images, TXT or CSV · up to 5 files, 3 MB total</span>
+            <ul id="fileList" class="file-list"></ul>
+          </div>
+
+          <div class="code-row" id="codeRow" hidden>
+            <label for="code" class="label">Team access code</label>
+            <input type="password" id="code" autocomplete="off">
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="btn primary" id="runBtn">Run</button>
+            <button type="button" class="btn" id="clearBtn">Clear</button>
+            <p class="error" id="error" role="alert" hidden></p>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel result" id="resultPanel" aria-live="polite" hidden>
+        <div class="result-head">
+          <h2>Result</h2>
+          <div class="result-actions">
+            <button type="button" class="btn small" id="copyBtn">Copy</button>
+          </div>
+        </div>
+        <div id="output" class="output"></div>
+      </section>
+    </main>
+  </div>
+  <script src="/amrissa.js"></script>
+</body>
+</html>

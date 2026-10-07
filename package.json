@@ -6,9 +6,12 @@
   "description": "Self-hosted workflow process intake form for Club Wealth, Homexa and PFL admins. Submissions are relayed to Google Sheets.",
   "scripts": {
     "dev": "node scripts/dev.mjs",
-    "check": "node --check api/submit.js && node --check public/app.js && node --check scripts/dev.mjs"
+    "check": "node --check api/submit.js && node --check api/assist.js && node --check public/amrissa.js && node --check public/app.js && node --check scripts/dev.mjs"
   },
   "engines": {
     "node": ">=18"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.132.0"
   }
 }
