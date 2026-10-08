@@ -42,7 +42,16 @@ Give the processing start and end times in the chat, outside the paste-ready lis
 ## Decisions so far
 
 - Trigger: Tara posts the Half Day form in Slack `#half-day-registration-forms` (C0C7UFD3DUJ).
-- Output: a new tab per event in the spreadsheet Ali uses.
+- Output spreadsheet: "LIST MAKING CHECKLIST (Half-Day Events)" (1mwt8MoYtxJIc5mdcDxCa0S8icLTEDWOI7Xl3z74YfPM).
+  - **Only the "Attendance Extracted" tab may be edited. Never read or edit any other tab.**
+  - **Part 1 writes columns A–E only** (Extracted Name, Extracted Phone, Source Page, Source Type, Notes).
+    Columns F–Q (matching, Approved, Tagging Status, Event, Event Date, Target Tag, Tagging Request ID) are never touched.
+  - New rows are appended below the last used row; existing rows are never changed or deleted.
+  - Review items go in as rows whose Notes start with "REVIEW:".
+  - Duplicate guard: a Slack message is processed only if it has no automation reply in its thread yet
+    (the confirmation reply marks it done), so no event columns are needed in the sheet.
+- Input: Tara's Adobe Acrobat share link. The PDF is fetched by opening the link in headless Chromium and
+  capturing the PDF the viewer loads (tested 2026-10-08: no login needed). Fallback: page images.
 - Ali's "done" signal: a **checkbox** in the sheet.
 - Summary source: a separate sheet in the Marketing Google Spreadsheet, at a fixed range that Ali fills in.
   Fields: Location, Date, Stat Sheet status, Attended Tagged (count | %), CWSocial25 (count | %), Opt-Ins (count | %).
