@@ -56,3 +56,20 @@ Give the processing start and end times in the chat, outside the paste-ready lis
 - Summary source: a separate sheet in the Marketing Google Spreadsheet, at a fixed range that Ali fills in.
   Fields: Location, Date, Stat Sheet status, Attended Tagged (count | %), CWSocial25 (count | %), Opt-Ins (count | %).
 - Summary is posted as a reply in Tara's original Slack thread.
+
+## Status (2026-10-08)
+
+- Routine "Half-Day Registration Forms → Attendance + Stats" (trig_01XSvvLYHxBri9HUdfg761WM): created, hourly at :43,
+  Slack + Google Sheets connectors attached, **paused** until the final runs.
+- Part 2 Slack reply format (exactly, nothing else):
+  ```
+  <Event name>
+  Stat Sheet | Updated
+
+  <x> of <y> Attended Tagged | <pct>
+  <x> of <y> CWSocial25 | <pct>
+  <x> of <y> Opt-Ins | <pct>
+  ```
+- Reply only in the thread of a main channel message; never respond to thread replies.
+- Dry runs 1 and 2 matched the sample: 22 of 136 | 16.18%, 2 of 5 | 40.00%, 10 of 22 | 45.45%.
+- Still to do: API trigger + Apps Script tick watcher on Attendance Extracted!R2 (fire about a minute after Ali ticks it).
