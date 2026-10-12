@@ -53,7 +53,7 @@
         </svg>
       </div>
       <h1>Workflow Process Form</h1>
-      <p class="masthead-sub">Three short questions about a task you do by hand, so we can find where AI and automation can take it off your plate.</p>
+      <p class="masthead-sub">Three short questions about the tasks you do by hand, so we can find where AI and automation can take it off your plate.</p>
     </div>
   </header>
 
@@ -63,11 +63,11 @@
 
       <section class="intro intro-simple reveal">
         <h2 class="kicker">What this form is for</h2>
-        <p>Tell us about <strong>one task you do by hand, over and over</strong>. We'll use your answers to find where AI and automation can take the work off your plate. It takes about 15 minutes.</p>
+        <p>Tell us about <strong>all the tasks you listed in your 10 bullet points</strong> in the AI audit. We'll use your answers to find where AI and automation can take the work off your plate.</p>
         <ol class="simple-steps">
-          <li><strong>Summarize</strong> the process in a few sentences.</li>
-          <li><strong>Map</strong> how you do it today, one box per tool.</li>
-          <li><strong>Optional:</strong> show how you wish it worked.</li>
+          <li><strong>Summarize</strong> each task in a few sentences.</li>
+          <li><strong>Map</strong> how you do each one today. Use "+ Add another task" so every task gets its own map.</li>
+          <li><strong>Optional:</strong> show how you wish they worked.</li>
         </ol>
         <p class="draft-note" id="draftNote">Your answers are saved in this browser as you type, so you can close the tab and come back.</p>
       </section>
@@ -97,10 +97,12 @@
           <span class="q-num">01</span>
           <h2 id="q1-title">Process summary</h2>
         </header>
-        <p class="hint">In a few sentences: what is the task, what starts it, how often you do it, and about how long it takes.</p>
+        <p class="hint">Go through each of your 10 tasks. For each one, in a few sentences: what the task is, what starts it, how often you do it, and about how long it takes. Number them 1–10 so they match your maps below.</p>
         <label class="field">
           <span class="visually-hidden">Process summary</span>
-          <textarea name="q2_overview" rows="4" required placeholder="e.g. After every Half-Day event, I turn the sign-in sheet into attendance stats. It takes about an hour per event, 3–4 times a week."></textarea>
+          <textarea name="q2_overview" rows="8" required placeholder="1. Event stats updates: after every Half-Day event, I turn the sign-in sheet into attendance stats. About an hour per event, 3–4 times a week.
+2. Remove from PB list: ...
+3. ..."></textarea>
         </label>
       </section>
 
@@ -110,16 +112,15 @@
           <span class="q-num">02</span>
           <h2 id="q2-title">Manual process <span class="tag">How you do it today</span></h2>
         </header>
-        <p class="hint">Map each step as <strong>Tool &rarr; What you do in it</strong>, in the order you do it. Use the plus <strong>above</strong> a step for a YES path and <strong>below</strong> for a NO path when the process splits on a decision.</p>
+        <p class="hint">Make <strong>one map per task</strong>: give it the task's title, then click <strong>+ Add another task</strong> for the next one. Map each step as <strong>Tool &rarr; What you do in it</strong>, in the order you do it. Use the plus <strong>above</strong> a step for a YES path and <strong>below</strong> for a NO path when the process splits on a decision.</p>
         <figure class="guide">
-          <a href="/sop/map-guide.png" target="_blank" rel="noopener" class="guide-shot" aria-label="Open the mapping guide full size">
-            <img src="/sop/map-guide.png" alt="Mapping guide preview" width="1600" height="1856" loading="lazy">
-          </a>
+          <button type="button" class="guide-shot" data-open-guide aria-label="Open the mapping guide">
+            <img src="/sop/map-guide.png" alt="" width="1600" height="1856" loading="lazy">
+          </button>
           <figcaption>
             <strong>Before you start, read the mapping guide.</strong>
             <span>It shows what to type in each box, a complete example map, a checklist, and vague vs. clear examples.</span>
-            <a class="guide-open" href="/sop/map-guide.png" target="_blank" rel="noopener">Open the mapping guide
-              <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M6 3h7v7M13 3 4 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <button type="button" class="guide-open" data-open-guide>Open the mapping guide</button>
           </figcaption>
         </figure>
         <div class="flows" data-flow="current"></div>
@@ -184,6 +185,21 @@
   </footer>
 
 
+
+  <dialog class="guide-dialog" id="guideDialog" aria-labelledby="guideTitle">
+    <div class="guide-dialog-inner">
+      <header class="guide-dialog-head">
+        <h2 id="guideTitle">How to fill in your process map</h2>
+        <button type="button" class="icon-btn" data-close-guide aria-label="Close the mapping guide"><svg viewBox="0 0 16 16" width="16" height="16"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+      </header>
+      <div class="guide-dialog-body">
+        <img src="/sop/map-guide.png" alt="Mapping guide: what goes in each box (the tool, and what you do in it as action, what and where), an example map of the Half-Day attendance process with a Yes/No decision, a checklist for a complete map, vague versus clear examples, and how to map the ideal automated version." width="1600" height="1856" loading="lazy">
+      </div>
+      <footer class="guide-dialog-foot">
+        <button type="button" class="btn-primary btn-sm" data-close-guide>Back to my map</button>
+      </footer>
+    </div>
+  </dialog>
 
   <!-- Templates -->
 

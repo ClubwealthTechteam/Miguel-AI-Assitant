@@ -441,6 +441,25 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
+  /* ---------- mapping guide pop-up ---------- */
+
+  const guide = document.getElementById('guideDialog');
+  let guideOpener = null;
+  $$('[data-open-guide]').forEach((btn) => btn.addEventListener('click', () => {
+    guideOpener = btn;
+    guide.showModal();
+    document.documentElement.classList.add('no-scroll');
+    $('.guide-dialog-body', guide).scrollTop = 0;
+  }));
+  guide.addEventListener('click', (e) => {
+    // Close on the X / footer button, or a click on the backdrop outside the panel.
+    if (e.target.closest('[data-close-guide]') || e.target === guide) guide.close();
+  });
+  guide.addEventListener('close', () => {
+    document.documentElement.classList.remove('no-scroll');
+    guideOpener?.focus();
+  });
+
   /* ---------- helpers + chrome ---------- */
 
   function today() {
