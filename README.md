@@ -8,11 +8,11 @@ A self-hosted intake form where admins across Clubwealth, Homexa and PFL documen
 
 ## Form sections
 
-The form is kept short for non-technical staff: three questions and the acknowledgement.
+The form is kept short for non-technical staff: three questions and the acknowledgement. A step-by-step tutorial (8 slides) opens on the first visit on a computer and can be reopened with **Watch the tutorial**; it focuses on writing specific map steps (spreadsheet link → tab → rows/columns; where in Keap and the automation name; the same for every other tool). The mapping guide image opens as a pop-up from question 02.
 
 | # | Section | Captured as |
 |---|---|---|
-| — | Name, CW/HX/PFL email, date | Required fields |
+| — | Name, CW/HX/PFL email, date, department | Required fields (department suggests e.g. "Events Department"; saved in the last `Department` column of `Submissions`) |
 | 01 | Process summary | Free text, required (sent as `q2.overview`) |
 | 02 | Manual process | Flow map per task on a draggable canvas: **Tool → What you do** steps that can split into YES / NO paths (sent as `q2.tasks`), plus an optional "What slows you down the most?" (sent as `q6.overview`). A mapping guide image (`public/sop/map-guide.png`) sits above the map |
 | 03 | Ideal automation (optional) | Free text plus a flow map of the ideal process (sent as `q7`) |

@@ -88,6 +88,7 @@ export function normalize(body) {
   return {
     name: str(b.name, 200),
     email: str(b.email, 320).toLowerCase(),
+    department: str(b.department, 120),
     date: str(b.date, 20),
     tools: {
       web: list(tools.web).map((t) => str(t, 200)).filter(Boolean),
@@ -128,6 +129,7 @@ export function validate(d) {
   const errors = [];
   if (!d.name) errors.push('Name is required.');
   if (!EMAIL_RE.test(d.email)) errors.push('A valid email is required.');
+  if (!d.department) errors.push('Department is required.');
   if (!/^\d{4}-\d{2}-\d{2}$/.test(d.date)) errors.push('Date is required.');
   if (!d.q2.overview) errors.push('Question 1 (process summary) is required.');
   if (!d.q2.tasks.some((t) => t.path)) errors.push('Map at least one step of your manual process in question 2.');

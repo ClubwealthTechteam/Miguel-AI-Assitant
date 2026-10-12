@@ -276,6 +276,7 @@
     return {
       name: val('name'),
       email: val('email'),
+      department: val('department'),
       date: val('date'),
       // The form asks three questions; they are sent in the original payload shape so the
       // Sheets relay keeps working: summary -> q2.overview, manual map -> q2.tasks,
@@ -296,7 +297,7 @@
       tasks.forEach((t) => addTask(f, t));
     });
     if (data) {
-      ['name', 'email', 'date', 'acknowledged'].forEach((k) => { if (data[k]) form.elements[k].value = data[k]; });
+      ['name', 'email', 'department', 'date', 'acknowledged'].forEach((k) => { if (data[k]) form.elements[k].value = data[k]; });
       ['q2', 'q6', 'q7'].forEach((k) => {
         if (data[k]?.overview) form.elements[`${k}_overview`].value = data[k].overview;
       });
@@ -334,6 +335,7 @@
     };
     if (!data.name) mark(form.elements.name, 'Enter your name.');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) mark(form.elements.email, 'Enter a valid email address.');
+    if (!data.department) mark(form.elements.department, 'Enter your department, e.g. Events Department.');
     if (!data.date) mark(form.elements.date, 'Pick a date.');
     if (!data.q2.overview) mark(form.elements.q2_overview, 'Write a short process summary in question 1.');
     if (!$$('[data-flow="current"] .task', form).some((t) => countSteps(t._path) > 0)) {
@@ -441,6 +443,43 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
+  /* ---------- first-visit tutorial ---------- */
+
+  const TOUR_KEY = 'cw-workflow-tour-seen-v1';
+  const tour = document.getElementById('tourDialog');
+  const slides = $$('[data-slide]', tour);
+  const dots = document.getElementById('tourDots');
+  const back = document.getElementById('tourBack');
+  const next = document.getElementById('tourNext');
+  let slide = 0;
+  dots.innerHTML = slides.map(() => '<i></i>').join('');
+  function showSlide(i) {
+    slide = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach((el, n) => { el.hidden = n !== slide; });
+    $$('i', dots).forEach((d, n) => d.classList.toggle('on', n === slide));
+    document.getElementById('tourCount').textContent = `${slide + 1} of ${slides.length}`;
+    back.hidden = slide === 0;
+    next.textContent = slide === slides.length - 1 ? 'Start the form' : 'Next';
+    $('.tour-body', tour).scrollTop = 0;
+  }
+  function openTour() {
+    showSlide(0);
+    tour.showModal();
+    document.documentElement.classList.add('no-scroll');
+  }
+  back.addEventListener('click', () => showSlide(slide - 1));
+  next.addEventListener('click', () => (slide === slides.length - 1 ? tour.close() : showSlide(slide + 1)));
+  tour.addEventListener('click', (e) => { if (e.target.closest('[data-close-tour]')) tour.close(); });
+  tour.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' && slide < slides.length - 1) showSlide(slide + 1);
+    if (e.key === 'ArrowLeft') showSlide(slide - 1);
+  });
+  tour.addEventListener('close', () => {
+    document.documentElement.classList.remove('no-scroll');
+    try { localStorage.setItem(TOUR_KEY, '1'); } catch { /* storage unavailable */ }
+  });
+  $$('[data-open-tour]').forEach((btn) => btn.addEventListener('click', openTour));
+
   /* ---------- mapping guide pop-up ---------- */
 
   const guide = document.getElementById('guideDialog');
@@ -508,6 +547,11 @@
       window.prompt('Copy this link:', gateUrl);
     }
   });
+
+  // Show the tutorial on the first visit on a computer (phones see the device notice instead).
+  let tourSeen = false;
+  try { tourSeen = localStorage.getItem(TOUR_KEY) === '1'; } catch { /* storage unavailable */ }
+  if (!tourSeen && matchMedia('(min-width: 641px) and (hover: hover)').matches) openTour();
 
   const draft = loadDraft();
   render(draft);
