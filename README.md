@@ -74,10 +74,10 @@ If no `.env` is present, the dev server runs the real `Code.gs` against an in-me
 - Apps Script rejects any request without the shared secret.
 - Cells that start with `= + - @` are escaped, so text can't run as a spreadsheet formula.
 
-## Slack bot: @Club Wealth Assistant in #cw-team
+## Slack bot: @Club Wealth Assistant
 
-`api/slack-events.js` is the Slack Events API endpoint for the **Club Wealth Assistant** Slack app. When someone tags the bot in #cw-team, Slack calls `https://miguel-ai-assitant.vercel.app/api/slack-events`; the function checks Slack's signature, ignores retries, other channels and bot messages, then fires the claude.ai routine "Club Wealth Assistant → replies to @mentions in #cw-team" (`trig_01NxEicTyZLjRL6bSNr9mF8Z`) with the channel, message/thread ts, user and text. The routine reads the thread and replies in it as the bot (about 1–3 minutes). It never writes to sheets or posts anywhere else.
+`api/slack-events.js` is the Slack Events API endpoint for the **Club Wealth Assistant** Slack app. When someone tags the bot in any channel it has been invited to, Slack calls `https://miguel-ai-assitant.vercel.app/api/slack-events`; the function checks Slack's signature, ignores retries and bot messages, then fires the claude.ai routine "Club Wealth Assistant → replies to @mentions in #cw-team" (`trig_01NxEicTyZLjRL6bSNr9mF8Z`, renamed to cover every channel) with the channel, message/thread ts, user and text. The routine reads the thread and replies in it as the bot (about 1–3 minutes). It never writes to sheets or posts anywhere else.
 
-Vercel env vars: `SLACK_SIGNING_SECRET` (Slack app › Basic Information › Signing Secret) and `CLAUDE_ROUTINE_TOKEN` (the routine's API token). Optional: `CLAUDE_ROUTINE_ID`, `SLACK_ALLOWED_CHANNELS` (comma-separated channel ids; default `C0AJ4P16YBD`).
+Vercel env vars: `SLACK_SIGNING_SECRET` (Slack app › Basic Information › Signing Secret) and `CLAUDE_ROUTINE_TOKEN` (the routine's API token). Optional: `CLAUDE_ROUTINE_ID`, `SLACK_ALLOWED_CHANNELS` (comma-separated channel ids to limit where it answers; default: every channel the bot is in).
 
-Slack app settings: bot scopes `app_mentions:read`, `chat:write`, `groups:history`, `channels:history`, `users:read`; Event Subscriptions on, Request URL as above, bot event `app_mention`; the bot invited to #cw-team. The bot token itself is a network secret in the claude.ai environment, attached to `slack.com/api/` requests, so it never appears in prompts or code.
+Slack app settings: bot scopes `app_mentions:read`, `chat:write`, `groups:history`, `channels:history`, `users:read`; Event Subscriptions on, Request URL as above, bot event `app_mention`; the bot invited to each channel where it should answer. The bot token itself is a network secret in the claude.ai environment, attached to `slack.com/api/` requests, so it never appears in prompts or code.

@@ -6,12 +6,11 @@
 //   SLACK_SIGNING_SECRET   Slack app > Basic Information > App Credentials > Signing Secret
 //   CLAUDE_ROUTINE_TOKEN   claude.ai routine "Club Wealth Assistant → replies to @mentions" > API token
 //   CLAUDE_ROUTINE_ID      optional; defaults to that routine's id below
-//   SLACK_ALLOWED_CHANNELS optional comma-separated channel ids; defaults to #cw-team
+//   SLACK_ALLOWED_CHANNELS optional comma-separated channel ids; default: every channel the bot is in
 
 import crypto from 'node:crypto';
 
 const DEFAULT_ROUTINE_ID = 'trig_01NxEicTyZLjRL6bSNr9mF8Z';
-const DEFAULT_CHANNELS = 'C0AJ4P16YBD'; // #cw-team
 const MAX_BYTES = 1_000_000;
 const MAX_TEXT = 4000;
 
@@ -83,9 +82,10 @@ export default async function handler(req, res) {
   if (req.headers['x-slack-retry-num']) return res.status(200).json({ ok: true, skipped: 'retry' });
 
   const ev = body.event || {};
-  const channels = (process.env.SLACK_ALLOWED_CHANNELS || DEFAULT_CHANNELS).split(',').map((s) => s.trim()).filter(Boolean);
+  // Slack only sends app_mention events from channels the bot was invited to.
+  const channels = (process.env.SLACK_ALLOWED_CHANNELS || '').split(',').map((s) => s.trim()).filter(Boolean);
   const relevant = body.type === 'event_callback' && ev.type === 'app_mention'
-    && !ev.bot_id && ev.user && channels.includes(ev.channel);
+    && !ev.bot_id && ev.user && ev.channel && (!channels.length || channels.includes(ev.channel));
   if (!relevant) return res.status(200).json({ ok: true, skipped: 'ignored event' });
 
   try {
