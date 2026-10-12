@@ -81,3 +81,4 @@ If no `.env` is present, the dev server runs the real `Code.gs` against an in-me
 Vercel env vars: `SLACK_SIGNING_SECRET` (Slack app › Basic Information › Signing Secret) and `CLAUDE_ROUTINE_TOKEN` (the routine's API token). Optional: `CLAUDE_ROUTINE_ID`, `SLACK_ALLOWED_CHANNELS` (comma-separated channel ids to limit where it answers; default: every channel the bot is in).
 
 Slack app settings: bot scopes `app_mentions:read`, `chat:write`, `groups:history`, `channels:history`, `users:read`; Event Subscriptions on, Request URL as above, bot event `app_mention`; the bot invited to each channel where it should answer. The bot token itself is a network secret in the claude.ai environment, attached to `slack.com/api/` requests, so it never appears in prompts or code.
+Updated by Miguel
