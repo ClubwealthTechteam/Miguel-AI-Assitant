@@ -101,6 +101,7 @@ export function normalize(body) {
     q5: { overview: str(section('q5').overview), rows: cleanRows(section('q5').rows, ['task', 'decision', 'info', 'aiPrepare']) },
     q6: { overview: str(section('q6').overview), rows: cleanRows(section('q6').rows, ['task', 'bottleneck', 'workaround', 'impact']) },
     q7: { overview: str(section('q7').overview), tasks: cleanFlow(section('q7').tasks) },
+    wishlist: { overview: str(section('wishlist').overview) },
     platform: { choice: str(section('platform').choice, 200), reason: str(section('platform').reason) },
     acknowledged: str(b.acknowledged, 40).toUpperCase(),
     // Set when the person used "Edit my response": the reference of the submission this one replaces.
