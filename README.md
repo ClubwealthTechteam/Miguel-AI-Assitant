@@ -8,7 +8,7 @@ A self-hosted intake form where admins across Clubwealth, Homexa and PFL documen
 
 ## Form sections
 
-The form is kept short for non-technical staff: three questions, the platform preference and the acknowledgement.
+The form is kept short for non-technical staff: three questions and the acknowledgement.
 
 | # | Section | Captured as |
 |---|---|---|
@@ -16,7 +16,6 @@ The form is kept short for non-technical staff: three questions, the platform pr
 | 01 | Process summary | Free text, required (sent as `q2.overview`) |
 | 02 | Manual process | Flow map per task on a draggable canvas: **Tool → What you do** steps that can split into YES / NO paths (sent as `q2.tasks`), plus an optional "What slows you down the most?" (sent as `q6.overview`). A mapping guide image (`public/sop/map-guide.png`) sits above the map |
 | 03 | Ideal automation (optional) | Free text plus a flow map of the ideal process (sent as `q7`) |
-| — | AI Task Hub preference | Software App vs. Club Wealth University page (comparison dialog with visual guides), plus an optional reason |
 | — | Room 10 Zoom acknowledgement | Must type `ACKNOWLEDGED` |
 
 The payload keeps the original field names, so `api/submit.js` and the deployed Apps Script need no changes. The tools lists and the Q3–Q5 tables are no longer asked; their Sheet columns stay empty.

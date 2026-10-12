@@ -131,7 +131,6 @@ export function validate(d) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(d.date)) errors.push('Date is required.');
   if (!d.q2.overview) errors.push('Question 1 (process summary) is required.');
   if (!d.q2.tasks.some((t) => t.path)) errors.push('Map at least one step of your manual process in question 2.');
-  if (!d.platform.choice) errors.push('Choose your preferred AI Task Hub option.');
   if (d.acknowledged !== 'ACKNOWLEDGED') errors.push('Type ACKNOWLEDGED to confirm.');
   return errors;
 }

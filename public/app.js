@@ -273,8 +273,6 @@
       path: cleanPath(t._path),
     })).filter((t) => t.title || t.path);
 
-    const platform = form.querySelector('input[name="platform"]:checked');
-
     return {
       name: val('name'),
       email: val('email'),
@@ -285,7 +283,6 @@
       q2: { overview: val('q2_overview'), tasks: flow('current') },
       q6: { overview: val('q6_overview'), rows: [] },
       q7: { overview: val('q7_overview'), tasks: flow('ideal') },
-      platform: { choice: platform ? platform.value : '', reason: val('platform_reason') },
       acknowledged: val('acknowledged'),
       website: val('website'),
     };
@@ -303,11 +300,6 @@
       ['q2', 'q6', 'q7'].forEach((k) => {
         if (data[k]?.overview) form.elements[`${k}_overview`].value = data[k].overview;
       });
-      if (data.platform?.reason) form.elements.platform_reason.value = data.platform.reason;
-      if (data.platform?.choice) {
-        const r = form.querySelector(`input[name="platform"][value="${CSS.escape(data.platform.choice)}"]`);
-        if (r) r.checked = true;
-      }
     }
     if (!form.elements.date.value) form.elements.date.value = today();
   }
@@ -347,7 +339,6 @@
     if (!$$('[data-flow="current"] .task', form).some((t) => countSteps(t._path) > 0)) {
       mark($('[data-flow="current"].flows', form), 'Map at least one step of your manual process in question 2.');
     }
-    if (!data.platform.choice) mark(form.querySelector('input[name="platform"]'), 'Choose your preferred AI Task Hub option.');
     if (data.acknowledged.toUpperCase() !== 'ACKNOWLEDGED') mark(form.elements.acknowledged, 'Type ACKNOWLEDGED to confirm.');
     return problems;
   }
@@ -448,37 +439,6 @@
     form.hidden = false;
     saveDraft();
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-
-  /* ---------- comparison dialog (AI Task Hub preference) ---------- */
-
-  const compare = document.getElementById('compareDialog');
-  let compareOpener = null;
-  // Side-by-side table vs. the visual guide for each option.
-  const showView = (view) => {
-    $$('.vg-tab', compare).forEach((t) => {
-      const on = t.dataset.vg === view;
-      t.classList.toggle('on', on);
-      t.setAttribute('aria-selected', String(on));
-    });
-    $$('.vg-panel', compare).forEach((p) => { p.hidden = p.dataset.panel !== view; });
-    $('.compare-body', compare).scrollTop = 0;
-  };
-  $$('.vg-tab', compare).forEach((t) => t.addEventListener('click', () => showView(t.dataset.vg)));
-  document.querySelectorAll('[data-open-compare]').forEach((btn) => btn.addEventListener('click', () => {
-    showView('compare');
-    compareOpener = btn;
-    compare.showModal();
-    document.documentElement.classList.add('no-scroll');
-    $('.compare-body', compare).scrollTop = 0;
-  }));
-  compare.addEventListener('click', (e) => {
-    // Close on the X / footer button, or a click on the backdrop outside the panel.
-    if (e.target.closest('[data-close-compare]') || e.target === compare) compare.close();
-  });
-  compare.addEventListener('close', () => {
-    document.documentElement.classList.remove('no-scroll');
-    compareOpener?.focus();
   });
 
   /* ---------- helpers + chrome ---------- */
