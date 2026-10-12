@@ -53,7 +53,7 @@
         </svg>
       </div>
       <h1>Workflow Process Form</h1>
-      <p class="masthead-sub">A universal form for documenting the work you do by hand, so we can find where AI and automation can take it off your plate.</p>
+      <p class="masthead-sub">Three short questions about a task you do by hand, so we can find where AI and automation can take it off your plate.</p>
     </div>
   </header>
 
@@ -61,36 +61,15 @@
     <form id="intakeForm" novalidate autocomplete="on">
       <p class="edit-banner" id="editBanner" role="status" hidden></p>
 
-      <section class="intro reveal">
-        <div class="intro-col">
-          <h2 class="kicker">Purpose of the form</h2>
-          <p>This form is designed to help identify manual, repetitive, time-consuming, and complex work processes within each department. The information collected will be used to understand how tasks are currently performed, what tools and systems are involved, where bottlenecks occur, and which steps can potentially be improved through AI and automation.</p>
-          <p>The goal is to reduce manual work, simplify complex processes, eliminate unnecessary repetitive tasks, improve workflow efficiency, and create smarter systems while keeping appropriate human review and decision-making where needed.</p>
-        </div>
-        <div class="intro-col">
-          <h2 class="kicker">Understanding the workaround</h2>
-          <p>Please answer the questions below based on one of your regular or repetitive work processes. The goal is to understand the current workflow, identify bottlenecks, and determine where AI or automation could help.</p>
-          <p class="callout"><strong>Important:</strong> Please be specific about the process and how you use each app. "I update the CRM" tells us little. "I copy the applicant's phone number from the Jotform email into Recruit CRM and change their stage to Screening" tells us exactly what can be automated.</p>
-          <p class="draft-note" id="draftNote">Your answers are saved in this browser as you type, so you can close the tab and come back.</p>
-        </div>
-        <div class="howto">
-          <div class="howto-head">
-            <h2 class="kicker">How to fill out this form</h2>
-            <div class="howto-links">
-              <a class="howto-link" href="/sop" target="_blank" rel="noopener">Read the full SOP with a worked example
-                <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M6 3h7v7M13 3 4 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-              <a class="howto-link howto-link-quiet" href="/sop/example-current-map.png" target="_blank" rel="noopener">See an example map</a>
-            </div>
-          </div>
-          <ol class="howto-steps">
-            <li><strong>Pick your tasks:</strong> the ones you do often by hand. You can document several in this form using "+ Add another task".</li>
-            <li><strong>List your tools</strong> in Q1: every web tool, app and named spreadsheet the process touches.</li>
-            <li><strong>Describe, then map it</strong> in Q2: one box per action in one tool. Use the plus above / below a step for YES / NO decisions.</li>
-            <li><strong>Add the details</strong> in Q3–Q6: information needed, repetitive steps with time spent, decisions, and bottlenecks.</li>
-            <li><strong>Map the ideal version</strong> in Q7: how it would run if it ran itself, and where you'd still approve.</li>
-            <li><strong>Choose your preference</strong> in Q8: use <em>View comparison</em> to see both options side by side and as visual walkthroughs, pick based on your own opinion, type <code>ACKNOWLEDGED</code>, and submit.</li>
-          </ol>
-        </div>
+      <section class="intro intro-simple reveal">
+        <h2 class="kicker">What this form is for</h2>
+        <p>Tell us about <strong>one task you do by hand, over and over</strong>. We'll use your answers to find where AI and automation can take the work off your plate. It takes about 15 minutes.</p>
+        <ol class="simple-steps">
+          <li><strong>Summarize</strong> the process in a few sentences.</li>
+          <li><strong>Map</strong> how you do it today, one box per tool.</li>
+          <li><strong>Optional:</strong> show how you wish it worked.</li>
+        </ol>
+        <p class="draft-note" id="draftNote">Your answers are saved in this browser as you type, so you can close the tab and come back.</p>
       </section>
 
       <!-- Identity -->
@@ -112,145 +91,56 @@
         </div>
       </section>
 
-      <!-- Q1 -->
+      <!-- Q1: process summary (stored as q2.overview) -->
       <section class="question reveal" aria-labelledby="q1-title">
         <header class="q-head">
           <span class="q-num">01</span>
-          <h2 id="q1-title">List all the web tools, apps and spreadsheets you use for repeated and manual processes.</h2>
+          <h2 id="q1-title">Process summary</h2>
         </header>
-        <p class="hint">Add one tool per box. Include the specific sheet or workspace name when it helps (for example "Daily Productivity Tracker" rather than just "Google Sheets").</p>
-        <div class="grid-3 tool-cols">
-          <div class="tool-col" data-list="web">
-            <h3 class="col-title">Web tools</h3>
-            <div class="stack" data-items></div>
-            <button type="button" class="add-btn" data-add="tool" data-group="web"><span class="plus" aria-hidden="true"></span>Add another tool</button>
-          </div>
-          <div class="tool-col" data-list="apps">
-            <h3 class="col-title">Apps</h3>
-            <div class="stack" data-items></div>
-            <button type="button" class="add-btn" data-add="tool" data-group="apps"><span class="plus" aria-hidden="true"></span>Add another tool</button>
-          </div>
-          <div class="tool-col" data-list="spreadsheets">
-            <h3 class="col-title">Spreadsheets</h3>
-            <div class="stack" data-items></div>
-            <button type="button" class="add-btn" data-add="tool" data-group="spreadsheets"><span class="plus" aria-hidden="true"></span>Add another tool</button>
-          </div>
-        </div>
+        <p class="hint">In a few sentences: what is the task, what starts it, how often you do it, and about how long it takes.</p>
+        <label class="field">
+          <span class="visually-hidden">Process summary</span>
+          <textarea name="q2_overview" rows="4" required placeholder="e.g. After every Half-Day event, I turn the sign-in sheet into attendance stats. It takes about an hour per event, 3–4 times a week."></textarea>
+        </label>
       </section>
 
-      <!-- Q2 -->
+      <!-- Q2: manual process map -->
       <section class="question reveal" aria-labelledby="q2-title">
         <header class="q-head">
           <span class="q-num">02</span>
-          <h2 id="q2-title">Walk us through the complete process from start to finish. <span class="tag">The manual way</span></h2>
+          <h2 id="q2-title">Manual process <span class="tag">How you do it today</span></h2>
         </header>
-        <label class="field">
-          <span class="visually-hidden">Process walkthrough</span>
-          <textarea name="q2_overview" rows="5" required placeholder="Describe the whole process in your own words, from what starts it to what finishes it."></textarea>
-        </label>
-        <p class="example"><span>Example</span> When we receive a new applicant, I first check the application in Recruit CRM. Then I review their resume, check whether they meet the requirements, and update their status. If they qualify, I copy their details into the tracking sheet, send an interview invite through Gmail, and create the event in Google Calendar. After the interview I update the candidate record and add them to the weekly report.</p>
-        <h3 class="sub">Map each step as Tool &rarr; What you do in it</h3>
-        <p class="hint">Each step is a tool and what you do in it. At the end of the flow, <strong>Add another step</strong> continues it. If the process splits on a yes/no decision (qualified or not, replied or no reply), use the plus <strong>above</strong> to map what happens on YES and the plus <strong>below</strong> for NO. Each path can keep going and split again.</p>
+        <p class="hint">Map each step as <strong>Tool &rarr; What you do in it</strong>, in the order you do it. Use the plus <strong>above</strong> a step for a YES path and <strong>below</strong> for a NO path when the process splits on a decision.</p>
+        <figure class="guide">
+          <a href="/sop/map-guide.png" target="_blank" rel="noopener" class="guide-shot" aria-label="Open the mapping guide full size">
+            <img src="/sop/map-guide.png" alt="Mapping guide preview" width="1600" height="1856" loading="lazy">
+          </a>
+          <figcaption>
+            <strong>Before you start, read the mapping guide.</strong>
+            <span>It shows what to type in each box, a complete example map, a checklist, and vague vs. clear examples.</span>
+            <a class="guide-open" href="/sop/map-guide.png" target="_blank" rel="noopener">Open the mapping guide
+              <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M6 3h7v7M13 3 4 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </figcaption>
+        </figure>
         <div class="flows" data-flow="current"></div>
         <button type="button" class="add-btn add-task" data-add="task" data-flow="current"><span class="plus" aria-hidden="true"></span>Add another task</button>
+        <label class="field field-soft">
+          <span class="label">What slows you down the most? <span class="opt">Optional</span></span>
+          <textarea name="q6_overview" rows="2" placeholder="e.g. Reading handwriting on 13 pages and typing every phone number by hand."></textarea>
+        </label>
       </section>
 
-      <!-- Q3 -->
+      <!-- Q3: ideal automation (optional) -->
       <section class="question reveal" aria-labelledby="q3-title">
         <header class="q-head">
           <span class="q-num">03</span>
-          <h2 id="q3-title">What information do you need to complete the process?</h2>
+          <h2 id="q3-title">Ideal automation <span class="tag tag-soft">Optional</span></h2>
         </header>
-        <label class="field">
-          <span class="visually-hidden">Information needed</span>
-          <textarea name="q3_overview" rows="4" placeholder="What do you need in front of you before you can do the work?"></textarea>
-        </label>
-        <p class="example"><span>Example</span> I need the applicant's name, resume, contact information, position applied for, years of experience, work availability, and the job's requirements. Most of it comes from the Jotform submission and Recruit CRM.</p>
-        <h3 class="sub">List the information each task needs, and where it comes from</h3>
-        <div class="table" data-table="q3">
-          <div class="t-head" aria-hidden="true">
-            <span>Task title</span><span>Information / data needed</span><span>Information source</span><span>Required / optional</span><span></span>
-          </div>
-          <div class="t-body" data-items></div>
-        </div>
-        <button type="button" class="add-btn" data-add="row" data-table="q3"><span class="plus" aria-hidden="true"></span>Add another task</button>
-      </section>
-
-      <!-- Q4 -->
-      <section class="question reveal" aria-labelledby="q4-title">
-        <header class="q-head">
-          <span class="q-num">04</span>
-          <h2 id="q4-title">What steps are completely manual? Which tasks are repetitive or time-consuming?</h2>
-        </header>
-        <label class="field">
-          <span class="visually-hidden">Manual and repetitive steps</span>
-          <textarea name="q4_overview" rows="4" placeholder="Which parts do you do by hand, over and over?"></textarea>
-        </label>
-        <p class="example"><span>Example</span> I manually copy applicant details from email into the spreadsheet, then re-type the same details into Recruit CRM. I also send each interview invite one at a time and update every candidate's status by hand after each call.</p>
-        <h3 class="sub">List each repetitive step, how often it happens, and how long it takes</h3>
-        <div class="table" data-table="q4">
-          <div class="t-head" aria-hidden="true">
-            <span>Task title</span><span>Repetitive step</span><span>How often?</span><span>Approx. time spent</span><span></span>
-          </div>
-          <div class="t-body" data-items></div>
-        </div>
-        <button type="button" class="add-btn" data-add="row" data-table="q4"><span class="plus" aria-hidden="true"></span>Add another task</button>
-      </section>
-
-      <!-- Q5 -->
-      <section class="question reveal" aria-labelledby="q5-title">
-        <header class="q-head">
-          <span class="q-num">05</span>
-          <h2 id="q5-title">Which parts require your judgment or approval?</h2>
-        </header>
-        <label class="field">
-          <span class="visually-hidden">Judgment and approval points</span>
-          <textarea name="q5_overview" rows="4" placeholder="Where do you have to decide something, or wait for someone to sign off?"></textarea>
-        </label>
-        <p class="example"><span>Example</span> I decide whether the applicant meets the requirements, whether they are a good fit for the role, and whether to move them forward. Final hiring decisions need the manager's approval.</p>
-        <h3 class="sub">List each decision, what you base it on, and whether AI could prepare it</h3>
-        <div class="table" data-table="q5">
-          <div class="t-head" aria-hidden="true">
-            <span>Task title</span><span>Decision or approval</span><span>Info used for the decision</span><span>Can AI prepare it?</span><span></span>
-          </div>
-          <div class="t-body" data-items></div>
-        </div>
-        <button type="button" class="add-btn" data-add="row" data-table="q5"><span class="plus" aria-hidden="true"></span>Add another task</button>
-      </section>
-
-      <!-- Q6 -->
-      <section class="question reveal" aria-labelledby="q6-title">
-        <header class="q-head">
-          <span class="q-num">06</span>
-          <h2 id="q6-title">Where do you run into bottlenecks or delays, and what workarounds do you use?</h2>
-        </header>
-        <label class="field">
-          <span class="visually-hidden">Bottlenecks and workarounds</span>
-          <textarea name="q6_overview" rows="4" placeholder="What slows you down, and how do you get around it today?"></textarea>
-        </label>
-        <p class="example"><span>Example</span> Candidates often don't reply to interview invites, so I keep a separate sheet of who I need to chase and re-send emails manually every two days. Waiting for the manager's approval can hold a candidate for a week.</p>
-        <h3 class="sub">List each bottleneck, your current workaround, and the impact</h3>
-        <div class="table" data-table="q6">
-          <div class="t-head" aria-hidden="true">
-            <span>Task title</span><span>Bottleneck or delay</span><span>Current workaround</span><span>Impact</span><span></span>
-          </div>
-          <div class="t-body" data-items></div>
-        </div>
-        <button type="button" class="add-btn" data-add="row" data-table="q6"><span class="plus" aria-hidden="true"></span>Add another task</button>
-      </section>
-
-      <!-- Q7 -->
-      <section class="question reveal" aria-labelledby="q7-title">
-        <header class="q-head">
-          <span class="q-num">07</span>
-          <h2 id="q7-title">What would the ideal automated version of this process look like?</h2>
-        </header>
+        <p class="hint">Your ideal vision only, no wrong answers. How would this task run if it did itself, and where would you still check or approve? If you don't know the tool, write "Automatically".</p>
         <label class="field">
           <span class="visually-hidden">Ideal automated process</span>
-          <textarea name="q7_overview" rows="4" placeholder="If this process ran itself, what would happen, and where would you still step in?"></textarea>
+          <textarea name="q7_overview" rows="3" placeholder="e.g. The sign-in sheet is read automatically and the rows appear in my sheet. I only check the flagged ones and click Finalize."></textarea>
         </label>
-        <p class="example"><span>Example</span> When an application comes in, the system scores it against the role's requirements, fills in the candidate record and the tracking sheet, and drafts the interview invite with open calendar slots. I review the shortlist and approve the invites in one click.</p>
-        <h3 class="sub">Map the ideal flow as Tool &rarr; What should happen</h3>
         <div class="flows" data-flow="ideal"></div>
         <button type="button" class="add-btn add-task" data-add="task" data-flow="ideal"><span class="plus" aria-hidden="true"></span>Add another task</button>
       </section>
@@ -258,8 +148,8 @@
       <!-- Platform preference -->
       <section class="question platform reveal" aria-labelledby="pf-title">
         <header class="q-head">
-          <span class="q-num">08</span>
-          <h2 id="pf-title">Which AI Task Hub option would you prefer?</h2>
+          <span class="q-num q-num-soft" aria-hidden="true">&#9733;</span>
+          <h2 id="pf-title">Last step: which AI Task Hub option would you prefer?</h2>
         </header>
         <p class="hint">This is your individual opinion. Please don't share, compare, or discuss your choice with other team members before submitting. Pick what you believe would work best for your own workflow.</p>
         <button type="button" class="compare-btn" data-open-compare>
@@ -288,8 +178,8 @@
         </fieldset>
 
         <label class="field">
-          <span class="label">Why does this option work better for you?</span>
-          <textarea name="platform_reason" rows="5" placeholder="Tell us how you work day to day and why this option fits."></textarea>
+          <span class="label">Why does this option work better for you? <span class="opt">Optional</span></span>
+          <textarea name="platform_reason" rows="3" placeholder="Tell us how you work day to day and why this option fits."></textarea>
         </label>
       </section>
 
@@ -336,7 +226,7 @@
     <div class="compare-inner">
       <header class="compare-head">
         <div>
-          <p class="compare-eyebrow">Question 08</p>
+          <p class="compare-eyebrow">Your preference</p>
           <h2 id="compareTitle">AI Task Hub: Software vs. CWU Web Integration</h2>
         </div>
         <button type="button" class="icon-btn compare-close" data-close-compare aria-label="Close comparison"><svg viewBox="0 0 16 16" width="16" height="16"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
@@ -445,15 +335,7 @@
     </div>
   </dialog>
 
-  <datalist id="taskTitles"></datalist>
-
   <!-- Templates -->
-  <template id="tpl-tool">
-    <div class="tool-item">
-      <input type="text" data-field="value" placeholder="Tool name" aria-label="Tool name">
-      <button type="button" class="icon-btn" data-remove aria-label="Remove tool"><svg viewBox="0 0 16 16" width="14" height="14"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
-    </div>
-  </template>
 
   <template id="tpl-task">
     <div class="task">
@@ -520,15 +402,6 @@
     <button type="button" class="branch-empty" data-act="add-branch"><span class="sq" aria-hidden="true"></span><span data-label>Add a path</span></button>
   </template>
 
-  <template id="tpl-row">
-    <div class="t-row">
-      <label class="cell"><span class="cell-label"></span><input type="text" data-field="c0" list="taskTitles"></label>
-      <label class="cell"><span class="cell-label"></span><textarea data-field="c1" rows="2"></textarea></label>
-      <label class="cell"><span class="cell-label"></span><textarea data-field="c2" rows="2"></textarea></label>
-      <label class="cell"><span class="cell-label"></span><input type="text" data-field="c3"></label>
-      <button type="button" class="icon-btn" data-remove aria-label="Remove row"><svg viewBox="0 0 16 16" width="14" height="14"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
-    </div>
-  </template>
 
   <script src="/map-image.js" defer></script>
   <script src="/app.js" defer></script>

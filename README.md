@@ -8,24 +8,22 @@ A self-hosted intake form where admins across Clubwealth, Homexa and PFL documen
 
 ## Form sections
 
+The form is kept short for non-technical staff: three questions, the platform preference and the acknowledgement.
+
 | # | Section | Captured as |
 |---|---|---|
 | — | Name, CW/HX/PFL email, date | Required fields |
-| 01 | Web tools / apps / spreadsheets | Three repeatable lists |
-| 02 | Process from start to finish (the manual way) | Free text plus a flow map per task on a draggable canvas: **Tool → What you do** steps that can split into YES / NO paths, which can continue and split again |
-| 03 | Information needed | Task · Information · Source · Required/Optional |
-| 04 | Manual / repetitive steps | Task · Step · How often · Time spent |
-| 05 | Judgment / approval | Task · Decision · Info used · Can AI prepare it? |
-| 06 | Bottlenecks & workarounds | Task · Bottleneck · Workaround · Impact |
-| 07 | Ideal automated version | Free text plus a flow map of the ideal process (same canvas) |
-| 08 | AI Task Hub preference | Software App vs. Club Wealth University page, plus the reason |
+| 01 | Process summary | Free text, required (sent as `q2.overview`) |
+| 02 | Manual process | Flow map per task on a draggable canvas: **Tool → What you do** steps that can split into YES / NO paths (sent as `q2.tasks`), plus an optional "What slows you down the most?" (sent as `q6.overview`). A mapping guide image (`public/sop/map-guide.png`) sits above the map |
+| 03 | Ideal automation (optional) | Free text plus a flow map of the ideal process (sent as `q7`) |
+| — | AI Task Hub preference | Software App vs. Club Wealth University page (comparison dialog with visual guides), plus an optional reason |
 | — | Room 10 Zoom acknowledgement | Must type `ACKNOWLEDGED` |
 
-Task titles entered in Q2 are suggested in the "Task title" cells of Q3–Q6.
+The payload keeps the original field names, so `api/submit.js` and the deployed Apps Script need no changes. The tools lists and the Q3–Q5 tables are no longer asked; their Sheet columns stay empty.
 
 ## SOP
 
-`/sop` (`public/sop.html`) is the step-by-step guide for admins: before you start, each section, how to use the process map, do's and don'ts, troubleshooting, and a full worked example ("New client welcome posts") with its map images in `public/sop/`. It prints cleanly to PDF. The form links to it from the "How to fill out this form" box under the Important note.
+`/sop/map-guide.png` is the one-page mapping guide linked from question 2. `/sop` (`public/sop.html`) is the older step-by-step guide written for the 8-question version of the form; it is no longer linked from the form: before you start, each section, how to use the process map, do's and don'ts, troubleshooting, and a full worked example ("New client welcome posts") with its map images in `public/sop/`. It prints cleanly to PDF. The form links to it from the "How to fill out this form" box under the Important note.
 
 ## Google Sheet layout
 

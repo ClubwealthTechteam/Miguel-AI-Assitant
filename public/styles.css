@@ -127,6 +127,28 @@ form {
 .howto-steps strong { color: var(--ink); }
 .howto-steps code { font-size: 0.85em; }
 
+/* ---------- simplified intro (3-question form) ---------- */
+.intro-simple { display: block; }
+.intro-simple p { text-align: left; font-size: 15px; max-width: 70ch; }
+.simple-steps { counter-reset: s; list-style: none; margin: 18px 0 16px; padding: 0; display: flex; flex-wrap: wrap; gap: 10px 26px; }
+.simple-steps li { counter-increment: s; position: relative; padding-left: 32px; font-size: 14.5px; line-height: 22px; color: var(--ink-2); }
+.simple-steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 6px; background: var(--navy); color: #fff; font-size: 12px; font-weight: 700; }
+.simple-steps strong { color: var(--ink); }
+
+/* mapping guide image beside the manual-process map */
+.guide { margin: 0 0 22px; padding: 14px; border: 1px solid #d6dcea; border-radius: 12px; background: var(--navy-tint); display: grid; grid-template-columns: 200px 1fr; gap: 18px; align-items: center; }
+.guide-shot { display: block; height: 130px; border-radius: 8px; overflow: hidden; border: 1px solid #d6dcea; background: #fff; }
+.guide-shot img { display: block; width: 100%; height: auto; }
+.guide-shot:hover { border-color: var(--navy-2); }
+.guide figcaption { display: grid; gap: 6px; font-size: 13.5px; color: var(--ink-2); }
+.guide figcaption strong { color: var(--ink); font-size: 14.5px; }
+.guide-open { display: inline-flex; align-items: center; gap: 6px; width: fit-content; margin-top: 4px; padding: 7px 12px; border-radius: 8px; background: var(--navy); color: #fff; font-size: 13px; font-weight: 600; text-decoration: none; }
+.guide-open:hover { background: var(--navy-2); }
+.field-soft { margin-top: 26px; }
+.opt { margin-left: 6px; font-family: var(--mono); font-size: 10.5px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.tag-soft { background: var(--surface-2); color: var(--muted); border: 1px solid var(--line); }
+.q-num-soft { font-size: 14px; }
+
 /* ---------- generic blocks ---------- */
 .card { padding: 32px 0; border-bottom: 1px solid var(--line); }
 
