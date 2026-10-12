@@ -306,6 +306,7 @@
   }
 
   function saveDraft() {
+    if (touring) return;
     try {
       const data = collect();
       delete data.website;
@@ -377,6 +378,7 @@
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    if (touring) return;
     $$('.invalid', form).forEach((el) => el.classList.remove('invalid'));
     const data = collect();
     const problems = validate(data);
@@ -443,41 +445,195 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
-  /* ---------- first-visit tutorial ---------- */
+  /* ---------- guided tour ----------
+   * Highlights the real form, types a worked example into it, and explains each part.
+   * The person's own answers are snapshotted first and put back when the tour ends;
+   * nothing typed by the tour is saved to the draft or submitted.
+   */
 
-  const TOUR_KEY = 'cw-workflow-tour-seen-v1';
-  const tour = document.getElementById('tourDialog');
-  const slides = $$('[data-slide]', tour);
-  const dots = document.getElementById('tourDots');
-  const back = document.getElementById('tourBack');
-  const next = document.getElementById('tourNext');
-  let slide = 0;
-  dots.innerHTML = slides.map(() => '<i></i>').join('');
-  function showSlide(i) {
-    slide = Math.max(0, Math.min(slides.length - 1, i));
-    slides.forEach((el, n) => { el.hidden = n !== slide; });
-    $$('i', dots).forEach((d, n) => d.classList.toggle('on', n === slide));
-    document.getElementById('tourCount').textContent = `${slide + 1} of ${slides.length}`;
-    back.hidden = slide === 0;
-    next.textContent = slide === slides.length - 1 ? 'Start the form' : 'Next';
-    $('.tour-body', tour).scrollTop = 0;
+  const TOUR_KEY = 'cw-workflow-tour-seen-v2';
+  const spot = document.getElementById('tourSpot');
+  const tip = document.getElementById('tourTip');
+  const tipTitle = $('[data-tip-title]', tip);
+  const tipText = $('[data-tip-text]', tip);
+  const tipCount = $('[data-tip-count]', tip);
+  const tipNext = $('[data-tip-next]', tip);
+  let touring = false;
+  let tourStep = 0;
+  let tourSnapshot = null;
+  let tourTarget = null;
+  let busy = false;
+
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  const firstFlow = () => $('[data-flow="current"] .task', form);
+  const nodes = () => $$('[data-flow="current"] .task:first-child .node', form);
+
+  async function type(el, text) {
+    if (!el || !touring) return;
+    el.focus({ preventScroll: true });
+    el.value = '';
+    const step = Math.max(1, Math.ceil(text.length / 70)); // long texts type in about the same time as short ones
+    for (let k = 0; k < text.length && touring; k += step) {
+      el.value = text.slice(0, k + step);
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      await wait(14);
+    }
+    el.value = text;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.blur();
   }
+  async function fillNode(n, tool, desc) {
+    await type($('.node-tool', n), tool);
+    await type($('.node-desc', n), desc);
+  }
+  const lastJunction = () => {
+    const js = $$('[data-flow="current"] .task:first-child .junction', form);
+    return js[js.length - 1];
+  };
+
+  const TOUR = [
+    { title: 'Welcome! Let us show you how', text: 'This quick tour highlights each part of the form and fills in an example as you go. Click <b>Next</b> to move on. Your own answers are put back when the tour ends.' },
+    { target: () => $('.card .grid-3', form), title: 'Your details',
+      text: 'Your name, work email, the date, and your <b>department</b>, e.g. "Events Department".',
+      run: async () => {
+        await type(form.elements.name, 'Ali Berico');
+        await type(form.elements.email, 'ali@clubwealth.com');
+        await type(form.elements.department, 'Events Department');
+      } },
+    { target: () => form.elements.q2_overview, title: '01 · Process summary',
+      text: 'Go through <b>all the tasks from your 10 bullet points</b>, numbered 1–10. For each: what it is, what starts it, how often, and how long it takes.',
+      run: () => type(form.elements.q2_overview, '1. Daily Huddle report: every morning I pull yesterday\'s numbers into the huddle sheet. Daily, ~30 min.\n2. Remove from PB list: after events I remove registered people from the ProspectBoss call lists. 3x a week, ~45 min.\n3. Event stats updates: after every Half-Day event, Tara posts the sign-in sheet in Slack and I turn it into attendance stats. 3–4x a week, ~1 hour each.') },
+    { target: () => $('.guide', form), title: 'The mapping guide',
+      text: 'Open this any time for a full example and a checklist. Now let\'s map task 3 together.' },
+    { target: () => $('.task-title', firstFlow()), title: '02 · One map per task',
+      text: 'Give each map the <b>task title</b> from your summary. Use <b>+ Add another task</b> (below the map) for the next one.',
+      run: () => type($('.task-title', firstFlow()), '3. Event stats updates') },
+    { target: () => nodes()[0], title: 'Each box = one tool + what you do',
+      text: '<b>Top box:</b> the tool <b>and exactly where</b> in it (here, the Slack channel). <b>Bottom box:</b> what you do there.',
+      run: () => fillNode(nodes()[0], 'Slack #half-day-registration-forms', 'Open the Adobe Acrobat link Tara posts after each event') },
+    { target: () => nodes()[1], title: 'Spreadsheets: link → tab → rows & columns',
+      text: 'Click <b>Add another step</b> for the next thing you do. For a spreadsheet, always give the <b>link</b>, the <b>sheet tab</b>, and the <b>rows and columns</b> you read or change.',
+      run: async () => {
+        $('[data-act="add-step"]', lastJunction()).click();
+        await wait(250);
+        await fillNode(nodes()[1], 'Google Sheets – LIST MAKING CHECKLIST › Attendance Extracted', 'Type each signed attendee\'s name, phone and page into rows 2–40, columns A–C. Link: https://docs.google.com/spreadsheets/d/…');
+      } },
+    { target: () => nodes()[2], title: 'Keap: where in Keap + the automation name',
+      text: '"Keap" alone isn\'t enough. Say <b>where in Keap</b> (Contacts, Campaign Builder, saved search, Broadcasts) and name the <b>automation, campaign or tag</b>. Do the same for every other tool.',
+      run: async () => {
+        $('[data-act="add-step"]', lastJunction()).click();
+        await wait(250);
+        await fillNode(nodes()[2], 'Keap › Contacts › contact record', 'Apply the tag "Attended – White Plains NY – 10-08-2026", which starts the automation "Post-event follow-up"');
+      } },
+    { target: () => $('.map-scroll', firstFlow()), title: 'Yes / No decisions',
+      text: 'When the process splits on a question, use the plus <b>above</b> for YES and <b>below</b> for NO, and type the question in the <b>Decision</b> box.',
+      run: async () => {
+        $('[data-act="add-yes"]', lastJunction()).click();
+        await wait(250);
+        await type($('[data-bind="decision"]', firstFlow()), 'Contact found in Keap?');
+        const yes = $('[data-flow="current"] .task:first-child .branch-yes .node', form);
+        await fillNode(yes, 'Slack #half-day-registration-forms', 'Reply in Tara\'s thread with the Stat Sheet summary (attended, CWSocial25, opt-ins)');
+      } },
+    { target: () => $('[data-add="task"][data-flow="current"]', form), title: 'Next task',
+      text: 'Click <b>+ Add another task</b> to start the map for your next task, until all your tasks are mapped.' },
+    { target: () => form.elements.q6_overview, title: 'What slows you down? (optional)',
+      text: 'One or two lines about the most time-consuming part.',
+      run: () => type(form.elements.q6_overview, 'Reading handwriting on 13 pages and typing every phone number by hand.') },
+    { target: () => $('[aria-labelledby="q3-title"]', form), title: '03 · Ideal automation (optional)',
+      text: 'How you <b>wish</b> it worked. Write "Automatically" if you don\'t know the tool, and say where you\'d still check or approve. You can map it the same way.',
+      run: () => type(form.elements.q7_overview, 'The sign-in sheet is read automatically and the rows appear in my sheet. I only check the flagged ones and click Finalize.') },
+    { target: () => $('.ack', form), title: 'Finish and submit',
+      text: 'Type <b>ACKNOWLEDGED</b> and click <b>Submit form</b>. You\'ll then be invited to Room 10 on the CW Helpdesk Zoom.' },
+    { title: 'Your turn!', text: 'We\'ll clear the example now and put back anything you had typed. You can replay this tour any time with <b>Watch the tutorial</b> at the top.' },
+  ];
+
+  function place() {
+    if (!touring) return;
+    const pad = 8;
+    if (!tourTarget) {
+      spot.style.cssText = 'top:50%;left:50%;width:0;height:0;';
+      tip.style.cssText = `top:${Math.max(16, innerHeight / 2 - tip.offsetHeight / 2)}px;left:${Math.max(16, innerWidth / 2 - tip.offsetWidth / 2)}px;`;
+      return;
+    }
+    const r = tourTarget.getBoundingClientRect();
+    spot.style.cssText = `top:${r.top - pad}px;left:${r.left - pad}px;width:${r.width + pad * 2}px;height:${r.height + pad * 2}px;`;
+    const th = tip.offsetHeight;
+    const tw = tip.offsetWidth;
+    let top;
+    if (r.bottom + pad + 14 + th < innerHeight) top = r.bottom + pad + 14;
+    else if (r.top - pad - 14 - th > 0) top = r.top - pad - 14 - th;
+    else top = innerHeight - th - 16;
+    const left = Math.min(Math.max(16, r.left + r.width / 2 - tw / 2), innerWidth - tw - 16);
+    tip.style.cssText = `top:${top}px;left:${left}px;`;
+  }
+
+  async function showTourStep(n) {
+    tourStep = n;
+    const st = TOUR[n];
+    busy = true;
+    tipNext.disabled = true;
+    tipTitle.textContent = st.title;
+    tipText.innerHTML = st.text;
+    tipCount.textContent = `${n + 1} of ${TOUR.length}`;
+    tipNext.textContent = n === TOUR.length - 1 ? 'Start filling it in' : 'Next';
+    tourTarget = st.target ? st.target() : null;
+    if (tourTarget) {
+      tourTarget.scrollIntoView({ block: 'center', inline: 'center' });
+      await wait(60);
+    }
+    place();
+    if (st.run) {
+      await st.run();
+      // The step may have added nodes; re-resolve the target and follow it.
+      if (st.target && touring) {
+        tourTarget = st.target();
+        tourTarget?.scrollIntoView({ block: 'center', inline: 'center' });
+        await wait(60);
+        place();
+      }
+    }
+    busy = false;
+    tipNext.disabled = false;
+    if (touring) tipNext.focus({ preventScroll: true });
+  }
+
   function openTour() {
-    showSlide(0);
-    tour.showModal();
-    document.documentElement.classList.add('no-scroll');
+    if (touring) return;
+    if (fullTask) setFullscreen(fullTask, false);
+    tourSnapshot = collect();
+    touring = true;
+    document.body.classList.add('touring');
+    spot.hidden = false;
+    tip.hidden = false;
+    form.reset();
+    render(null);
+    showTourStep(0);
   }
-  back.addEventListener('click', () => showSlide(slide - 1));
-  next.addEventListener('click', () => (slide === slides.length - 1 ? tour.close() : showSlide(slide + 1)));
-  tour.addEventListener('click', (e) => { if (e.target.closest('[data-close-tour]')) tour.close(); });
-  tour.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight' && slide < slides.length - 1) showSlide(slide + 1);
-    if (e.key === 'ArrowLeft') showSlide(slide - 1);
-  });
-  tour.addEventListener('close', () => {
-    document.documentElement.classList.remove('no-scroll');
+
+  function endTour() {
+    if (!touring) return;
+    touring = false;
+    document.body.classList.remove('touring');
+    spot.hidden = true;
+    tip.hidden = true;
+    form.reset();
+    render(tourSnapshot);
+    tourSnapshot = null;
+    clearTimeout(saveTimer);
     try { localStorage.setItem(TOUR_KEY, '1'); } catch { /* storage unavailable */ }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  tipNext.addEventListener('click', () => {
+    if (busy) return;
+    if (tourStep >= TOUR.length - 1) endTour();
+    else showTourStep(tourStep + 1);
   });
+  $('[data-tip-skip]', tip).addEventListener('click', endTour);
+  document.addEventListener('keydown', (e) => { if (touring && e.key === 'Escape') endTour(); });
+  window.addEventListener('resize', place);
+  window.addEventListener('scroll', place, { passive: true });
+  form.addEventListener('scroll', place, { capture: true, passive: true });
   $$('[data-open-tour]').forEach((btn) => btn.addEventListener('click', openTour));
 
   /* ---------- mapping guide pop-up ---------- */
@@ -548,13 +704,13 @@
     }
   });
 
-  // Show the tutorial on the first visit on a computer (phones see the device notice instead).
-  let tourSeen = false;
-  try { tourSeen = localStorage.getItem(TOUR_KEY) === '1'; } catch { /* storage unavailable */ }
-  if (!tourSeen && matchMedia('(min-width: 641px) and (hover: hover)').matches) openTour();
-
   const draft = loadDraft();
   render(draft);
   if (draft) $('#draftNote').textContent = 'We restored the answers you saved in this browser. Pick up where you left off.';
   updateBar();
+
+  // Run the guided tour on the first visit on a computer (phones see the device notice instead).
+  let tourSeen = false;
+  try { tourSeen = localStorage.getItem(TOUR_KEY) === '1'; } catch { /* storage unavailable */ }
+  if (!tourSeen && matchMedia('(min-width: 641px) and (hover: hover)').matches) setTimeout(openTour, 600);
 })();

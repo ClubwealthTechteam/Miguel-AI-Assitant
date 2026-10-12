@@ -203,131 +203,17 @@
 
 
 
-  <dialog class="tour" id="tourDialog" aria-labelledby="tourTitle">
-    <div class="tour-inner">
-      <header class="tour-head">
-        <p class="tour-eyebrow">Form tutorial <span id="tourCount">1 of 8</span></p>
-        <button type="button" class="icon-btn" data-close-tour aria-label="Close the tutorial"><svg viewBox="0 0 16 16" width="16" height="16"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
-      </header>
-      <div class="tour-body">
-
-        <section class="tour-slide" data-slide>
-          <h2 id="tourTitle">Welcome! Here's how this form works</h2>
-          <p>This form collects <strong>all the tasks from your 10 bullet points</strong> in the AI audit, so we can find which ones AI and automation can take off your plate.</p>
-          <ol class="tour-list">
-            <li><b>01 Process summary:</b> a few sentences about each task, numbered 1–10.</li>
-            <li><b>02 Manual process:</b> a map of how you do each task today. This is the most important part.</li>
-            <li><b>03 Ideal automation:</b> optional, how you wish the task worked.</li>
-          </ol>
-          <p class="tour-note">The next slides show exactly what to type, especially in the map. It takes about 2 minutes. Your answers save in this browser as you type.</p>
-        </section>
-
-        <section class="tour-slide" data-slide hidden>
-          <h2>01 · Process summary</h2>
-          <p>Write one short paragraph per task, numbered to match your 10 bullet points. For each task, cover:</p>
-          <ul class="tour-ticks">
-            <li><b>What</b> the task is</li>
-            <li><b>What starts it</b> (an email arrives, Tara posts a link, every Monday 9 AM)</li>
-            <li><b>How often</b> you do it</li>
-            <li><b>How long</b> it takes each time</li>
-          </ul>
-          <div class="tour-example"><span>Example</span>3. Event stats updates: after every Half-Day event, Tara posts the sign-in sheet in Slack and I turn it into attendance stats. 3–4 times a week, about 1 hour each.</div>
-        </section>
-
-        <section class="tour-slide" data-slide hidden>
-          <h2>02 · How the map works</h2>
-          <div class="tour-node">
-            <div class="tn-box">
-              <div class="tn-tool">Google Sheets – LIST MAKING CHECKLIST › Attendance Extracted</div>
-              <div class="tn-desc">Type each signed attendee's name and phone into rows 2–40, columns A–B. Link: https://docs.google.com/spreadsheets/d/…</div>
-            </div>
-            <ul class="tour-ticks">
-              <li><b>Top box (Tool):</b> the app <b>and exactly where</b> in it.</li>
-              <li><b>Bottom box (Task description):</b> what you do there: action + what + where, plus the link, tab, rows/columns or automation name.</li>
-              <li><b>+ Add another step:</b> the next thing you do.</li>
-              <li><b>Add a sub step Yes / No:</b> when the process splits on a question (e.g. "Signature clear?").</li>
-              <li><b>+ Add another task:</b> a new map for your next task. <b>One map per task.</b></li>
-            </ul>
-          </div>
-        </section>
-
-        <section class="tour-slide" data-slide hidden>
-          <h2>Spreadsheets: link → tab → rows &amp; columns</h2>
-          <p>If a step uses a spreadsheet you review or update, we need to find the exact cells. Always give all of these:</p>
-          <ol class="tour-steps">
-            <li><b>The link</b> to the spreadsheet (copy it from the browser address bar)</li>
-            <li><b>The sheet tab</b> name (the tab at the bottom of the screen)</li>
-            <li><b>The rows and columns</b> you read or change</li>
-          </ol>
-          <div class="tour-vs">
-            <div class="vs-bad"><span>Vague</span>Google Sheets: update the tracker</div>
-            <div class="vs-good"><span>Clear</span><b>Google Sheets – Daily Productivity Tracker › tab "October"</b><br>Paste yesterday's call count into column D, one row per rep (rows 2–25). Link: https://docs.google.com/spreadsheets/d/…</div>
-          </div>
-        </section>
-
-        <section class="tour-slide" data-slide hidden>
-          <h2>Keap: say where in Keap, and name the automation</h2>
-          <p>"Keap" alone could mean a hundred places. Say which area you're in, and name the exact <b>campaign, automation, tag, saved search or broadcast</b>.</p>
-          <ul class="tour-ticks">
-            <li><b>Contacts:</b> Keap › Contacts › contact record › Tags: apply tag "Attended – White Plains NY – 10-08-2026"</li>
-            <li><b>Campaigns / automations:</b> Keap › Campaign Builder › "Half-Day Registration Follow-up" › sequence "Day 1 reminder"</li>
-            <li><b>Saved searches / reports:</b> Keap › Contacts › saved search "Half-Day registrants – Oct"</li>
-            <li><b>Emails:</b> Keap › Broadcasts › "Week 42 event invite"</li>
-          </ul>
-          <div class="tour-vs">
-            <div class="vs-bad"><span>Vague</span>Keap: update the contact</div>
-            <div class="vs-good"><span>Clear</span><b>Keap › Contacts › contact record</b><br>Apply the tag "Attended – White Plains NY – 10-08-2026", which starts the automation "Post-event follow-up".</div>
-          </div>
-        </section>
-
-        <section class="tour-slide" data-slide hidden>
-          <h2>Every other tool: the same rule</h2>
-          <p>Name the tool <b>and the exact place</b>, and name any automation, template, list or report by its real name.</p>
-          <div class="tour-grid">
-            <div><b>Slack</b>Channel name: #half-day-registration-forms</div>
-            <div><b>Gmail / Outlook</b>Inbox, folder or label, and the template name</div>
-            <div><b>Google Drive</b>Folder link and file name</div>
-            <div><b>ProspectBoss</b>List or pond name</div>
-            <div><b>Eventbrite</b>Event name and the report or page you open</div>
-            <div><b>Zapier</b>The Zap name, e.g. "Half day registration forms &gt; Slack"</div>
-            <div><b>Zoom</b>Meeting or room name, e.g. "CW Helpdesk – Room 10"</div>
-            <div><b>Adobe Acrobat / PDFs</b>Where the file comes from and what you read in it</div>
-            <div><b>Any website or app</b>The page, menu or button you use</div>
-          </div>
-        </section>
-
-        <section class="tour-slide" data-slide hidden>
-          <h2>Vague vs. clear: quick check</h2>
-          <p>Before you move on, read each box and ask: <b>"Could someone else do this step from my description alone?"</b> If not, add more detail.</p>
-          <table class="tour-table">
-            <tr><th class="bad">Too vague</th><th class="good">Clear (do this)</th></tr>
-            <tr><td class="bad">Check the sheet</td><td class="good">Google Sheets – Event Registration tab (link): count "Yes" in column F for rows with today's event date in column H</td></tr>
-            <tr><td class="bad">Keap stuff</td><td class="good">Keap › Campaign Builder › "Half-Day Registration Follow-up": pause the sequence "Day 1 reminder" for no-shows</td></tr>
-            <tr><td class="bad">Send email</td><td class="good">Gmail – events@ inbox: reply using the template "Zoom link – Half-Day"</td></tr>
-            <tr><td class="bad">Post in Slack</td><td class="good">Slack #half-day-registration-forms: reply in Tara's thread with the stats summary</td></tr>
-          </table>
-        </section>
-
-        <section class="tour-slide" data-slide hidden>
-          <h2>03 · Ideal automation, then submit</h2>
-          <ul class="tour-ticks">
-            <li><b>Optional:</b> map how you wish each task worked. Write "Automatically" if you don't know the tool, and mark where you'd still check or approve.</li>
-            <li>Type <code>ACKNOWLEDGED</code> and click <b>Submit form</b>.</li>
-            <li>You'll be invited to <b>Room 10</b> on the CW Helpdesk Zoom to walk through your process with Miguel and Camille.</li>
-          </ul>
-          <p class="tour-note">You can reopen this tutorial any time with the <b>Watch the tutorial</b> button at the top, and the <b>mapping guide</b> in question 02.</p>
-        </section>
-
-      </div>
-      <footer class="tour-foot">
-        <div class="tour-dots" id="tourDots" aria-hidden="true"></div>
-        <div class="tour-btns">
-          <button type="button" class="btn-ghost btn-sm" id="tourBack">Back</button>
-          <button type="button" class="btn-primary btn-sm" id="tourNext">Next</button>
-        </div>
-      </footer>
+  <!-- Guided tour: a spotlight over the real form plus an explanation card. -->
+  <div class="tour-spot" id="tourSpot" hidden aria-hidden="true"></div>
+  <div class="tour-tip" id="tourTip" role="dialog" aria-live="polite" aria-labelledby="tourTipTitle" hidden>
+    <p class="tour-tip-count" data-tip-count>1 of 14</p>
+    <h2 class="tour-tip-title" id="tourTipTitle" data-tip-title></h2>
+    <p class="tour-tip-text" data-tip-text></p>
+    <div class="tour-tip-btns">
+      <button type="button" class="tour-skip" data-tip-skip>Skip tour</button>
+      <button type="button" class="btn-primary btn-sm" data-tip-next>Next</button>
     </div>
-  </dialog>
+  </div>
 
   <dialog class="guide-dialog" id="guideDialog" aria-labelledby="guideTitle">
     <div class="guide-dialog-inner">
@@ -371,7 +257,7 @@
   <template id="tpl-node">
     <div class="node">
       <button type="button" class="node-remove" data-act="remove-step" aria-label="Remove step"><svg viewBox="0 0 16 16" width="10" height="10"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
-      <input type="text" class="node-tool" data-bind="tool" placeholder="Tool + where (e.g. Keap › Campaign Builder)" aria-label="Tool used and where in it">
+      <textarea class="node-tool" data-bind="tool" rows="2" placeholder="Tool + where (e.g. Keap › Campaign Builder)" aria-label="Tool used and where in it"></textarea>
       <textarea class="node-desc" data-bind="description" rows="4" placeholder="What you do. Add the link, sheet tab, rows/columns, or the automation name." aria-label="Task description"></textarea>
     </div>
   </template>

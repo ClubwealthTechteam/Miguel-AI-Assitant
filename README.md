@@ -8,7 +8,7 @@ A self-hosted intake form where admins across Clubwealth, Homexa and PFL documen
 
 ## Form sections
 
-The form is kept short for non-technical staff: three questions and the acknowledgement. A step-by-step tutorial (8 slides) opens on the first visit on a computer and can be reopened with **Watch the tutorial**; it focuses on writing specific map steps (spreadsheet link → tab → rows/columns; where in Keap and the automation name; the same for every other tool). The mapping guide image opens as a pop-up from question 02.
+The form is kept short for non-technical staff: three questions and the acknowledgement. A guided tour opens on the first visit on a computer and can be replayed with **Watch the tutorial**: it spotlights each part of the real form and types a worked example into it (details, summary, a map with a spreadsheet step, a Keap step and a Yes/No decision), stressing specific steps (spreadsheet link → tab → rows/columns; where in Keap and the automation name; the same for every other tool). The person's own answers are snapshotted first and restored when the tour ends; nothing the tour types is saved or submitted. The mapping guide image opens as a pop-up from question 02.
 
 | # | Section | Captured as |
 |---|---|---|

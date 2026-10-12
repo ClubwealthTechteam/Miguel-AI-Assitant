@@ -48,7 +48,7 @@
   function measure(ctx, path) {
     ctx.font = `600 14px ${SANS}`;
     path.steps.forEach((s) => {
-      s._tool = wrap(ctx, s.tool || '—', NODE_W - PAD_X * 2, 2);
+      s._tool = wrap(ctx, s.tool || '—', NODE_W - PAD_X * 2, 3);
     });
     ctx.font = `400 13px ${SANS}`;
     path.steps.forEach((s) => {
