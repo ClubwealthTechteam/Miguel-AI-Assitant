@@ -16,7 +16,6 @@ The form is kept short for non-technical staff: three questions and the acknowle
 | 01 | Process summary | Free text, required (sent as `q2.overview`) |
 | 02 | Manual process | Flow map per task on a draggable canvas: **Tool → What you do** steps that can split into YES / NO paths (sent as `q2.tasks`), plus an optional "What slows you down the most?" (sent as `q6.overview`). A mapping guide image (`public/sop/map-guide.png`) sits above the map |
 | 03 | Ideal automation (optional) | Free text plus a flow map of the ideal process (sent as `q7`) |
-| 04 | What would you like to automate? (optional) | Free text for anything else they wish were automated (sent as `wishlist.overview`; saved in the last `Q4 What I'd Like Automated` column of `Submissions`). A **Hide / Show** button folds the section away; the choice is remembered in that browser |
 | — | Room 10 Zoom acknowledgement | Must type `ACKNOWLEDGED` |
 
 The payload keeps the original field names, so `api/submit.js` and the deployed Apps Script need no changes. The tools lists and the Q3–Q5 tables are no longer asked; their Sheet columns stay empty.

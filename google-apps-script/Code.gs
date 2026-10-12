@@ -25,7 +25,7 @@ var TABS = {
       'Q3 Information Needed', 'Q4 Manual / Repetitive Steps', 'Q5 Judgment / Approval',
       'Q6 Bottlenecks & Workarounds', 'Q7 Ideal Automated Version', 'Q7 Ideal Process Map',
       'Preferred Platform', 'Platform Reason', 'Acknowledged', 'Raw JSON',
-      'Q2 Map Images', 'Q7 Map Images', 'Department', 'Q4 What I\'d Like Automated']
+      'Q2 Map Images', 'Q7 Map Images', 'Department']
   },
   steps: {
     name: 'Process Steps',
@@ -100,8 +100,7 @@ function writeSubmission_(ss, body) {
     d.q6 && d.q6.overview, d.q7 && d.q7.overview, flowText_(d.q7 && d.q7.tasks),
     d.platform && d.platform.choice, d.platform && d.platform.reason,
     d.acknowledged, JSON.stringify(d).slice(0, 49000),
-    images.current.join('\n'), images.ideal.join('\n'), d.department,
-    d.wishlist && d.wishlist.overview
+    images.current.join('\n'), images.ideal.join('\n'), d.department
   ]]);
 
   var stepRows = []

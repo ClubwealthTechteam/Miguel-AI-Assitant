@@ -267,29 +267,6 @@
   const val = (name) => (form.elements[name]?.value || '').trim();
   const clean = (s) => (s || '').trim();
 
-  /* ---------- collapsible optional sections (question 04) ---------- */
-  const COLLAPSE_KEY = 'cw-form-collapsed-v1';
-  function setCollapsed(section, collapsed, remember = true) {
-    if (!section) return;
-    const btn = $('[data-toggle-section]', section), body = $('.q-body', section);
-    section.classList.toggle('is-collapsed', collapsed);
-    body.hidden = collapsed;
-    btn.setAttribute('aria-expanded', String(!collapsed));
-    $('[data-toggle-label]', btn).textContent = collapsed ? 'Show' : 'Hide';
-    if (!remember) return;
-    try {
-      const saved = JSON.parse(localStorage.getItem(COLLAPSE_KEY) || '{}');
-      saved[section.dataset.collapsible] = collapsed;
-      localStorage.setItem(COLLAPSE_KEY, JSON.stringify(saved));
-    } catch { /* storage unavailable: the section just starts open */ }
-  }
-  $$('[data-collapsible]', form).forEach((section) => {
-    $('[data-toggle-section]', section).addEventListener('click', () => setCollapsed(section, !section.classList.contains('is-collapsed')));
-    let saved = {};
-    try { saved = JSON.parse(localStorage.getItem(COLLAPSE_KEY) || '{}'); } catch { /* ignore */ }
-    if (saved[section.dataset.collapsible]) setCollapsed(section, true, false);
-  });
-
   function collect() {
     const flow = (name) => $$(`[data-flow="${name}"] .task`, form).map((t) => ({
       title: clean($('[data-field="title"]', t).value),
@@ -307,8 +284,6 @@
       q2: { overview: val('q2_overview'), tasks: flow('current') },
       q6: { overview: val('q6_overview'), rows: [] },
       q7: { overview: val('q7_overview'), tasks: flow('ideal') },
-      // Optional question 04: anything else they'd like automated.
-      wishlist: { overview: val('wishlist_overview') },
       acknowledged: val('acknowledged'),
       website: val('website'),
     };
@@ -323,7 +298,7 @@
     });
     if (data) {
       ['name', 'email', 'department', 'date', 'acknowledged'].forEach((k) => { if (data[k]) form.elements[k].value = data[k]; });
-      ['q2', 'q6', 'q7', 'wishlist'].forEach((k) => {
+      ['q2', 'q6', 'q7'].forEach((k) => {
         if (data[k]?.overview) form.elements[`${k}_overview`].value = data[k].overview;
       });
     }
@@ -567,9 +542,6 @@
     { target: () => $('[aria-labelledby="q3-title"]', form), title: '03 · Ideal automation (optional)',
       text: 'How you <b>wish</b> it worked. Write "Automatically" if you don\'t know the tool, and say where you\'d still check or approve. You can map it the same way.',
       run: () => type(form.elements.q7_overview, 'The sign-in sheet is read automatically and the rows appear in my sheet. I only check the flagged ones and click Finalize.') },
-    { target: () => $('[aria-labelledby="q4-title"]', form), title: '04 · What would you like to automate? (optional)',
-      text: 'Anything else you wish AI could do for you, outside your 10 tasks. Not required: click <b>Hide</b> to fold it away if nothing comes to mind.',
-      run: () => { setCollapsed($('[data-collapsible="wishlist"]', form), false, false); return type(form.elements.wishlist_overview, 'A daily summary of my Gmail with only the emails I need to act on.'); } },
     { target: () => $('.ack', form), title: 'Finish and submit',
       text: 'Type <b>ACKNOWLEDGED</b> and click <b>Submit form</b>. You\'ll then be invited to Room 10 on the CW Helpdesk Zoom.' },
     { title: 'Your turn!', text: 'We\'ll clear the example now and put back anything you had typed. You can replay this tour any time with <b>Watch the tutorial</b> at the top.' },
