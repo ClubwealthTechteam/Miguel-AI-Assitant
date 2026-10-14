@@ -1,0 +1,10 @@
+{
+  "name": "cw-replica",
+  "description": "Replace a paid outside app with an in-house Club Wealth tool: subscription audit, build-or-keep plan on our stack, and data migration and cutover.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Club Wealth Tech Team"
+  },
+  "repository": "https://github.com/clubwealthtechteam/miguel-ai-assitant",
+  "keywords": ["internal-tools", "subscriptions", "app-replacement", "clubwealth"]
+}

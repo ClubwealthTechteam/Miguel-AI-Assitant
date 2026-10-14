@@ -1,0 +1,26 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "clubwealth",
+  "description": "Club Wealth's internal Claude Code plugins",
+  "owner": {
+    "name": "Club Wealth Tech Team"
+  },
+  "plugins": [
+    {
+      "name": "cw-replica",
+      "description": "Replace a paid outside app with an in-house one: audit what the team really uses, decide if a rebuild pays off, plan it on our stack, then migrate the data and cancel.",
+      "source": "./plugins/cw-replica",
+      "category": "productivity"
+    },
+    {
+      "name": "replica-skill",
+      "description": "Jake Schincariol's Replica pack (MIT): recon, build, test and parity-diff skills that do the actual rebuild. cw-replica hands off to it.",
+      "source": {
+        "source": "github",
+        "repo": "Jakeschincariol/replica-skill"
+      },
+      "category": "productivity",
+      "homepage": "https://github.com/Jakeschincariol/replica-skill"
+    }
+  ]
+}

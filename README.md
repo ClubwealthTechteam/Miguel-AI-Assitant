@@ -82,3 +82,7 @@ Vercel env vars: `SLACK_SIGNING_SECRET` (Slack app › Basic Information › Sig
 
 Slack app settings: bot scopes `app_mentions:read`, `chat:write`, `groups:history`, `channels:history`, `users:read`; Event Subscriptions on, Request URL as above, bot event `app_mention`; the bot invited to each channel where it should answer. The bot token itself is a network secret in the claude.ai environment, attached to `slack.com/api/` requests, so it never appears in prompts or code.
 Updated by Miguel
+
+## Claude Code plugin: cw-replica
+
+`plugins/cw-replica/` is a Claude Code plugin for replacing paid outside apps with in-house tools (audit → plan → cutover), listed in this repo's marketplace (`.claude-plugin/marketplace.json`) next to the Replica pack it hands the build to. Install with `/plugin marketplace add clubwealthtechteam/miguel-ai-assitant`, then `/plugin install cw-replica@clubwealth`. See `plugins/cw-replica/README.md`.
