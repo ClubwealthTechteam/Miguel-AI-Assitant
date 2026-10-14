@@ -1,0 +1,14 @@
+feature,used_by,how_often,must_keep,notes
+Candidate records (contact details, resume),unknown,unknown,unknown,SOP shows phone numbers copied in by hand from Jotform emails
+Pipeline stages per job (e.g. Screening),unknown,unknown,unknown,SOP example: change stage to Screening
+Review incoming applications,unknown,unknown,unknown,"Intake form example: ""Recruit CRM (Check application)"""
+Send interview invites by email,unknown,unknown,unknown,"Intake form example: ""> Gmail (Send invite)"" - may happen in Gmail, not Recruit CRM"
+Job openings,unknown,unknown,unknown,
+Interview scheduling / calendar sync,unknown,unknown,unknown,
+Notes and tasks on candidates,unknown,unknown,unknown,
+Resume parsing,unknown,unknown,unknown,Hard to rebuild well; AI step would cost per resume
+Careers page / application form,unknown,unknown,unknown,Applications currently seem to arrive through Jotform
+Job board multiposting,unknown,unknown,unknown,Metered add-on on Recruit CRM; would need a paid job-board feed if rebuilt
+Email sequences / templates,unknown,unknown,unknown,
+Reports (time to hire etc),unknown,unknown,unknown,
+Onboarding after hire,unknown,unknown,unknown,May not be in Recruit CRM at all
