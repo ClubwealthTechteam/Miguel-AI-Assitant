@@ -22,6 +22,9 @@ const ACROBAT = /acrobat\.adobe\.com\/(id\/urn:aaid|link\/)/i;
 // Half-Day Event Forms routine right away (its hourly run stays as the backup).
 const FORMS_CHANNEL = { id: 'C0CAGLHJQAE', posters: ['U03JNPKQ2G2', 'U0C6BGGHY3C'] };
 const DEFAULT_FORMS_ROUTINE_ID = 'trig_01FcH7xaGFM8euvCcku3ztta';
+// Kathleen or Miguel saying "done" (a reply in a forms thread, or one new message covering
+// several threads) starts the same routine's Keap check right away.
+const DONE_SAYERS = ['U0AJFNKSSBY', 'U0C6BGGHY3C'];
 
 async function readRaw(req) {
   const chunks = [];
@@ -63,6 +66,13 @@ export function isFormsChannelPost(ev) {
   return ev.type === 'message' && !ev.bot_id && ev.channel === FORMS_CHANNEL.id
     && FORMS_CHANNEL.posters.includes(ev.user) && (!ev.subtype || ev.subtype === 'file_share')
     && (!ev.thread_ts || ev.thread_ts === ev.ts) && (ACROBAT.test(String(ev.text || '')) || hasPdf(ev));
+}
+
+// "done" from Kathleen or Miguel: a thread reply that is just "done", or a top-level message containing it.
+export function isFormsDone(ev) {
+  if (ev.type !== 'message' || ev.bot_id || ev.subtype || ev.channel !== FORMS_CHANNEL.id || !DONE_SAYERS.includes(ev.user)) return false;
+  const text = String(ev.text || '').trim();
+  return ev.thread_ts && ev.thread_ts !== ev.ts ? /^done\W*$/i.test(text) : /\bdone\b/i.test(text);
 }
 
 async function fireRoutine(text, forms = false) {
@@ -109,6 +119,14 @@ export default async function handler(req, res) {
       await fireRoutine(`New forms post in #cw-halfday-event-forms-automation (message ts ${ev.ts}). Run now.`, true);
     } catch (e) {
       console.error('slack-events (forms channel):', e.message);
+    }
+    return res.status(200).json({ ok: true });
+  }
+  if (body.type === 'event_callback' && isFormsDone(ev)) {
+    try {
+      await fireRoutine(`Kathleen/Miguel said done in #cw-halfday-event-forms-automation (message ts ${ev.ts}${ev.thread_ts ? `, thread ${ev.thread_ts}` : ''}). Run now.`, true);
+    } catch (e) {
+      console.error('slack-events (forms done):', e.message);
     }
     return res.status(200).json({ ok: true });
   }

@@ -80,6 +80,8 @@ If no `.env` is present, the dev server runs the real `Code.gs` against an in-me
 
 **Forms channel pickup:** in #cw-halfday-event-forms-automation (`C0CAGLHJQAE`, see `FORMS_CHANNEL`), a new top-level post from Tara or Miguel with an Acrobat link or a PDF starts the "Half-Day Event Forms → sheet + Keap check" routine (`trig_01FcH7xaGFM8euvCcku3ztta`) right away instead of waiting for its hourly run. A tag on that post is ignored so the replies routine doesn't answer it too. Needs `FORMS_ROUTINE_TOKEN` (that routine's API token) in Vercel and the `message.groups` bot event (the channel is private).
 
+**Forms "done":** Kathleen or Miguel replying "done" in a forms thread, or posting one new message in the channel with "done" in it (covering several forms threads), starts the same routine right away, so the Keap check runs without waiting for the hourly run.
+
 Vercel env vars: `SLACK_SIGNING_SECRET` (Slack app › Basic Information › Signing Secret) and `CLAUDE_ROUTINE_TOKEN` (the routine's API token). `FORMS_ROUTINE_TOKEN` (the forms routine's API token). Optional: `CLAUDE_ROUTINE_ID`, `FORMS_ROUTINE_ID`, `SLACK_ALLOWED_CHANNELS` (comma-separated channel ids to limit where it answers; default: every channel the bot is in).
 
 Slack app settings: bot scopes `app_mentions:read`, `chat:write`, `groups:history`, `channels:history`, `mpim:history`, `users:read`; Event Subscriptions on, Request URL as above, bot events `app_mention` and `message.groups`; the bot invited to each channel where it should answer. The bot token itself is a network secret in the claude.ai environment, attached to `slack.com/api/` requests, so it never appears in prompts or code.
