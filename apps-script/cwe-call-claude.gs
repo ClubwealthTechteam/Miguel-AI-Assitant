@@ -2,11 +2,14 @@
 // start the CWE Call Attendance Summary routine right away instead of waiting
 // for its hourly check. The routine itself reads the sheet and posts to #cw-team.
 //
-// Setup (once): Extensions > Apps Script, paste this file, then
+// Setup (once): paste this file into Extensions > Apps Script on the sheet, or into a new
+// project at script.google.com (works the same, it finds the sheet by SHEET_ID), then
 //   Project Settings > Script Properties > add ROUTINE_TOKEN = <the routine's API token>
 //   and run setup() once (it asks for permission to run on edit and call the API).
+// The account that runs setup() needs edit access to the sheet.
 
 const ROUTINE_ID = 'trig_01SUmf3Uv5foFEXRvr73Czqk';
+const SHEET_ID = '1YbMCRPFMysBzPO9M-0wdZ0Gz-VYLFsjFNK7Q7fSpdCs'; // Club Wealth Explained
 const COOLDOWN_MS = 2 * 60 * 1000; // ignore a quick untick + retick
 
 function onCallClaudeTick(e) {
@@ -39,7 +42,7 @@ function onCallClaudeTick(e) {
 }
 
 function setup() {
-  const ss = SpreadsheetApp.getActive();
+  const ss = SpreadsheetApp.openById(SHEET_ID);
   ScriptApp.getProjectTriggers()
     .filter((t) => t.getHandlerFunction() === 'onCallClaudeTick')
     .forEach((t) => ScriptApp.deleteTrigger(t));
