@@ -1,7 +1,6 @@
 // Vercel serverless function: Slack Events API endpoint for the Club Wealth Assistant bot.
-// Slack calls this when someone @mentions the bot, for new messages in the group DMs in
-// FORMS_WATCH (half-day event forms posted without a tag), and for new posts in the forms
-// channel (FORMS_CHANNEL). We check the request really came from Slack (signing secret), then
+// Slack calls this when someone @mentions the bot, and for new posts in the forms channel
+// (FORMS_CHANNEL). We check the request really came from Slack (signing secret), then
 // start the Claude routine that handles it.
 //
 // Vercel env vars:
@@ -18,9 +17,6 @@ const DEFAULT_ROUTINE_ID = 'trig_01NxEicTyZLjRL6bSNr9mF8Z';
 const MAX_BYTES = 1_000_000;
 const MAX_TEXT = 4000;
 const BOT_MENTION = '<@U0C8DNAJ82F>';
-// Group DM -> the one person whose untagged posts are checked for half-day event forms there.
-// Jizel, Camille and Tara's group DM: Tara posts the forms link, the routine tags Jizel.
-const FORMS_WATCH = { C0CAB8R1FD5: 'U03JNPKQ2G2' };
 const ACROBAT = /acrobat\.adobe\.com\/(id\/urn:aaid|link\/)/i;
 // #cw-halfday-event-forms-automation: a top-level forms PDF from Tara or Miguel starts the
 // Half-Day Event Forms routine right away (its hourly run stays as the backup).
@@ -48,9 +44,9 @@ export function validSignature(secret, timestamp, raw, signature) {
 }
 
 // The text handed to the routine. Slack text is user content: the routine treats it as data.
-export function eventText(ev, formsWatch = false) {
+export function eventText(ev) {
   return [
-    formsWatch ? 'Slack event (from the Club Wealth relay, forms watch: untagged message):' : 'Slack event (from the Club Wealth relay):',
+    'Slack event (from the Club Wealth relay):',
     `channel: ${ev.channel}`,
     `message ts: ${ev.ts}`,
     `thread ts: ${ev.thread_ts || '(none: reply in a new thread under the message)'}`,
@@ -58,16 +54,6 @@ export function eventText(ev, formsWatch = false) {
     'message text:',
     String(ev.text || '').slice(0, MAX_TEXT),
   ].join('\n');
-}
-
-// An untagged post in a watched group DM that may be half-day event forms. Tagged posts are
-// left to the app_mention event so the routine never runs twice for one message.
-export function isFormsPost(ev) {
-  const text = String(ev.text || '');
-  const pdf = hasPdf(ev);
-  return ev.type === 'message' && !ev.bot_id && FORMS_WATCH[ev.channel] === ev.user
-    && (!ev.subtype || ev.subtype === 'file_share') && !text.includes(BOT_MENTION)
-    && (ACROBAT.test(text) || pdf);
 }
 
 const hasPdf = (ev) => (ev.files || []).some((f) => /pdf/i.test(`${f.mimetype || ''} ${f.filetype || ''}`));
@@ -134,11 +120,10 @@ export default async function handler(req, res) {
   const channels = (process.env.SLACK_ALLOWED_CHANNELS || '').split(',').map((s) => s.trim()).filter(Boolean);
   const mention = body.type === 'event_callback' && ev.type === 'app_mention'
     && !ev.bot_id && ev.user && ev.channel && (!channels.length || channels.includes(ev.channel));
-  const forms = body.type === 'event_callback' && isFormsPost(ev);
-  if (!mention && !forms) return res.status(200).json({ ok: true, skipped: 'ignored event' });
+  if (!mention) return res.status(200).json({ ok: true, skipped: 'ignored event' });
 
   try {
-    await fireRoutine(eventText(ev, forms));
+    await fireRoutine(eventText(ev));
   } catch (e) {
     console.error('slack-events:', e.message);
   }
