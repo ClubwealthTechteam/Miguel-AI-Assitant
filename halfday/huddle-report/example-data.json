@@ -1,0 +1,478 @@
+{
+ "asOf": "October 23, 2026 | 6:00 AM PT (TEST 3)",
+ "window": "Sign-ups between 7:00 AM 10/21/2026 and 7:00 AM 10/22/2026, Pacific.",
+ "full": [
+  {
+   "city": "Plano",
+   "state": "TX",
+   "label": "Thu 10/22/2026 \u00b7 held",
+   "goal": 300,
+   "signUps": 196,
+   "held": true,
+   "shownText": "Attended: 28 of 201 tagged (13.93%)"
+  },
+  {
+   "city": "Houston",
+   "state": "TX",
+   "label": "Fri 10/23/2026 \u00b7 today",
+   "goal": 300,
+   "signUps": 477,
+   "prev": 490,
+   "prevShow": 87,
+   "same": 472,
+   "expect": 85,
+   "flat": 100,
+   "need": "\u2014",
+   "pace": 493,
+   "health": "On track",
+   "h": "good"
+  }
+ ],
+ "partial": [],
+ "isa": [
+  [
+   "ChristinaL",
+   "02 Rod",
+   "06/19/2026",
+   4
+  ],
+  [
+   "Alleah",
+   "04 Dave",
+   "01/23/2026",
+   3
+  ],
+  [
+   "GabrielG",
+   "04 Dave",
+   "07/17/2026",
+   3
+  ],
+  [
+   "HazelB",
+   "01 Mark",
+   "10/16/2026",
+   3
+  ],
+  [
+   "JamD",
+   "01 Mark",
+   "10/02/2026",
+   3
+  ],
+  [
+   "JeffN",
+   "01 Mark",
+   "10/16/2026",
+   3
+  ],
+  [
+   "RomeF",
+   "01 Mark",
+   "08/28/2026",
+   3
+  ],
+  [
+   "SamP",
+   "04 Dave",
+   "08/21/2026",
+   3
+  ],
+  [
+   "DaveT",
+   "04 Dave",
+   "05/22/2026",
+   2
+  ],
+  [
+   "Jeriza",
+   "03 Jeriza",
+   "10/03/2025",
+   2
+  ],
+  [
+   "Aaevah",
+   "02 Rod",
+   "11/07/2025",
+   1
+  ],
+  [
+   "Katrina",
+   "03 Jeriza",
+   "11/26/2025",
+   1
+  ],
+  [
+   "LolitaE",
+   "03 Jeriza",
+   "07/31/2026",
+   1
+  ],
+  [
+   "Rj",
+   "04 Dave",
+   "01/16/2026",
+   1
+  ],
+  [
+   "RodV",
+   "02 Rod",
+   "05/01/2026",
+   1
+  ],
+  [
+   "Ruth",
+   "02 Rod",
+   "10/03/2025",
+   1
+  ],
+  [
+   "BrianC",
+   "01 Mark",
+   "10/23/2026",
+   0
+  ],
+  [
+   "EjayM",
+   "03 Jeriza",
+   "08/21/2026",
+   0
+  ],
+  [
+   "EmieE",
+   "01 Mark",
+   "10/02/2026",
+   0
+  ],
+  [
+   "JonaC",
+   "01 Mark",
+   "10/02/2026",
+   0
+  ],
+  [
+   "Lily",
+   "02 Rod",
+   "11/14/2025",
+   0
+  ],
+  [
+   "Mark",
+   "01 Mark",
+   "06/27/2025",
+   0
+  ],
+  [
+   "MelchanP",
+   "01 Mark",
+   "10/02/2026",
+   0
+  ],
+  [
+   "ShayneB",
+   "03 Jeriza",
+   "07/06/2026",
+   0
+  ]
+ ],
+ "rm": [
+  [
+   "Andrew",
+   5
+  ],
+  [
+   "Beula",
+   5
+  ],
+  [
+   "Ebimo",
+   3
+  ],
+  [
+   "Joe",
+   3
+  ],
+  [
+   "Vanessa",
+   3
+  ],
+  [
+   "Marcia",
+   2
+  ],
+  [
+   "Francis N",
+   1
+  ]
+ ],
+ "events": [
+  [
+   "VIPGUEST1 - SMS Campaign",
+   4,
+   8
+  ],
+  [
+   "CW300 - Email Blast (w/ GFX)",
+   1,
+   28
+  ],
+  [
+   "Coaches/Clients",
+   0,
+   0
+  ],
+  [
+   "CWEvents",
+   0,
+   0
+  ],
+  [
+   "CWSOCIAL19 - Social Media",
+   0,
+   0
+  ],
+  [
+   "CWSocial25",
+   0,
+   16
+  ],
+  [
+   "CWSocial26",
+   0,
+   0
+  ],
+  [
+   "CWSocial27",
+   0,
+   1
+  ],
+  [
+   "Meta Ads 1",
+   0,
+   1
+  ],
+  [
+   "Meta Ads 2",
+   0,
+   1
+  ],
+  [
+   "Past Registrant",
+   0,
+   5
+  ],
+  [
+   "VIPGUEST - Email Campaigns",
+   0,
+   0
+  ]
+ ],
+ "ccv": [
+  [
+   "Erick Harbert",
+   1
+  ],
+  [
+   "Brad Burnes",
+   0
+  ],
+  [
+   "Carlyn Lowery",
+   0
+  ],
+  [
+   "Chad Keeney",
+   0
+  ],
+  [
+   "Chris Lloyd",
+   0
+  ],
+  [
+   "Hea Joo Kim",
+   0
+  ],
+  [
+   "Jeff Russell",
+   0
+  ],
+  [
+   "Jon Shepheard",
+   0
+  ],
+  [
+   "Linda Welsh",
+   0
+  ],
+  [
+   "Patrick Morales (NEXA Mortgage)",
+   0
+  ],
+  [
+   "Richard Overall",
+   0
+  ],
+  [
+   "Ryan Nicholas",
+   0
+  ]
+ ],
+ "unatt": [
+  [
+   "(none)",
+   1
+  ]
+ ],
+ "totals": {
+  "isa": 35,
+  "rm": 22,
+  "events": 5,
+  "ccv": 1,
+  "unatt": 1
+ },
+ "codes": {
+  "CWSocial25": [
+   [
+    "Plano TX \u00b7 10/22",
+    "\u2014",
+    10
+   ],
+   [
+    "Houston TX \u00b7 10/23",
+    0,
+    16
+   ]
+  ],
+  "CW300": [
+   [
+    "Plano TX \u00b7 10/22",
+    "\u2014",
+    12
+   ],
+   [
+    "Houston TX \u00b7 10/23",
+    1,
+    28
+   ]
+  ]
+ },
+ "c27": [
+  [
+   "Houston TX \u00b7 10/23/2026",
+   "via \"5Ways - Houston TX - 10-23-2026 | FB\" (24188): 2\nalso on \"5Ways - Houston TX - 10-23-2026\" (23940): 1",
+   0,
+   2
+  ]
+ ],
+ "note": "Plano: first visit, so no last-visit bars. Plano attended is from the Stat Sheet (Keap tags); the 196 bar is Eventbrite sign-ups, so the two counts differ slightly.",
+ "daily": [
+  [
+   "Houston",
+   13,
+   false
+  ],
+  [
+   "Chesapeake",
+   4,
+   true
+  ],
+  [
+   "Newport News",
+   2,
+   true
+  ],
+  [
+   "Richmond",
+   4,
+   true
+  ],
+  [
+   "Fairfax",
+   14,
+   true
+  ],
+  [
+   "Arnold",
+   6,
+   true
+  ]
+ ],
+ "dailyNote": "Houston: huddle window, 5 AM to 5 AM Pacific. * November stops: Pacific calendar day so far. Plano was held, so it is off the chart.",
+ "title": "This week: Thursday and Friday stops",
+ "next": [
+  {
+   "city": "Chesapeake",
+   "state": "VA",
+   "label": "Mon 11/16/2026 \u00b7 24 days out",
+   "goal": 300,
+   "signUps": 20,
+   "flat": 4,
+   "need": "11.67",
+   "pace": 82,
+   "prev": 129,
+   "prevShow": 49,
+   "expect": 8
+  },
+  {
+   "city": "Newport News",
+   "state": "VA",
+   "label": "Tue 11/17/2026 \u00b7 25 days out",
+   "goal": 300,
+   "signUps": 10,
+   "flat": 2,
+   "need": "11.60",
+   "pace": 39,
+   "expect": 2
+  },
+  {
+   "city": "Richmond",
+   "state": "VA",
+   "label": "Wed 11/18/2026 \u00b7 26 days out",
+   "goal": 300,
+   "signUps": 15,
+   "flat": 3,
+   "need": "10.96",
+   "pace": 63,
+   "expect": 3
+  },
+  {
+   "city": "Fairfax",
+   "state": "VA",
+   "label": "Thu 11/19/2026 \u00b7 27 days out",
+   "goal": 300,
+   "signUps": 46,
+   "flat": 10,
+   "need": "9.41",
+   "pace": 212,
+   "prev": 460,
+   "prevShow": 93,
+   "expect": 9
+  },
+  {
+   "city": "Arnold",
+   "state": "MD",
+   "label": "Fri 11/20/2026 \u00b7 28 days out",
+   "goal": 300,
+   "signUps": 25,
+   "flat": 5,
+   "need": "9.82",
+   "pace": 117,
+   "prev": 247,
+   "prevShow": 62,
+   "expect": 6
+  }
+ ],
+ "nextTitle": "Next Half-Day tour: Nov 16\u201320, 2026 (VA / MD)",
+ "nextNote": "Newport News and Richmond: first visit, so no last-visit bars. Expect uses each city's last-visit show-up rate where there is one. Pace = last 7 days' average \u00d7 days left.",
+ "stat": {
+  "city": "Plano, TX",
+  "date": "Thu 10/22/2026",
+  "rows": [
+   [
+    "Attended Tagged",
+    28,
+    201
+   ]
+  ]
+ }
+}
