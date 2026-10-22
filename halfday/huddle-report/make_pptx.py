@@ -1,4 +1,5 @@
 # Usage: python3 make_pptx.py <images_dir> <out.pptx> "<title>" "<subtitle>"
+# The first slide is cover.png (Club Wealth cover, Miguel 2026-10-22) with the title on its right.
 import sys, glob, os
 from pptx import Presentation
 from pptx.util import Inches, Pt
@@ -11,8 +12,10 @@ NAMES = {'0-previous-day-event': "Previous day's event", '1-upcoming': 'This wee
 p = Presentation(); p.slide_width, p.slide_height = Inches(13.333), Inches(7.5)
 W, H = p.slide_width, p.slide_height
 s = p.slides.add_slide(p.slide_layouts[6])
+cover = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cover.png')
+if os.path.exists(cover): s.shapes.add_picture(cover, 0, 0, W, H)
 for txt, top, size, bold, col in [(title, 2.6, 40, True, '1F2937'), (sub, 3.6, 20, False, '5B6472')]:
-    tb = s.shapes.add_textbox(Inches(0.8), Inches(top), W - Inches(1.6), Inches(1)); r = tb.text_frame.paragraphs[0].add_run()
+    tb = s.shapes.add_textbox(Inches(3.4), Inches(top), W - Inches(4.2), Inches(1)); r = tb.text_frame.paragraphs[0].add_run()
     r.text, r.font.size, r.font.bold, r.font.color.rgb = txt, Pt(size), bold, RGBColor.from_string(col)
 for f in sorted(glob.glob(os.path.join(src, '*.png'))):
     key = os.path.basename(f)[:-4]

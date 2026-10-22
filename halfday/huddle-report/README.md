@@ -2,7 +2,7 @@
 
 Replaces the screenshots Andrea used to take of the CWU Daily Huddle page. The routine
 "Half-Day Huddle Report → Andrea (DM)" pulls the numbers from the Club Wealth Reports
-connector, draws the images with `render.cjs`, packs them into a deck with `make_pptx.py`,
+connector, draws the images with `render.cjs`, packs them into a deck with `make_pptx.py` (first slide = `cover.png`, the Club Wealth cover),
 and DMs Andrea both every weekday morning.
 
 ```
