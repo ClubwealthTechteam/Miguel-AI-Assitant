@@ -22,7 +22,7 @@ python3 make_pptx.py out/ "Half-Day Huddle YYYY-MM-DD.pptx" "<title>" "<subtitle
 - **The day after an event:** image 0 = "Previous day's event", ONLY the
   `N of M Attended Tagged | X%` line from the forms bot's "Stat Sheet | Updated" reply
   for that stop in #cw-half-day-registration-forms-automation.
-- Never plot "no scans" as 0, never rank people (ISAs are listed by squad, then name).
+- Never plot "no scans" as 0, no commentary on people. ISAs and RMs on image 4 are sorted by sign-ups, highest first, ties by name, the same order as the CWU Daily Huddle page (Miguel, 2026-10-23).
 
 ## data.json
 
