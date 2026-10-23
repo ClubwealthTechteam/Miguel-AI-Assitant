@@ -445,35 +445,121 @@
  "codes": {
   "CWSocial25": [
    [
-    "Plano TX \u00b7 10/22",
-    "\u2014",
+    "Plano TX \u00b7 10/22/2026",
+    0,
     10
    ],
    [
-    "Houston TX \u00b7 10/23",
-    "\u2014",
+    "Houston TX \u00b7 10/23/2026",
+    1,
     17
+   ],
+   [
+    "Chesapeake VA \u00b7 11/16/2026",
+    0,
+    0
+   ],
+   [
+    "Newport News VA \u00b7 11/17/2026",
+    0,
+    0
+   ],
+   [
+    "Richmond VA \u00b7 11/18/2026",
+    0,
+    0
+   ],
+   [
+    "Fairfax VA \u00b7 11/19/2026",
+    0,
+    0
+   ],
+   [
+    "Arnold MD \u00b7 11/20/2026",
+    0,
+    0
    ]
   ],
   "CW300": [
    [
-    "Plano TX \u00b7 10/22",
-    "\u2014",
+    "Plano TX \u00b7 10/22/2026",
+    0,
     12
    ],
    [
-    "Houston TX \u00b7 10/23",
-    "\u2014",
+    "Houston TX \u00b7 10/23/2026",
+    0,
     27
+   ],
+   [
+    "Chesapeake VA \u00b7 11/16/2026",
+    0,
+    0
+   ],
+   [
+    "Newport News VA \u00b7 11/17/2026",
+    0,
+    0
+   ],
+   [
+    "Richmond VA \u00b7 11/18/2026",
+    0,
+    0
+   ],
+   [
+    "Fairfax VA \u00b7 11/19/2026",
+    0,
+    0
+   ],
+   [
+    "Arnold MD \u00b7 11/20/2026",
+    0,
+    0
    ]
   ]
  },
  "c27": [
   [
+   "Plano TX \u00b7 10/22/2026",
+   "via \"5Ways - Plano TX - 10-22-2026 | FB\" (24176): 3",
+   0,
+   3
+  ],
+  [
    "Houston TX \u00b7 10/23/2026",
    "via \"5Ways - Houston TX - 10-23-2026 | FB\" (24188): 2\nalso on \"5Ways - Houston TX - 10-23-2026\" (23940): 1",
    0,
    2
+  ],
+  [
+   "Chesapeake VA \u00b7 11/16/2026",
+   "",
+   0,
+   0
+  ],
+  [
+   "Newport News VA \u00b7 11/17/2026",
+   "",
+   0,
+   0
+  ],
+  [
+   "Richmond VA \u00b7 11/18/2026",
+   "",
+   0,
+   0
+  ],
+  [
+   "Fairfax VA \u00b7 11/19/2026",
+   "",
+   0,
+   0
+  ],
+  [
+   "Arnold MD \u00b7 11/20/2026",
+   "",
+   0,
+   0
   ]
  ]
 }

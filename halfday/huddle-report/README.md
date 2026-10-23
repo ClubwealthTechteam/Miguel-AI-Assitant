@@ -41,3 +41,10 @@ See `example-data.json` (the approved Fri 10/23/2026 report: today's stop with l
 | `c27` | optional → image 6: `[[location, via text, new, total]]` |
 
 Health: sign-ups ≥ 80% of goal On track (`good`), ≥ 50% Monitor (`warn`), else Behind (`bad`).
+
+## Campaign codes (images 5 and 6, Miguel, 2026-10-23)
+
+Match the CWU Daily Huddle "Campaign codes by stop" cards: list EVERY stop on images 1 and 2
+(held, today's and next tour), each with New (last 24 h, 5 AM to 5 AM) and Total. A stop the code
+never reached shows 0 / 0, never "—". CWSocial27 is a Keap tag: show each stop's "via" tag text when
+it has one. Totals come from a live huddle whose chart still lists those stops (see the routine).
