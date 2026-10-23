@@ -26,7 +26,7 @@ python3 make_pptx.py out/ "Half-Day Huddle YYYY-MM-DD.pptx" "<title>" "<subtitle
 
 ## data.json
 
-See `example-data.json` (the Test 3 run, mock Fri 10/23/2026). Keys:
+See `example-data.json` (the approved Fri 10/23/2026 report: today's stop with last-visit bars and the same-days-out line, next tour with last-visit bars). Keys:
 
 | key | what |
 |---|---|

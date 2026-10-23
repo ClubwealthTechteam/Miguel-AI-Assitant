@@ -1,6 +1,17 @@
 {
- "asOf": "October 23, 2026 | 6:00 AM PT (TEST 3)",
- "window": "Sign-ups between 7:00 AM 10/21/2026 and 7:00 AM 10/22/2026, Pacific.",
+ "asOf": "October 23, 2026 | 6:00 AM PT",
+ "stat": {
+  "city": "Plano, TX",
+  "date": "Thu 10/22/2026",
+  "rows": [
+   [
+    "Attended Tagged",
+    28,
+    201
+   ]
+  ]
+ },
+ "title": "This week: Thursday and Friday stops",
  "full": [
   {
    "city": "Plano",
@@ -17,9 +28,9 @@
    "label": "Fri 10/23/2026 \u00b7 today",
    "goal": 300,
    "signUps": 477,
-   "prev": 490,
-   "prevShow": 87,
-   "same": 472,
+   "prev": 491,
+   "prevShow": 88,
+   "same": 473,
    "expect": 85,
    "flat": 100,
    "need": "\u2014",
@@ -29,42 +40,153 @@
   }
  ],
  "partial": [],
+ "note": "Plano: first visit, so no last-visit bars. Plano attended is from the Stat Sheet (Keap tags); the 196 bar is Eventbrite sign-ups, so the two counts differ slightly. Houston: live count (Eventbrite + Keap form sign-ups) as of 6:52 AM PT; last visit 03/19/2026.",
+ "next": [
+  {
+   "city": "Chesapeake",
+   "state": "VA",
+   "label": "Mon 11/16/2026 \u00b7 24 days out",
+   "goal": 300,
+   "signUps": 26,
+   "flat": 5,
+   "need": "11.42",
+   "pace": 108,
+   "prev": 129,
+   "prevShow": 49,
+   "expect": 10
+  },
+  {
+   "city": "Newport News",
+   "state": "VA",
+   "label": "Tue 11/17/2026 \u00b7 25 days out",
+   "goal": 300,
+   "signUps": 14,
+   "flat": 3,
+   "need": "11.44",
+   "pace": 57,
+   "expect": 3
+  },
+  {
+   "city": "Richmond",
+   "state": "VA",
+   "label": "Wed 11/18/2026 \u00b7 26 days out",
+   "goal": 300,
+   "signUps": 17,
+   "flat": 4,
+   "need": "10.88",
+   "pace": 73,
+   "expect": 4
+  },
+  {
+   "city": "Fairfax",
+   "state": "VA",
+   "label": "Thu 11/19/2026 \u00b7 27 days out",
+   "goal": 300,
+   "signUps": 64,
+   "flat": 13,
+   "need": "8.74",
+   "pace": 299,
+   "prev": 460,
+   "prevShow": 93,
+   "expect": 13
+  },
+  {
+   "city": "Arnold",
+   "state": "MD",
+   "label": "Fri 11/20/2026 \u00b7 28 days out",
+   "goal": 300,
+   "signUps": 51,
+   "flat": 11,
+   "need": "8.89",
+   "pace": 247,
+   "prev": 247,
+   "prevShow": 62,
+   "expect": 13
+  }
+ ],
+ "nextTitle": "Next Half-Day tour: Nov 16\u201320, 2026 (VA / MD)",
+ "nextNote": "Newport News and Richmond: first visit, so no last-visit bars; their expect uses the flat 21%. Expect uses each city's last-visit show-up rate where there is one (Feb 2026). Pace = last 7 days' average \u00d7 days left.",
+ "daily": [
+  [
+   "Houston",
+   5,
+   true
+  ],
+  [
+   "Chesapeake",
+   10,
+   true
+  ],
+  [
+   "Newport News",
+   5,
+   true
+  ],
+  [
+   "Richmond",
+   6,
+   true
+  ],
+  [
+   "Fairfax",
+   29,
+   true
+  ],
+  [
+   "Arnold",
+   28,
+   true
+  ]
+ ],
+ "dailyNote": "* Pacific calendar day Thu 10/22 (Houston: Eventbrite, 10/22 to now). Plano was held, so it is off the chart.",
  "isa": [
   [
-   "ChristinaL",
-   "02 Rod",
-   "06/19/2026",
-   4
+   "BrianC",
+   "01 Mark",
+   "10/23/2026",
+   0
   ],
   [
-   "Alleah",
-   "04 Dave",
-   "01/23/2026",
-   3
-  ],
-  [
-   "GabrielG",
-   "04 Dave",
-   "07/17/2026",
+   "EmieE",
+   "01 Mark",
+   "10/02/2026",
    3
   ],
   [
    "HazelB",
    "01 Mark",
    "10/16/2026",
-   3
+   5
   ],
   [
    "JamD",
    "01 Mark",
    "10/02/2026",
-   3
+   2
   ],
   [
    "JeffN",
    "01 Mark",
    "10/16/2026",
+   2
+  ],
+  [
+   "JonaC",
+   "01 Mark",
+   "10/02/2026",
    3
+  ],
+  [
+   "Mark",
+   "01 Mark",
+   "06/27/2025",
+   3
+  ],
+  [
+   "MelchanP",
+   "01 Mark",
+   "10/02/2026",
+   4
   ],
   [
    "RomeF",
@@ -73,46 +195,22 @@
    3
   ],
   [
-   "SamP",
-   "04 Dave",
-   "08/21/2026",
-   3
-  ],
-  [
-   "DaveT",
-   "04 Dave",
-   "05/22/2026",
-   2
-  ],
-  [
-   "Jeriza",
-   "03 Jeriza",
-   "10/03/2025",
-   2
-  ],
-  [
    "Aaevah",
    "02 Rod",
    "11/07/2025",
-   1
+   4
   ],
   [
-   "Katrina",
-   "03 Jeriza",
-   "11/26/2025",
-   1
+   "ChristinaL",
+   "02 Rod",
+   "06/19/2026",
+   2
   ],
   [
-   "LolitaE",
-   "03 Jeriza",
-   "07/31/2026",
-   1
-  ],
-  [
-   "Rj",
-   "04 Dave",
-   "01/16/2026",
-   1
+   "Lily",
+   "02 Rod",
+   "11/14/2025",
+   2
   ],
   [
    "RodV",
@@ -124,13 +222,7 @@
    "Ruth",
    "02 Rod",
    "10/03/2025",
-   1
-  ],
-  [
-   "BrianC",
-   "01 Mark",
-   "10/23/2026",
-   0
+   3
   ],
   [
    "EjayM",
@@ -139,85 +231,103 @@
    0
   ],
   [
-   "EmieE",
-   "01 Mark",
-   "10/02/2026",
-   0
+   "Jeriza",
+   "03 Jeriza",
+   "10/03/2025",
+   2
   ],
   [
-   "JonaC",
-   "01 Mark",
-   "10/02/2026",
-   0
+   "Katrina",
+   "03 Jeriza",
+   "11/26/2025",
+   2
   ],
   [
-   "Lily",
-   "02 Rod",
-   "11/14/2025",
-   0
-  ],
-  [
-   "Mark",
-   "01 Mark",
-   "06/27/2025",
-   0
-  ],
-  [
-   "MelchanP",
-   "01 Mark",
-   "10/02/2026",
-   0
+   "LolitaE",
+   "03 Jeriza",
+   "07/31/2026",
+   2
   ],
   [
    "ShayneB",
    "03 Jeriza",
    "07/06/2026",
+   2
+  ],
+  [
+   "Alleah",
+   "04 Dave",
+   "01/23/2026",
+   2
+  ],
+  [
+   "DaveT",
+   "04 Dave",
+   "05/22/2026",
    0
+  ],
+  [
+   "GabrielG",
+   "04 Dave",
+   "07/17/2026",
+   4
+  ],
+  [
+   "Rj",
+   "04 Dave",
+   "01/16/2026",
+   0
+  ],
+  [
+   "SamP",
+   "04 Dave",
+   "08/21/2026",
+   2
   ]
  ],
  "rm": [
   [
    "Andrew",
-   5
+   6
   ],
   [
    "Beula",
-   5
+   4
   ],
   [
    "Ebimo",
-   3
-  ],
-  [
-   "Joe",
-   3
-  ],
-  [
-   "Vanessa",
-   3
-  ],
-  [
-   "Marcia",
    2
   ],
   [
    "Francis N",
+   5
+  ],
+  [
+   "Joe",
+   5
+  ],
+  [
+   "Marcia",
    1
+  ],
+  [
+   "Vanessa",
+   5
   ]
  ],
  "events": [
   [
-   "VIPGUEST1 - SMS Campaign",
-   4,
-   8
-  ],
-  [
-   "CW300 - Email Blast (w/ GFX)",
+   "CWSocial25",
    1,
-   28
+   0
   ],
   [
    "Coaches/Clients",
+   0,
+   0
+  ],
+  [
+   "CW300 - Email Blast (w/ GFX)",
    0,
    0
   ],
@@ -232,11 +342,6 @@
    0
   ],
   [
-   "CWSocial25",
-   0,
-   16
-  ],
-  [
    "CWSocial26",
    0,
    0
@@ -244,34 +349,36 @@
   [
    "CWSocial27",
    0,
-   1
+   0
   ],
   [
    "Meta Ads 1",
    0,
-   1
+   0
   ],
   [
    "Meta Ads 2",
    0,
-   1
+   0
   ],
   [
    "Past Registrant",
    0,
-   5
+   0
   ],
   [
    "VIPGUEST - Email Campaigns",
    0,
    0
+  ],
+  [
+   "VIPGUEST1 - SMS Campaign",
+   0,
+   0
   ]
  ],
+ "noEventTotals": true,
  "ccv": [
-  [
-   "Erick Harbert",
-   1
-  ],
   [
    "Brad Burnes",
    0
@@ -286,6 +393,10 @@
   ],
   [
    "Chris Lloyd",
+   0
+  ],
+  [
+   "Erick Harbert",
    0
   ],
   [
@@ -324,12 +435,13 @@
   ]
  ],
  "totals": {
-  "isa": 35,
-  "rm": 22,
-  "events": 5,
-  "ccv": 1,
+  "isa": 53,
+  "rm": 28,
+  "events": 1,
+  "ccv": 0,
   "unatt": 1
  },
+ "window": "Sign-ups between 5:00 AM 10/22/2026 and 5:00 AM 10/23/2026, Pacific.",
  "codes": {
   "CWSocial25": [
    [
@@ -339,8 +451,8 @@
    ],
    [
     "Houston TX \u00b7 10/23",
-    0,
-    16
+    "\u2014",
+    17
    ]
   ],
   "CW300": [
@@ -351,8 +463,8 @@
    ],
    [
     "Houston TX \u00b7 10/23",
-    1,
-    28
+    "\u2014",
+    27
    ]
   ]
  },
@@ -363,116 +475,5 @@
    0,
    2
   ]
- ],
- "note": "Plano: first visit, so no last-visit bars. Plano attended is from the Stat Sheet (Keap tags); the 196 bar is Eventbrite sign-ups, so the two counts differ slightly.",
- "daily": [
-  [
-   "Houston",
-   13,
-   false
-  ],
-  [
-   "Chesapeake",
-   4,
-   true
-  ],
-  [
-   "Newport News",
-   2,
-   true
-  ],
-  [
-   "Richmond",
-   4,
-   true
-  ],
-  [
-   "Fairfax",
-   14,
-   true
-  ],
-  [
-   "Arnold",
-   6,
-   true
-  ]
- ],
- "dailyNote": "Houston: huddle window, 5 AM to 5 AM Pacific. * November stops: Pacific calendar day so far. Plano was held, so it is off the chart.",
- "title": "This week: Thursday and Friday stops",
- "next": [
-  {
-   "city": "Chesapeake",
-   "state": "VA",
-   "label": "Mon 11/16/2026 \u00b7 24 days out",
-   "goal": 300,
-   "signUps": 20,
-   "flat": 4,
-   "need": "11.67",
-   "pace": 82,
-   "prev": 129,
-   "prevShow": 49,
-   "expect": 8
-  },
-  {
-   "city": "Newport News",
-   "state": "VA",
-   "label": "Tue 11/17/2026 \u00b7 25 days out",
-   "goal": 300,
-   "signUps": 10,
-   "flat": 2,
-   "need": "11.60",
-   "pace": 39,
-   "expect": 2
-  },
-  {
-   "city": "Richmond",
-   "state": "VA",
-   "label": "Wed 11/18/2026 \u00b7 26 days out",
-   "goal": 300,
-   "signUps": 15,
-   "flat": 3,
-   "need": "10.96",
-   "pace": 63,
-   "expect": 3
-  },
-  {
-   "city": "Fairfax",
-   "state": "VA",
-   "label": "Thu 11/19/2026 \u00b7 27 days out",
-   "goal": 300,
-   "signUps": 46,
-   "flat": 10,
-   "need": "9.41",
-   "pace": 212,
-   "prev": 460,
-   "prevShow": 93,
-   "expect": 9
-  },
-  {
-   "city": "Arnold",
-   "state": "MD",
-   "label": "Fri 11/20/2026 \u00b7 28 days out",
-   "goal": 300,
-   "signUps": 25,
-   "flat": 5,
-   "need": "9.82",
-   "pace": 117,
-   "prev": 247,
-   "prevShow": 62,
-   "expect": 6
-  }
- ],
- "nextTitle": "Next Half-Day tour: Nov 16\u201320, 2026 (VA / MD)",
- "nextNote": "Newport News and Richmond: first visit, so no last-visit bars. Expect uses each city's last-visit show-up rate where there is one. Pace = last 7 days' average \u00d7 days left.",
- "stat": {
-  "city": "Plano, TX",
-  "date": "Thu 10/22/2026",
-  "rows": [
-   [
-    "Attended Tagged",
-    28,
-    201
-   ]
-  ]
- }
+ ]
 }
