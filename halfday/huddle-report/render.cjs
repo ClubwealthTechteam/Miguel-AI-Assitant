@@ -76,7 +76,7 @@ function statChart(rows) {
 if (D.stat) pages['0-previous-day-event'] = `<div class="card" style="width:820px"><h2>Previous day's event: ${esc(D.stat.city)} · ${esc(D.stat.date)}</h2><div class="sub">From the Stat Sheet | Updated post in #cw-half-day-registration-forms-automation</div>${statChart(D.stat.rows)}<div class="note">Attended Tagged = people tagged attended in Keap out of registrations.</div></div>`;
 pages['1-upcoming'] = `<div class="card" style="width:${D.full.length > 2 ? 1370 : 900}px"><h2>${esc(D.title || 'Previous vs upcoming Half-Day events')}</h2><div class="sub">Light blue: last visit's sign-ups · orange: last visit's show-ups · dark blue: sign-ups now · black line: last visit at the same days out · dashed: goal</div>${stopsChart(D.full, D.full.length > 2 ? 1320 : 850)}${D.note ? `<div class="note">${D.note}</div>` : ''}</div>`;
 if (D.next) pages['2-next-tour'] = `<div class="card" style="width:1370px"><h2>${esc(D.nextTitle)}</h2><div class="sub">Light blue: last visit's sign-ups · orange: last visit's show-ups · dark blue: sign-ups now · dashed: goal</div>${stopsChart(D.next, 1320)}<div class="note">${D.nextNote || ''}</div></div>`;
-pages['3-daily-sign-ups'] = `<div class="card" style="width:680px"><h2>Daily sign-ups</h2><div class="sub">Sign-ups in the last 24 hours, against the daily goal.</div>${dailyChart(D.daily)}<div class="note">${esc(D.dailyNote || '')}</div></div>`;
+pages['3-daily-sign-ups'] = `<div class="card" style="width:680px"><h2>${esc(D.dailyTitle || 'Daily sign-ups')}</h2><div class="sub">${esc(D.dailySub || 'Sign-ups in the last 24 hours, against the daily goal.')}</div>${dailyChart(D.daily)}<div class="note">${esc(D.dailyNote || '')}</div></div>`;
 // Highest sign-ups first, ties by name: the same order as the CWU Daily Huddle page (Miguel, 2026-10-23).
 const bySignUps = (n) => (a, b) => b[n] - a[n] || a[0].localeCompare(b[0]);
 const isa = [...D.isa].sort(bySignUps(3));
@@ -85,8 +85,12 @@ pages['4-who-brought-them-in'] = `<div style="width:1130px;display:flex;gap:18px
  <div style="flex:1">${table('RMs', '#d68a2f', D.totals.rm, [['OWNER'], ['SIGN-UPS', 'n']], [...D.rm].sort(bySignUps(1)))}${table('Coaches / clients / vendors', '#7b4fc4', D.totals.ccv, [['OWNER'], ['SIGN-UPS', 'n']], D.ccv)}</div>
  <div style="flex:1">${D.noEventTotals ? table('Events', '#469a85', D.totals.events, [['OWNER'], ['SIGN-UPS', 'n']], D.events.map((r) => [r[0], r[1]])) : table('Events', '#469a85', D.totals.events, [['OWNER'], ['SIGN-UPS', 'n'], ['TOTAL', 'n']], D.events, '<div class="note">Every sign-up that owner\'s codes have brought to the stops on this chart so far, not just in the period.</div>')}${table('Codes nobody owns', '#c0394b', D.totals.unatt, [['OWNER'], ['SIGN-UPS', 'n']], D.unatt)}</div></div>`;
 const code = (name, rows) => table(name, '#469a85', rows.reduce((a, r) => a + r[2], 0), [['LOCATION'], ['NEW', 'n'], ['TOTAL', 'n']], [...rows, ['All stops on the chart', rows.reduce((a, r) => a + (+r[1] || 0), 0), rows.reduce((a, r) => a + r[2], 0)]]);
-pages['5-campaign-codes'] = `<div style="width:760px;display:flex;gap:18px;padding:10px">${Object.entries(D.codes).map(([k, v]) => `<div style="flex:1">${code(k, v)}</div>`).join('')}</div>`;
-if (D.c27) pages['6-cwsocial27'] = `<div style="width:420px;padding:10px">${table('CWSocial27', '#469a85', D.c27.reduce((a, r) => a + r[3], 0), [['LOCATION'], ['NEW', 'n'], ['TOTAL', 'n']], D.c27.map((r) => [r[1] ? r[0] + ' — ' + r[1].replace(/\n/g, '; ') : r[0], r[2], r[3]]), '<div class="note">Keap tag "CWSocial27" (24174), applied by the clubwealth.com registration form. Not an Eventbrite code.</div>')}</div>`;
+// A card whose every New and Total is 0 says nothing, so it is left out; if every card is empty the image is skipped
+// and the routine notes it on image 1 instead (Miguel, 2026-10-26).
+const anyCode = (rows, ni, ti) => rows.some((r) => Number(r[ni]) > 0 || Number(r[ti]) > 0);
+const liveCodes = Object.entries(D.codes || {}).filter(([, v]) => anyCode(v, 1, 2));
+if (liveCodes.length) pages['5-campaign-codes'] = `<div style="width:760px;display:flex;gap:18px;padding:10px">${liveCodes.map(([k, v]) => `<div style="flex:1">${code(k, v)}</div>`).join('')}</div>`;
+if (D.c27 && anyCode(D.c27, 2, 3)) pages['6-cwsocial27'] = `<div style="width:420px;padding:10px">${table('CWSocial27', '#469a85', D.c27.reduce((a, r) => a + r[3], 0), [['LOCATION'], ['NEW', 'n'], ['TOTAL', 'n']], D.c27.map((r) => [r[1] ? r[0] + ' — ' + r[1].replace(/\n/g, '; ') : r[0], r[2], r[3]]), '<div class="note">Keap tag "CWSocial27" (24174), applied by the clubwealth.com registration form. Not an Eventbrite code.</div>')}</div>`;
 
 (async () => {
   fs.mkdirSync(OUT, { recursive: true });
