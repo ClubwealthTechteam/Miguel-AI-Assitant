@@ -37,8 +37,8 @@ See `example-data.json` (the approved Fri 10/23/2026 report: today's stop with l
 | `daily`, `dailyNote`, `dailyTitle?`, `dailySub?` | image 3: `[[city, signUps, starred]]`. On Mondays set `dailyTitle` "Sign-ups since Friday 5 AM" and `dailySub` to say it covers the weekend |
 | `isa` `[name, squad, MM/DD/YYYY, n]`, `rm`, `events` `[name, n, total]`, `ccv`, `unatt`, `totals` | image 4 |
 | `noEventTotals` | optional, drops the Events TOTAL column |
-| `codes` | image 5: `{CODE: [[location, new, total]]}`. A code whose rows are all 0 is left out; if every code is all 0, image 5 is skipped |
-| `c27` | optional → image 6: `[[location, via text, new, total]]`, skipped when every row is 0 |
+| `codes` | image 5: `{CODE: [[location, new, total]]}`. Always shown, even when every row is 0 (Miguel, 2026-10-26) |
+| `c27` | optional → image 6: `[[location, via text, new, total]]`, shown even when every row is 0 |
 
 Health: sign-ups ≥ 80% of goal On track (`good`), ≥ 50% Monitor (`warn`), else Behind (`bad`).
 
