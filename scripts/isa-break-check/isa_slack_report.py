@@ -7,6 +7,8 @@ Inputs in data/<DAY>/:
   mapping.json   {"bpond01": "Jeff", ...}  from the tracker's Daily Assignment Archive
   roster.json    [{"name": "Rod Velasco", "promo": "CWRodV"}, ...]  ISA Masterfile 'Active ISAs' rows with Active = TRUE
   signups.json   [["2026-11-03", "CWJamDRE"], ...]  ISA Masterfile 'EB Cache' columns D:E (Sign-up date, Promo code)
+  td.json        {"Jeff Napisa": 32860, ...}  Time Doctor tracked seconds for DAY (td_get_time_summary, ISA group,
+                 groupBy user, timezone America/Los_Angeles). Optional: without it the TD part is left out.
 Usage: python3 isa_slack_report.py DAY            -> prints the message
        python3 isa_slack_report.py DAY --post CHANNEL_ID   -> also posts it with the Slack bot (chat.postMessage)
 """
@@ -61,27 +63,42 @@ def build(day):
                 ups[name] += 1
                 break
 
-    def ranked(counts, unit, units):
+    tdf = d / "td.json"
+    td = json.load(open(tdf)) if tdf.exists() else None
+
+    def hm(sec):
+        m = int(round(sec / 60))
+        return f"{m // 60}h {m % 60:02d}m"
+
+    def td_note(name, n):
+        if td is None:
+            return ""
+        sec = td.get(name, 0) or 0
+        if sec <= 0:
+            return " · ⚠️ no Time Doctor time" if n else ""
+        return f" · {hm(sec)} on Time Doctor"
+
+    def ranked(counts, unit, units, with_td=False):
         items = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0].lower()))
         top = items[0][1] if items else 0
         out = []
         for name, n in items:
             mark = "🔥" if n and n == top else ("✅" if n else "⭕")
             label = name.upper() if mark == "🔥" else name
-            out.append(f"{mark} {label} - {n:,} {unit if n == 1 else units}")
+            out.append(f"{mark} {label} - {n:,} {unit if n == 1 else units}" + (td_note(name, n) if with_td else ""))
         return out
 
     nice = dt.date.fromisoformat(day).strftime("%A, %B %-d, %Y")
     lines = ["📋 *Daily ISA Report - Calls & Half-Day Sign-ups*", f"_{nice} | End of Shift_", "",
              "*Calls Made* (ranked highest to lowest)"]
-    lines += ranked(calls, "call", "calls")
+    lines += ranked(calls, "call", "calls", with_td=True)
     lines += ["", f"Total ISA calls today: {sum(calls.values()):,}"]
     if unassigned:
         lines.append("_Ponds used but not in today's assignment: " + ", ".join(f"{p} ({n:,} calls)" for p, n, _ in sorted(unassigned)) + "_")
     lines += ["", "*Half-Day Sign-ups Today* (ranked highest to lowest)"]
     lines += ranked(ups, "sign-up", "sign-ups")
     lines += ["", f"Total half-day sign-ups today: {sum(ups.values()):,}",
-              "_Calls: ProspectBoss call logs for each ISA's assigned pond. Sign-ups: Eventbrite sign-ups made today, credited by promo code (as in the ISA Masterfile)._"]
+              "_Calls: ProspectBoss call logs for each ISA's assigned pond. Hours: Time Doctor tracked time today. Sign-ups: Eventbrite sign-ups made today, credited by promo code, one per person per event (as in the ISA Masterfile)._"]
     return "\n".join(lines)
 
 
