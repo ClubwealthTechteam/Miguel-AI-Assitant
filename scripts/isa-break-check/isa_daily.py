@@ -246,7 +246,8 @@ def main(day):
             [f"ProspectBoss = when calls were made · Time Doctor = tracked time. Updated {dt.datetime.now(TZ).strftime('%b %-d %-I:%M %p')} PT, read-only pull. Ponds from the tracker's Daily Assignment Archive."],
             [f"Schedule: shift {fmt(sh_start)}–{fmt(sh_end)} · {wtxt}. Break = gap of {CFG['gap_min']}+ min between calls; 'unscheduled' = minutes outside those windows."],
             [f"Timezone check: {cal_txt}."]]
-    payload = dict(day=day, head=head, header=header, table=table,
+    dash = dashboard(rows, day, sh_start, sh_end)
+    payload = dict(day=day, head=head, dash=dash, header=header, table=table,
                    breaks_header=["ISA", "Pond", "Gap start", "Gap end", "Gap (min)", "Scheduled (min)", "Unscheduled (min)", "Overlaps", "Check"],
                    breaks=breaks_rows,
                    log=[[day] + row for row in table])
@@ -258,6 +259,62 @@ def main(day):
                 f.write(f"- {row[0]} ({row[1]}): {row[-1]}\n")
     write_xlsx(d / f"ISA_Break_Check_{day}.xlsx", payload)
     print(open(d / "summary.txt").read())
+
+
+def dashboard(rows, day, sh_start, sh_end):
+    """Simple view: status + short plain-language note per ISA, plus headline numbers."""
+    out = []
+    for r in rows:
+        has_td, has_pb = bool(r.get("td_first")), bool(r.get("pb_first"))
+        notes, level = [], 0          # 0 OK, 1 Review, 2 Action
+        if r["isa"] == "(not in assignment)":
+            level, notes = 2, [f"Pond used but not assigned to anyone (calls {fmt(r['pb_first'])}–{fmt(r['pb_last'])})"]
+        elif not has_td and not has_pb:
+            level = -1; notes = ["No Time Doctor time and no pond"]
+        else:
+            off = r.get("calls_off_td", 0) or 0
+            if has_td and off >= 100:
+                level = 2; notes.append(f"Time Doctor off at {fmt(r['td_last'])} but calls until {fmt(r['pb_last'])} ({off} calls)")
+            elif has_td and (sh_end - r["td_last"]).total_seconds() / 60 >= 60:
+                level = 2; notes.append(f"Time Doctor stopped at {fmt(r['td_last'])}")
+            if not has_td and has_pb:
+                level = 2; notes.append("Calls made but no Time Doctor time")
+            if has_td and has_pb and (r["td_last"] - r["pb_last"]).total_seconds() / 60 >= 60:
+                level = max(level, 2); notes.append(f"Calls stopped {fmt(r['pb_last'])}, Time Doctor on until {fmt(r['td_last'])}")
+            if has_td and not r.get("pond"):
+                level = max(level, 1); notes.append("No pond in the day's assignment")
+            ex = r.get("pb_unsched", 0) or 0
+            if ex >= 60:
+                level = max(level, 1); notes.append(f"{round(ex)} min of extra breaks")
+            if has_pb and (r["pb_first"] - sh_start).total_seconds() / 60 > 15:
+                level = max(level, 1); notes.append(f"First call {fmt(r['pb_first'])}")
+            if has_td and (r["td_first"] - sh_start).total_seconds() / 60 > 5:
+                level = max(level, 1); notes.append(f"Time Doctor started {fmt(r['td_first'])}")
+            if "possible switch" in r["flags"]:
+                q = r["flags"].split("possible switch to unassigned ")[1].split(" ")[0]
+                notes.append(f"may have moved to {q}")
+        status = {2: "Action", 1: "Review", 0: "OK", -1: "No shift"}[level]
+        span = lambda a, b: f"{fmt(a)} – {fmt(b)}" if a else "—"
+        out.append(dict(level=level, row=[
+            "Unassigned" if r["isa"] == "(not in assignment)" else r["isa"], status, r["pond"] or "—",
+            span(r.get("td_first"), r.get("td_last")), span(r.get("pb_first"), r.get("pb_last")),
+            r.get("calls", "") or "", hmm(r["pb_active"]) if r.get("pb_active") else "",
+            round(r["pb_unsched"]) if r.get("pb_unsched") is not None and has_pb else "",
+            round(r["tracked_nocalls"]) if r.get("tracked_nocalls") is not None else "",
+            "; ".join(notes[:3]) if notes else "On schedule"]))
+    order = {2: 0, 1: 1, 0: 2, -1: 3}
+    out.sort(key=lambda x: (order[x["level"]], x["row"][0].lower()))
+    work = [x for x in rows if x.get("td_first") and x.get("pb_active")]
+    kpi = [["ISAs on shift", "Action needed", "To review", "Avg active calling", "Avg extra break"],
+           [sum(1 for x in rows if x.get("td_first")), sum(1 for x in out if x["level"] == 2),
+            sum(1 for x in out if x["level"] == 1),
+            hmm(sum(x["pb_active"] for x in work) / len(work)) if work else "",
+            f"{round(sum(x.get('pb_unsched', 0) for x in work) / len(work))} min" if work else ""]]
+    nice = dt.date.fromisoformat(day).strftime("%A, %B %-d, %Y")
+    return dict(title="ISA Break Check", subtitle=f"{nice}  ·  Pacific time  ·  Shift {fmt(sh_start)} – {fmt(sh_end)}",
+                kpi=kpi, header=["ISA", "Status", "Pond", "Time Doctor", "Calling (ProspectBoss)", "Calls",
+                                 "Active calling", "Extra break (min)", "Tracked, no calls (min)", "Notes"],
+                rows=[x["row"] for x in out])
 
 
 def write_xlsx(path, P):

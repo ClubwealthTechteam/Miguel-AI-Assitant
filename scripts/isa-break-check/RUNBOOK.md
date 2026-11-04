@@ -1,7 +1,9 @@
 # Daily ISA break check — runbook (for the scheduled session)
 
 Goal: every morning by 5:00 AM PT, report the PREVIOUS shift day (Pacific) into the ISA Masterfile
-(`config.json` → `masterfile_id`) tabs **ISA Break Check** (overwritten) and **ISA Break Check Log** (appended).
+(`config.json` → `masterfile_id`): **ISA Break Check** (simple dashboard, overwritten), **ISA Break Details**
+(every no-call gap, overwritten) and **ISA Break Check Log** (appended). Formatting on these tabs is fixed —
+only write values to the ranges `sheet_ranges.py` gives; never change formatting, merges or other tabs.
 
 ## Hard rules
 - ProspectBoss is READ-ONLY. Only `pb_fetch.py` (login + getAllReports). Never call logout, refreshToken,
@@ -33,5 +35,5 @@ Goal: every morning by 5:00 AM PT, report the PREVIOUS shift day (Pacific) into 
 7. `python3 sheet_ranges.py DAY` → JSON. On the Masterfile: `batch_clear_values(clear)`, then
    `update_values` for every item in `updates`, then `append_values(append)`.
    Before appending, read `'ISA Break Check Log'!A:A`; if DAY is already there, skip the append.
-8. Read back `'ISA Break Check'!A1:S8` to confirm. End with a 3–5 line summary (no names of leads,
+8. Read back `'ISA Break Check'!A1:J10` to confirm. End with a 3–5 line summary (no names of leads,
    no phone numbers): date, rows written, the timezone check line, count of flagged ISAs.
