@@ -6,3 +6,4 @@ node_modules/
 pond_creds.json
 pb_*.json
 scripts/isa-break-check/data/
+__pycache__/
