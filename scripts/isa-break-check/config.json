@@ -1,0 +1,19 @@
+{
+  "report_tz": "America/Los_Angeles",
+  "schedule": {"start": "05:30", "end": "15:00"},
+  "windows": [
+    {"name": "Huddle",  "start": "07:30", "end": "08:30"},
+    {"name": "Break 1", "start": "08:30", "end": "08:40"},
+    {"name": "Lunch",   "start": "10:30", "end": "11:00"},
+    {"name": "Break 2", "start": "12:30", "end": "12:40"}
+  ],
+  "gap_min": 10,
+  "pb_late_grace_min": 15, "pb_early_grace_min": 15,
+  "td_late_grace_min": 5,  "td_early_grace_min": 5,
+  "break_allowance_min": 10, "lunch_allowance_min": 30, "tolerance_min": 1,
+  "flag_unscheduled_min": 30, "flag_tracked_no_calls_min": 30,
+  "name_alias": {"Sam": "L.A Patulan", "LA": "L.A Patulan", "Rj": "RJ Torsiende"},
+  "masterfile_id": "1ahOwILkD6_S_YDoEiy_zg4hmqkvEUgsMVoXXfW0t3Bg",
+  "tracker_id": "1C6m-rpp-W_3aTEGSUjrcqhhF0aftDx4FoMDJoIy4BOI",
+  "creds_sheet_id": "1mwt8MoYtxJIc5mdcDxCa0S8icLTEDWOI7Xl3z74YfPM"
+}

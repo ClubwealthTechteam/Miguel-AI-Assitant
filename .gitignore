@@ -5,3 +5,4 @@ node_modules/
 .dev-submissions/
 pond_creds.json
 pb_*.json
+scripts/isa-break-check/data/

@@ -1,8 +1,9 @@
-# Read-only ProspectBoss fetch. Only login + getAllReports. Never logout/refresh/remove.
-import json, os, sys, urllib.request, urllib.parse, concurrent.futures as cf
+# Read-only ProspectBoss fetch. Only login + getAllReports. Never logout/refreshToken/remove/disconnectUsers.
+# Usage: python3 pb_fetch.py YYYY-MM-DD  -> data/YYYY-MM-DD/pb.json (time, duration, type, status only)
+import json, os, re, sys, urllib.request, urllib.parse, concurrent.futures as cf
 BASE="https://app1.prospectboss.com/api"
 def ponds(): return ["bpond0%d"%i for i in range(1,26)]
-CREDS=json.load(open(os.environ.get("PB_POND_CREDS","pond_creds.json")))  # {"bpond01":"<pw>",...}; never commit
+CREDS=json.load(open(os.environ.get("PB_POND_CREDS",os.path.join(os.path.dirname(os.path.abspath(__file__)),"pond_creds.json"))))  # {"bpond01":"<pw>",...}; never commit
 def pw(p): return CREDS[p]
 def req(url, data=None, token=None):
     h={"Content-Type":"application/json","Accept":"application/json"}
@@ -26,6 +27,10 @@ if __name__=="__main__":
     res={}
     with cf.ThreadPoolExecutor(5) as ex:
         for p,(u,c) in zip(which, ex.map(lambda p: calls(p,day), which)):
-            res[p]={"user":{k:u.get(k) for k in ("id","name","first_name","last_name","timezone")},"calls":c}
-    json.dump(res,open(f"pb_{day}.json","w"))
+            gs=u.get("general_settings"); gs=gs if isinstance(gs,str) else json.dumps(gs)
+            m=re.search(r'"tz"\s*:\s*"([^"]*)"',gs or "")
+            keep=("updated_on","duration","call_type","statusValue")   # no lead names / numbers / emails
+            res[p]={"tz":m.group(1) if m else "?","calls":[{k:r.get(k) for k in keep} for r in c]}
+    out=os.path.join(os.path.dirname(os.path.abspath(__file__)),"data",day); os.makedirs(out,exist_ok=True)
+    json.dump(res,open(os.path.join(out,"pb.json"),"w"))
     print({p:len(v["calls"]) for p,v in res.items()})
