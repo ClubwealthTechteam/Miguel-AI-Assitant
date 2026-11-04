@@ -40,3 +40,21 @@ formulas with a date filter — never write to them. The run only APPENDS rows t
    there, stop (already reported). Otherwise `append_values` each item in `append` (log first, then details).
 8. Read back `'ISA Break Check'!A1:K12` to confirm the dashboard shows DAY (it defaults to the latest day). End with a 3–5 line summary (no names of leads,
    no phone numbers): date, rows written, the timezone check line, count of flagged ISAs.
+
+---
+
+# End-of-shift ISA Slack report (calls + half-day sign-ups)
+
+Goal: Monday–Friday after the shift ends (3:00 PM PT), post today's ISA report to Slack #cw-isa (`C0AJSBDT9AA`).
+Test channel: #cw-assistant (`C0C93SGG2FN`). The Slack bot token is injected by the proxy (no key needed).
+
+DAY = today in America/Los_Angeles.
+1. Assignments → `data/DAY/mapping.json` (same as step 2 above).
+2. Pond logins → `pond_creds.json`, then `python3 pb_fetch.py DAY` → `data/DAY/pb.json`; delete `pond_creds.json`.
+3. Roster: `get_values` ISA Masterfile `'Active ISAs'!A1:I60`; rows with Active = TRUE →
+   `data/DAY/roster.json` as `[{"name": <Time Doctor column>, "promo": <PromoCode>}]`.
+4. Sign-ups: `get_values` ISA Masterfile `'EB Cache'!D1:E25000` (Sign-up date, Promo code). The result is large and is
+   saved to a file; keep only rows whose date == DAY → `data/DAY/signups.json` as `[["DAY", "<promo>"], ...]`.
+5. `python3 isa_slack_report.py DAY` (check it), then `python3 isa_slack_report.py DAY --post C0AJSBDT9AA`.
+   Post once per day only: if `conversations.history` for the channel already has today's report from the bot, skip.
+Rules: read-only everywhere except that one Slack message. Never post pond passwords, emails or phone numbers.
