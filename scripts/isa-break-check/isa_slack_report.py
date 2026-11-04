@@ -64,7 +64,7 @@ def build(day):
                 break
 
     tdf = d / "td.json"
-    td = json.load(open(tdf)) if tdf.exists() else None
+    td = json.load(open(tdf)) if (tdf.exists() and "--with-td" in sys.argv) else None   # hours stay out of the public post
 
     def hm(sec):
         m = int(round(sec / 60))
@@ -98,7 +98,7 @@ def build(day):
     lines += ["", "*Half-Day Sign-ups Today* (ranked highest to lowest)"]
     lines += ranked(ups, "sign-up", "sign-ups")
     lines += ["", f"Total half-day sign-ups today: {sum(ups.values()):,}",
-              "_Calls: ProspectBoss call logs for each ISA's assigned pond. Hours: Time Doctor tracked time today. Sign-ups: Eventbrite sign-ups made today, credited by promo code, one per person per event (as in the ISA Masterfile)._"]
+              "_Calls: ProspectBoss call logs for each ISA's assigned pond. Sign-ups: Eventbrite sign-ups made today, credited by promo code, one per person per event (as in the ISA Masterfile)._"]
     return "\n".join(lines)
 
 

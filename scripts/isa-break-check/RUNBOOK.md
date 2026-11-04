@@ -55,9 +55,6 @@ DAY = today in America/Los_Angeles.
    `data/DAY/roster.json` as `[{"name": <Time Doctor column>, "promo": <PromoCode>}]`.
 4. Sign-ups: `get_values` ISA Masterfile `'EB Cache'!D1:E25000` (Sign-up date, Promo code). The result is large and is
    saved to a file; keep only rows whose date == DAY → `data/DAY/signups.json` as `[["DAY", "<promo>"], ...]`.
-4b. Time Doctor: `td_get_time_summary` from=DAY to=DAY, timezone `America/Los_Angeles`, tag `["ZEw2v-rm687rx3KV"]`,
-   groupBy `user`, fields `["trackedSec"]` → `data/DAY/td.json` as `{"<userName>": trackedSec, ...}`.
-   If Time Doctor fails, skip td.json (the report then leaves the hours out) rather than not posting.
 5. `python3 isa_slack_report.py DAY` (check it), then `python3 isa_slack_report.py DAY --post C0AJSBDT9AA`.
    Post once per day only: if `conversations.history` for the channel already has today's report from the bot, skip.
-Rules: read-only everywhere except that one Slack message. Never post pond passwords, emails or phone numbers.
+Rules: read-only everywhere except that one Slack message. Do NOT add Time Doctor hours to the public post. Never post pond passwords, emails or phone numbers.
