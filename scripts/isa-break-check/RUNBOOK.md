@@ -1,6 +1,6 @@
 # Daily ISA break check — runbook (for the scheduled session)
 
-Goal: every morning by 5:00 AM PT, report the PREVIOUS shift day (Pacific) into the ISA Masterfile
+Goal: every weekday morning (Mon–Fri) by 5:00 AM PT, report the PREVIOUS weekday's shift (Pacific; Monday reports Friday) into the ISA Masterfile
 (`config.json` → `masterfile_id`). The dashboard tabs **ISA Break Check** and **ISA Break Details** are
 formulas with a date filter — never write to them. The run only APPENDS rows to **ISA Break Check Log** and
 **ISA Break Details Log** (hidden). Never change formatting, formulas or any other tab.
@@ -13,8 +13,8 @@ formulas with a date filter — never write to them. The run only APPENDS rows t
 - Do NOT post to Slack or anywhere else. Only write the two Masterfile tabs.
 - Do not commit anything from `data/`.
 
-## Steps (DAY = yesterday in America/Los_Angeles, YYYY-MM-DD)
-1. Skip if DAY is Saturday or Sunday, or if the tracker's 'Daily Assignment Archive' has no block for DAY
+## Steps (DAY = previous weekday in America/Los_Angeles, YYYY-MM-DD: Mon → last Fri, Tue–Fri → yesterday)
+1. Skip if the tracker's 'Daily Assignment Archive' has no block for DAY
    or Time Doctor has no ISA time for DAY → end with a one-line note.
 2. **Assignments**: Google Sheets `get_values` on `tracker_id`, `'Daily Assignment Archive'!A1:E400`.
    Find the row whose column A == DAY; the 25 rows under its header are pond (col D) → ISA first name (col B).
