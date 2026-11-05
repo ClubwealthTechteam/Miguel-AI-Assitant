@@ -45,16 +45,27 @@ formulas with a date filter — never write to them. The run only APPENDS rows t
 
 # End-of-shift ISA Slack report (calls + half-day sign-ups)
 
-Goal: Monday–Friday after the shift ends (3:00 PM PT), post today's ISA report to Slack #cw-isa (`C0AJSBDT9AA`).
-Test channel: #cw-assistant (`C0C93SGG2FN`). The Slack bot token is injected by the proxy (no key needed).
+Timing the ISAs were told: final sign-ups and calls close at 3:00 PM PT · the bot starts collecting at 3:10 PM PT ·
+the bot posts at 3:30 PM PT. The routine starts at 3:10 PM PT, Monday–Friday.
+Channel: #cw-isa (`C0AJSBDT9AA`). Test channel: #cw-assistant (`C0C93SGG2FN`). The Slack bot token is injected by
+the proxy (no key needed). DAY = today in America/Los_Angeles.
 
-DAY = today in America/Los_Angeles.
-1. Assignments → `data/DAY/mapping.json` (same as step 2 above).
-2. Pond logins → `pond_creds.json`, then `python3 pb_fetch.py DAY` → `data/DAY/pb.json`; delete `pond_creds.json`.
+Calls per ISA = ProspectBoss "CALLS USED" (Today's calling capacity box, `total_daily_usage` of `getDiallingCount`)
+of the pond(s) assigned to the ISA that day — the number the ISAs report. Summed when an ISA has two ponds. It only
+exists for TODAY, so read it during the run. The call-log count stays in the private break check only.
+
+1. Assignments → `data/DAY/mapping.json` (same as step 2 at the top of this runbook).
+2. Pond logins → `pond_creds.json`, then `python3 pb_used.py DAY` → `data/DAY/pb_used.json`; delete `pond_creds.json`.
+   (Read-only: login + viewCallingGroups + getDiallingCount only. Never logout/refreshToken/remove/disconnectUsers.)
 3. Roster: `get_values` ISA Masterfile `'Active ISAs'!A1:I60`; rows with Active = TRUE →
    `data/DAY/roster.json` as `[{"name": <Time Doctor column>, "promo": <PromoCode>}]`.
-4. Sign-ups: `get_values` ISA Masterfile `'EB Cache'!D1:E25000` (Sign-up date, Promo code). The result is large and is
+4. Wait until 3:20 PM PT so the Masterfile's 3:15 Eventbrite sync has run: `python3 wait_until.py 15:20`
+   (repeat until it prints READY; each call waits at most 8 minutes).
+5. Sign-ups: `get_values` ISA Masterfile `'EB Cache'!D1:E25000` (Sign-up date, Promo code). The result is large and
    saved to a file; keep only rows whose date == DAY → `data/DAY/signups.json` as `[["DAY", "<promo>"], ...]`.
-5. `python3 isa_slack_report.py DAY` (check it), then `python3 isa_slack_report.py DAY --post C0AJSBDT9AA`.
-   Post once per day only: if `conversations.history` for the channel already has today's report from the bot, skip.
-Rules: read-only everywhere except that one Slack message. Do NOT add Time Doctor hours to the public post. Never post pond passwords, emails or phone numbers.
+6. `python3 isa_slack_report.py DAY` and check it (the footer must say "ProspectBoss Calls Used").
+7. `python3 wait_until.py 15:30` until READY. Then check `conversations.history` for C0AJSBDT9AA since 12:00 PM PT
+   today; if the bot already posted today's "Daily ISA Report", stop. Otherwise
+   `python3 isa_slack_report.py DAY --post C0AJSBDT9AA` (one message only).
+Rules: read-only everywhere except that one Slack message. Do NOT add Time Doctor hours to the public post. Never post
+pond passwords, emails or phone numbers. If Calls Used cannot be read, do not post; end with a note saying why.

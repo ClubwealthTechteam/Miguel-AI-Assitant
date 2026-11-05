@@ -3,7 +3,8 @@ half-day sign-ups per ISA (Eventbrite sign-ups by sign-up date, credited by prom
 ISA Masterfile). Read-only on every source.
 
 Inputs in data/<DAY>/:
-  pb.json        from pb_fetch.py (only call counts are used)
+  pb_used.json   {"bpond01": 790, ...}  from pb_used.py: ProspectBoss "CALLS USED" today (preferred; what ISAs report)
+  pb.json        from pb_fetch.py; call-log rows, used only if pb_used.json is missing
   mapping.json   {"bpond01": "Jeff", ...}  from the tracker's Daily Assignment Archive
   roster.json    [{"name": "Rod Velasco", "promo": "CWRodV"}, ...]  ISA Masterfile 'Active ISAs' rows with Active = TRUE
   signups.json   [["2026-11-03", "CWJamDRE"], ...]  ISA Masterfile 'EB Cache' columns D:E (Sign-up date, Promo code)
@@ -25,7 +26,7 @@ def first(n):
 
 def build(day):
     d = HERE / "data" / day
-    pb = json.load(open(d / "pb.json"))
+    pb = json.load(open(d / "pb.json")) if (d / "pb.json").exists() else {}
     mapping = json.load(open(d / "mapping.json"))
     roster = json.load(open(d / "roster.json"))
     signups = json.load(open(d / "signups.json"))
@@ -40,10 +41,12 @@ def build(day):
         hits = [r["name"] for r in roster if first(r["name"]) == f.lower()]
         return hits[0] if len(hits) == 1 else None
 
+    usedf = d / "pb_used.json"
+    used = json.load(open(usedf)) if usedf.exists() else None   # ProspectBoss "CALLS USED" (what the ISAs report)
     calls = {r["name"]: 0 for r in roster}
     unassigned = []
-    for pond, v in pb.items():
-        n = len(v["calls"])
+    for pond, v in (used.items() if used is not None else pb.items()):
+        n = v if used is not None else len(v["calls"])
         if not n:
             continue
         name = who(mapping.get(pond, ""))
@@ -98,7 +101,7 @@ def build(day):
     lines += ["", "*Half-Day Sign-ups Today* (ranked highest to lowest)"]
     lines += ranked(ups, "sign-up", "sign-ups")
     lines += ["", f"Total half-day sign-ups today: {sum(ups.values()):,}",
-              "_Calls: ProspectBoss call logs for each ISA's assigned pond. Sign-ups: Eventbrite sign-ups made today, credited by promo code, one per person per event (as in the ISA Masterfile)._"]
+              ("_Calls: ProspectBoss Calls Used for each ISA's assigned pond. Sign-ups:" if used is not None else "_Calls: ProspectBoss call logs for each ISA's assigned pond. Sign-ups:") + " Eventbrite sign-ups made today, credited by promo code, one per person per event (as in the ISA Masterfile)._"]
     return "\n".join(lines)
 
 
@@ -116,6 +119,8 @@ def post(channel, text):
 if __name__ == "__main__":
     day = sys.argv[1]
     text = build(day)
+    if "--test" in sys.argv:
+        text = "🧪 *TEST - partial day, numbers so far (not the end-of-shift report)*\n\n" + text
     print(text)
     if "--post" in sys.argv:
         print("posted ts", post(sys.argv[sys.argv.index("--post") + 1], text))
