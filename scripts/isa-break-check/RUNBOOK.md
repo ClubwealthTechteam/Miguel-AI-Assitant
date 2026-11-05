@@ -50,12 +50,20 @@ the bot posts at 3:30 PM PT. The routine starts at 3:10 PM PT, Monday–Friday.
 Channel: #cw-isa (`C0AJSBDT9AA`). Test channel: #cw-assistant (`C0C93SGG2FN`). The Slack bot token is injected by
 the proxy (no key needed). DAY = today in America/Los_Angeles.
 
+Pond moves: when an ISA moves pond mid-shift, the squad leader adds a note in that day's archive block (Note column),
+e.g. "Lily from bpond03 to bpond02 at 2:05 PM PT". The report then splits each affected pond's Calls used between the
+people who held it, by that pond's call-log rows before/after the move time, and lists the moves under the calls.
+
 Calls per ISA = ProspectBoss "CALLS USED" (Today's calling capacity box, `total_daily_usage` of `getDiallingCount`)
 of the pond(s) assigned to the ISA that day — the number the ISAs report. Summed when an ISA has two ponds. It only
 exists for TODAY, so read it during the run. The call-log count stays in the private break check only.
 
-1. Assignments → `data/DAY/mapping.json` (same as step 2 at the top of this runbook).
-2. Pond logins → `pond_creds.json`, then `python3 pb_used.py DAY` → `data/DAY/pb_used.json`; delete `pond_creds.json`.
+1. Assignments → `data/DAY/mapping.json` (same as step 2 at the top of this runbook). Read the block's columns A:E:
+   the Note column (E) holds pond moves made during the shift, e.g. "Lily from bpond03 to bpond02 at 2:05 PM PT".
+   Write every non-empty note of DAY's block to `data/DAY/notes.json` as a JSON list of strings (`[]` if none).
+2. Pond logins → `pond_creds.json`, then `python3 pb_used.py DAY` → `data/DAY/pb_used.json`. If notes.json is not
+   empty, also run `python3 pb_fetch.py DAY` (call logs, used to split a moved pond's Calls used by time).
+   Delete `pond_creds.json`.
    (Read-only: login + viewCallingGroups + getDiallingCount only. Never logout/refreshToken/remove/disconnectUsers.)
 3. Roster: `get_values` ISA Masterfile `'Active ISAs'!A1:I60`; rows with Active = TRUE →
    `data/DAY/roster.json` as `[{"name": <Time Doctor column>, "promo": <PromoCode>}]`.

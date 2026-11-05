@@ -6,6 +6,8 @@ Inputs in data/<DAY>/:
   pb_used.json   {"bpond01": 790, ...}  from pb_used.py: ProspectBoss "CALLS USED" today (preferred; what ISAs report)
   pb.json        from pb_fetch.py; call-log rows, used only if pb_used.json is missing
   mapping.json   {"bpond01": "Jeff", ...}  from the tracker's Daily Assignment Archive
+  notes.json     ["Lily from bpond03 to bpond02 at 11:05 AM PT", ...]  the archive's Note column for DAY (optional);
+                 any move note needs pb.json (pb_fetch.py DAY) so the pond's calls can be split by time
   roster.json    [{"name": "Rod Velasco", "promo": "CWRodV"}, ...]  ISA Masterfile 'Active ISAs' rows with Active = TRUE
   signups.json   [["2026-11-03", "CWJamDRE"], ...]  ISA Masterfile 'EB Cache' columns D:E (Sign-up date, Promo code)
   td.json        {"Jeff Napisa": 32860, ...}  Time Doctor tracked seconds for DAY (td_get_time_summary, ISA group,
@@ -14,6 +16,8 @@ Usage: python3 isa_slack_report.py DAY            -> prints the message
        python3 isa_slack_report.py DAY --post CHANNEL_ID   -> also posts it with the Slack bot (chat.postMessage)
 """
 import json, sys, datetime as dt, urllib.request
+import moves
+from isa_daily import pb_to_utc
 from pathlib import Path
 
 HERE = Path(__file__).parent
@@ -45,15 +49,31 @@ def build(day):
     used = json.load(open(usedf)) if usedf.exists() else None   # ProspectBoss "CALLS USED" (what the ISAs report)
     calls = {r["name"]: 0 for r in roster}
     unassigned = []
+    # Pond moves from the archive's Note column (see moves.py); without notes every pond has one owner.
+    notesf = d / "notes.json"
+    mv = moves.parse(json.load(open(notesf)) if notesf.exists() else [], day)
+    tl = moves.timelines(mapping, mv)
+    moved = []
     for pond, v in (used.items() if used is not None else pb.items()):
         n = v if used is not None else len(v["calls"])
         if not n:
             continue
-        name = who(mapping.get(pond, ""))
-        if name in calls:
-            calls[name] += n
+        segs = tl.get(pond, [(None, mapping.get(pond, ""))])
+        if len(segs) > 1:
+            ct = [pb_to_utc(dt.datetime.strptime(c["updated_on"], "%Y-%m-%d %I:%M:%S %p"), pb[pond]["tz"], None)
+                  for c in pb.get(pond, {}).get("calls", [])] if pond in pb else []
+            if not ct:
+                raise SystemExit(f"{pond} has a move note but no call log in pb.json; run pb_fetch.py DAY first.")
+            parts = moves.split(n, ct, segs)
+            moved.append(pond)
         else:
-            unassigned.append((pond, n, mapping.get(pond, "")))
+            parts = [(segs[0][1], n)]
+        for owner, k in parts:
+            name = who(owner)
+            if name in calls:
+                calls[name] += k
+            else:
+                unassigned.append((pond, k, owner))
 
     codes = sorted(((r["promo"].lower(), r["name"]) for r in roster if r.get("promo")), key=lambda x: -len(x[0]))
     ups = {r["name"]: 0 for r in roster}
@@ -97,7 +117,9 @@ def build(day):
     lines += ranked(calls, "call", "calls", with_td=True)
     lines += ["", f"Total ISA calls today: {sum(calls.values()):,}"]
     if unassigned:
-        lines.append("_Ponds used but not in today's assignment: " + ", ".join(f"{p} ({n:,} calls)" for p, n, _ in sorted(unassigned)) + "_")
+        lines.append("_Pond time not assigned to anyone: " + ", ".join(f"{p} ({n:,} calls)" for p, n, _ in sorted(unassigned)) + "_")
+    if mv:
+        lines.append("_Pond moves today: " + "; ".join(f"{n} {f} → {t2} at {t.astimezone(moves.PT):%-I:%M %p} PT" for n, f, t2, t in mv) + " (calls split by time)_")
     lines += ["", "*Half-Day Sign-ups Today* (ranked highest to lowest)"]
     lines += ranked(ups, "sign-up", "sign-ups")
     lines += ["", f"Total half-day sign-ups today: {sum(ups.values()):,}",
