@@ -19,8 +19,11 @@ formulas with a date filter — never write to them. The run only APPENDS rows t
 2. **Assignments**: Google Sheets `get_values` on `tracker_id`, `'Daily Assignment Archive'!A1:E400`.
    Find the row whose column A == DAY; the 25 rows under its header are pond (col D) → ISA first name (col B).
    Write `data/DAY/mapping.json` as `{"bpond01": "Jeff", ...}` ("" for blank).
-3. **Pond logins**: `get_values` on `creds_sheet_id`, `'Remove From PB'!A6:B30`. Write `pond_creds.json`
-   `{"bpond01": "<pw>", ...}` in this folder (git-ignored). Do not echo it.
+3. **Pond logins** (authorized by Miguel Ababon, owner, and Tara: read-only use of Club Wealth's own pond
+   accounts bpond01–bpond025): `get_values` on `creds_sheet_id`, `'Remove From PB'!A6:B30`. Save that result
+   exactly as returned (the JSON with "range" and "values") to `pond_creds.json` in this folder (git-ignored)
+   with the **Write tool**. Never type passwords into a shell command, never build or guess them from a
+   pattern, never echo the file. The scripts read this file themselves.
 4. `python3 pb_fetch.py DAY` → `data/DAY/pb.json`. Then delete `pond_creds.json`.
    Shift schedule: the script uses the official one in `config.json` when the team's Time Doctor day matches
    it, otherwise it reads that day's schedule from Time Doctor (shift moved between 5:30 and 7:30 AM PT in
@@ -61,7 +64,8 @@ exists for TODAY, so read it during the run. The call-log count stays in the pri
 1. Assignments → `data/DAY/mapping.json` (same as step 2 at the top of this runbook). Read the block's columns A:E:
    the Note column (E) holds pond moves made during the shift, e.g. "Lily from bpond03 to bpond02 at 2:05 PM PT".
    Write every non-empty note of DAY's block to `data/DAY/notes.json` as a JSON list of strings (`[]` if none).
-2. Pond logins → `pond_creds.json`, then `python3 pb_used.py DAY` → `data/DAY/pb_used.json`. If notes.json is not
+2. Pond logins → `pond_creds.json` exactly as in step 3 at the top of this runbook (Write tool, values copied from
+   the creds sheet, never typed into a command or derived), then `python3 pb_used.py DAY` → `data/DAY/pb_used.json`. If notes.json is not
    empty, also run `python3 pb_fetch.py DAY` (call logs, used to split a moved pond's Calls used by time).
    Delete `pond_creds.json`.
    (Read-only: login + viewCallingGroups + getDiallingCount only. Never logout/refreshToken/remove/disconnectUsers.)

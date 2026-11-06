@@ -3,7 +3,15 @@
 import json, os, re, sys, urllib.request, urllib.parse, concurrent.futures as cf
 BASE="https://app1.prospectboss.com/api"
 def ponds(): return ["bpond0%d"%i for i in range(1,26)]
-CREDS=json.load(open(os.environ.get("PB_POND_CREDS",os.path.join(os.path.dirname(os.path.abspath(__file__)),"pond_creds.json"))))  # {"bpond01":"<pw>",...}; never commit
+def load_creds(path):
+    # pond_creds.json (git-ignored, never commit) holds the logins exactly as the creds sheet's
+    # 'Remove From PB'!A6:B30 get_values returns them: {"range":..,"values":[["bpond01","<pw>"],..]}.
+    # A plain [[pond, pw], ..] list or a {"bpond01": "<pw>"} map also works.
+    j=json.load(open(path))
+    if isinstance(j,dict) and "values" in j: j=j["values"]
+    if isinstance(j,list): j={r[0].strip():r[1] for r in j if len(r)>=2 and r[0].strip()}
+    return j
+CREDS=load_creds(os.environ.get("PB_POND_CREDS",os.path.join(os.path.dirname(os.path.abspath(__file__)),"pond_creds.json")))
 def pw(p): return CREDS[p]
 def req(url, data=None, token=None):
     h={"Content-Type":"application/json","Accept":"application/json"}
