@@ -87,19 +87,21 @@ def build(day):
                 break
 
     tdf = d / "td.json"
-    td = json.load(open(tdf)) if (tdf.exists() and "--with-td" in sys.argv) else None   # hours stay out of the public post
+    td = json.load(open(tdf)) if (tdf.exists() and "--with-td" in sys.argv) else None   # Time Doctor hours shown with --with-td
 
     def hm(sec):
         m = int(round(sec / 60))
         return f"{m // 60}h {m % 60:02d}m"
 
     def td_note(name, n):
+        # Miguel, 2026-11-09: "✅ Rome Flores - 309 calls | 4.5 hours worked" (Time Doctor tracked time)
         if td is None:
             return ""
         sec = td.get(name, 0) or 0
         if sec <= 0:
-            return " · ⚠️ no Time Doctor time" if n else ""
-        return f" · {hm(sec)} on Time Doctor"
+            return " | ⚠️ no Time Doctor time" if n else ""
+        h = round(sec / 3600, 1)
+        return f" | {h:g} hour{'' if h == 1 else 's'} worked"
 
     def ranked(counts, unit, units, with_td=False):
         items = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0].lower()))
