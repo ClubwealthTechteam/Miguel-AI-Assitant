@@ -31,6 +31,9 @@ function stopsChart(stops, W) {
     const cx = L + cw * i + cw / 2, goal = st.goal || 300;
     s += `<line x1="${L + cw * i + 12}" x2="${L + cw * (i + 1) - 12}" y1="${y(goal)}" y2="${y(goal)}" stroke="#374151" stroke-dasharray="7 5" stroke-width="1.5"/>`;
     const bars = st.prev != null ? [['#a9c8ee', st.prev, '#1f2937'], ['#d68a2f', st.prevShow, '#1f2937'], ['#2e63c7', st.signUps, '#1f2937']] : [['#2e63c7', st.signUps, '#1f2937']];
+    // Held stop (Miguel, 2026-11-17): a 4th bar, green, for who attended this visit (Stat Sheet "N of M" N, else scanned show-ups).
+    const att = st.attended ?? st.shown;
+    if (st.held && att != null) bars.push(['#2f9e6b', att, '#1f2937']);
     const x0 = cx - (bars.length * bw + (bars.length - 1) * 4) / 2;
     bars.forEach((b, k) => { const x = x0 + k * (bw + 4); s += `<rect x="${x}" y="${y(b[1])}" width="${bw}" height="${B - y(b[1])}" rx="2" fill="${b[0]}"/><text x="${x + bw / 2}" y="${y(b[1]) - 7}" text-anchor="middle" font-size="13" font-weight="700" fill="${b[2]}">${b[1]}</text>`; });
     if (st.same != null) s += `<line x1="${x0 - 6}" x2="${x0 + bw + 6}" y1="${y(st.same)}" y2="${y(st.same)}" stroke="#111" stroke-width="3"/><text x="${x0 - 10}" y="${y(st.same) + 4}" text-anchor="end" font-size="11" fill="#4b5563">${st.same}</text>`;
@@ -74,7 +77,7 @@ function statChart(rows) {
   return `<svg width="${W}" height="${H}" font-family="Source Sans 3,Segoe UI,Arial,sans-serif">${s}</svg>`;
 }
 if (D.stat) pages['0-previous-day-event'] = `<div class="card" style="width:820px"><h2>Previous day's event: ${esc(D.stat.city)} · ${esc(D.stat.date)}</h2><div class="sub">From the Stat Sheet | Updated post in #cw-half-day-registration-forms-automation</div>${statChart(D.stat.rows)}<div class="note">Attended Tagged = people tagged attended in Keap out of registrations.</div></div>`;
-pages['1-upcoming'] = `<div class="card" style="width:${D.full.length > 2 ? 1370 : 900}px"><h2>${esc(D.title || 'Previous vs upcoming Half-Day events')}</h2><div class="sub">Light blue: last visit's sign-ups · orange: last visit's show-ups · dark blue: sign-ups now · black line: last visit at the same days out · dashed: goal</div>${stopsChart(D.full, D.full.length > 2 ? 1320 : 850)}${D.note ? `<div class="note">${D.note}</div>` : ''}</div>`;
+pages['1-upcoming'] = `<div class="card" style="width:${D.full.length > 2 ? 1370 : 900}px"><h2>${esc(D.title || 'Previous vs upcoming Half-Day events')}</h2><div class="sub">Light blue: last visit's sign-ups · orange: last visit's show-ups · dark blue: sign-ups now · green: attended (held stops) · black line: last visit at the same days out · dashed: goal</div>${stopsChart(D.full, D.full.length > 2 ? 1320 : 850)}${D.note ? `<div class="note">${D.note}</div>` : ''}</div>`;
 if (D.next) pages['2-next-tour'] = `<div class="card" style="width:1370px"><h2>${esc(D.nextTitle)}</h2><div class="sub">Light blue: last visit's sign-ups · orange: last visit's show-ups · dark blue: sign-ups now · dashed: goal</div>${stopsChart(D.next, 1320)}<div class="note">${D.nextNote || ''}</div></div>`;
 pages['3-daily-sign-ups'] = `<div class="card" style="width:680px"><h2>${esc(D.dailyTitle || 'Daily sign-ups')}</h2><div class="sub">${esc(D.dailySub || 'Sign-ups in the last 24 hours, against the daily goal.')}</div>${dailyChart(D.daily)}<div class="note">${esc(D.dailyNote || '')}</div></div>`;
 // Highest sign-ups first, ties by name: the same order as the CWU Daily Huddle page (Miguel, 2026-10-23).

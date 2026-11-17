@@ -48,3 +48,5 @@ Match the CWU Daily Huddle "Campaign codes by stop" cards: list EVERY stop on im
 (held, today's and next tour), each with New (last 24 h, 5 AM to 5 AM) and Total. A stop the code
 never reached shows 0 / 0, never "—". CWSocial27 is a Keap tag: show each stop's "via" tag text when
 it has one. Totals come from a live huddle whose chart still lists those stops (see the routine).
+
+Held stops (Miguel, 2026-11-17): set `attended` (the Stat Sheet's "N of M Attended Tagged" N, or scanned show-ups) and image 1 draws a 4th, green bar for it next to last visit's sign-ups / show-ups and this visit's sign-ups.
