@@ -19,6 +19,8 @@ td{padding:7px 6px;border-top:1px solid #eef0f3}td.n,th.n{text-align:right;font-
 const HC = { good: '#2f7d4f', warn: '#8a6514', bad: '#b33a2c' };
 const health = (s) => { const p = s.signUps / (s.goal || 300); return p >= 0.8 ? ['On track', 'good'] : p >= 0.5 ? ['Monitor', 'warn'] : ['Behind', 'bad']; };
 
+const legend = (items) => `<div style="display:flex;flex-wrap:wrap;gap:8px 22px;margin:2px 0 14px;font-size:14.5px;color:#374151">${items.map(([c, t, dash]) => `<span style="display:inline-flex;align-items:center;gap:7px">${dash ? `<svg width="26" height="10"><line x1="0" x2="26" y1="5" y2="5" stroke="#374151" stroke-width="2" ${dash === 'dash' ? 'stroke-dasharray="6 4"' : 'stroke-width="3"'}/></svg>` : `<span style="width:14px;height:14px;border-radius:3px;background:${c};display:inline-block"></span>`}${t}</span>`).join('')}</div>`;
+const LEG_PREV = ['#a9c8ee', "Last visit's sign-ups"], LEG_PSHOW = ['#d68a2f', "Last visit's show-ups"], LEG_NOW = ['#2e63c7', 'Sign-ups now'], LEG_ATT = ['#2f9e6b', 'Attended (held stops)'], LEG_SAME = ['', 'Last visit at the same days out', 'solid'], LEG_GOAL = ['', 'Goal (300)', 'dash'];
 function stopsChart(stops, W) {
   const H = 470, L = 70, R = W - 30, T = 30, B = 330;
   const max = Math.max(500, Math.ceil(Math.max(...stops.flatMap((s) => [s.signUps, s.prev || 0])) / 100) * 100);
@@ -83,8 +85,8 @@ function statChart(rows) {
   return `<svg width="${W}" height="${H}" font-family="Source Sans 3,Segoe UI,Arial,sans-serif">${s}</svg>`;
 }
 if (D.stat) pages['0-previous-day-event'] = `<div class="card" style="width:820px"><h2>Previous day's event: ${esc(D.stat.city)} · ${esc(D.stat.date)}</h2><div class="sub">From the Stat Sheet | Updated post in #cw-half-day-registration-forms-automation</div>${statChart(D.stat.rows)}<div class="note">Attended Tagged = people tagged attended in Keap out of registrations.</div></div>`;
-pages['1-upcoming'] = `<div class="card" style="width:${D.full.length > 2 ? 1370 : 900}px"><h2>${esc(D.title || 'Previous vs upcoming Half-Day events')}</h2><div class="sub">Light blue: last visit's sign-ups · orange: last visit's show-ups · dark blue: sign-ups now · green: attended (held stops) · black line: last visit at the same days out · dashed: goal</div>${stopsChart(D.full, D.full.length > 2 ? 1320 : 850)}${D.note ? `<div class="note">${D.note}</div>` : ''}</div>`;
-if (D.next) pages['2-next-tour'] = `<div class="card" style="width:1370px"><h2>${esc(D.nextTitle)}</h2><div class="sub">Light blue: last visit's sign-ups · orange: last visit's show-ups · dark blue: sign-ups now · dashed: goal</div>${stopsChart(D.next, 1320)}<div class="note">${D.nextNote || ''}</div></div>`;
+pages['1-upcoming'] = `<div class="card" style="width:${D.full.length > 2 ? 1370 : 900}px"><h2>${esc(D.title || 'Previous vs upcoming Half-Day events')}</h2>${legend([LEG_PREV, LEG_PSHOW, LEG_NOW, LEG_ATT, LEG_SAME, LEG_GOAL])}${stopsChart(D.full, D.full.length > 2 ? 1320 : 850)}${D.note ? `<div class="note">${D.note}</div>` : ''}</div>`;
+if (D.next) pages['2-next-tour'] = `<div class="card" style="width:1370px"><h2>${esc(D.nextTitle)}</h2>${legend([LEG_PREV, LEG_PSHOW, LEG_NOW, LEG_GOAL])}${stopsChart(D.next, 1320)}<div class="note">${D.nextNote || ''}</div></div>`;
 pages['3-daily-sign-ups'] = `<div class="card" style="width:680px"><h2>${esc(D.dailyTitle || 'Daily sign-ups')}</h2><div class="sub">${esc(D.dailySub || 'Sign-ups in the last 24 hours, against the daily goal.')}</div>${dailyChart(D.daily)}<div class="note">${esc(D.dailyNote || '')}</div></div>`;
 // Highest sign-ups first, ties by name: the same order as the CWU Daily Huddle page (Miguel, 2026-10-23).
 const bySignUps = (n) => (a, b) => b[n] - a[n] || a[0].localeCompare(b[0]);
