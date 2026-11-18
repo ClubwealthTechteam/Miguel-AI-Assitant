@@ -30,7 +30,12 @@ function stopsChart(stops, W) {
   stops.forEach((st, i) => {
     const cx = L + cw * i + cw / 2, goal = st.goal || 300;
     s += `<line x1="${L + cw * i + 12}" x2="${L + cw * (i + 1) - 12}" y1="${y(goal)}" y2="${y(goal)}" stroke="#374151" stroke-dasharray="7 5" stroke-width="1.5"/>`;
-    const bars = st.prev != null ? [['#a9c8ee', st.prev, '#1f2937'], ['#d68a2f', st.prevShow, '#1f2937'], ['#2e63c7', st.signUps, '#1f2937']] : [['#2e63c7', st.signUps, '#1f2937']];
+    // Last visit (Tara, 2026-11-17): show its sign-ups even when it recorded no show-ups (e.g. AZ 2025 stops had no
+    // check-in scans and no Attended tags) — then the orange bar is left out and the city line says so.
+    const bars = [];
+    if (st.prev != null) bars.push(['#a9c8ee', st.prev, '#1f2937']);
+    if (st.prev != null && st.prevShow != null) bars.push(['#d68a2f', st.prevShow, '#1f2937']);
+    bars.push(['#2e63c7', st.signUps, '#1f2937']);
     // Held stop (Miguel, 2026-11-17): a 4th bar, green, for who attended this visit (Stat Sheet "N of M" N, else scanned show-ups).
     const att = st.attended ?? st.shown;
     if (st.held && att != null) bars.push(['#2f9e6b', att, '#1f2937']);
@@ -43,6 +48,7 @@ function stopsChart(stops, W) {
       <text x="${cx}" y="${B + 65}" text-anchor="middle" font-size="12.5" font-weight="700">${st.shownText ? esc(st.shownText) : st.shown != null ? `Showed: ${st.shown} scanned (${Math.round(100 * st.shown / st.signUps)}%)` : 'Showed: no scans recorded'}</text>
       <text x="${cx}" y="${B + 84}" text-anchor="middle" font-size="12.5" fill="#4b5563">Event held</text>`; return; }
     const expect = st.expect != null ? `Expect ${st.expect} to show · ${st.flat} at 21%` : `Expect ${st.flat} to show at 21%`;
+    if (st.prevDate && st.prev != null) s += `<text x="${cx}" y="${B + 124}" text-anchor="middle" font-size="11.5" fill="#6b7280">Last visit ${esc(st.prevDate)}: ${st.prev} signed up · ${st.prevShow != null ? st.prevShow + ' showed' : 'no show-up data'}</text>`;
     s += `<text x="${cx}" y="${B + 26}" text-anchor="middle" font-size="15" font-weight="700" font-family="Barlow Semi Condensed,Arial Narrow,sans-serif">${esc(st.city)}, ${st.state}</text>
       <text x="${cx}" y="${B + 46}" text-anchor="middle" font-size="12.5" fill="#4b5563">${esc(st.label)}</text>
       <text x="${cx}" y="${B + 65}" text-anchor="middle" font-size="12.5" fill="#4b5563">${expect}</text>
