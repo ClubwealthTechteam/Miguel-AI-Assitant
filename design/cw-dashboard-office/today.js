@@ -21,14 +21,14 @@
     $('#td-date').textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'America/Los_Angeles' }) + ' · ' + ofPT(now) + ' PT';
     $('#td-hello').textContent = (h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening') + ', Tara';
     var P = OF.people || [], staff = P.filter(function (o) { return !o.p.boss; }), inNow = staff.filter(function (o) { return o.present; }).length;
-    var work = P.filter(function (o) { return o.td && o.td.state === 'working'; }).length, idle = P.filter(function (o) { return o.td && o.td.state === 'idle' && o.present; }).length;
+    var work = P.filter(function (o) { return o.td && o.td.state === 'working'; }).length, idle = P.filter(function (o) { return o.away && (o.away.kind === 'break' || o.away.kind === 'lunch'); }).length;
     var attn = P.filter(function (o) { return o.attn && o.attn.length; });
     var live = OF.zoomFresh || (OF.td && work > 0);
     $('#td-sum').textContent = !P.length ? 'Loading the team…' : (live ? inNow + ' of ' + staff.length + ' people are in right now' : 'Nobody is clocked in right now' + (OF.zoom ? ' · last Zoom day ' + ofDayLabel(OF.zoom.date) : '')) + (attn.length ? ' · ' + attn.length + ' need your attention.' : ' · nothing needs your attention.');
     var kp = function (label, val, sub, dot) { return '<div class="td-kpi"><span>' + (dot ? '<i class="dot" style="background:' + dot + '"></i>' : '') + esc(label) + '</span><b>' + esc(String(val)) + '</b>' + (sub ? '<small>' + esc(sub) + '</small>' : '') + '</div>'; };
     var SL = OF.slack;
     $('#td-kpis').innerHTML = kp(live ? 'In now' : 'In on ' + (OF.zoom ? ofDayLabel(OF.zoom.date) : 'last day'), inNow + '/' + staff.length, 'Help Desk Zoom + Time Doctor', '#46c37b') +
-      kp('Working', OF.td ? work : '–', OF.td ? idle + ' idle · Time Doctor ' + ofPT(OF.td.at) : (OF.tdErr ? 'Time Doctor not connected' : 'loading Time Doctor'), '#36c3f0') +
+      kp('Working', OF.td ? work : '–', OF.td ? idle + ' on break or lunch · Time Doctor ' + ofPT(OF.td.at) : (OF.tdErr ? 'Time Doctor not connected' : 'loading Time Doctor'), '#36c3f0') +
       kp('Needs attention', attn.length, 'late, missed, Action, blockers, idle', attn.length ? '#ff6b5a' : '#9aa0b8') +
       kp('ISA calls', SL ? Number(SL.totalCalls).toLocaleString('en-US') : '–', SL ? 'end-of-shift report · ' + SL.dayLabel : 'report posts 3:30 PM PT') +
       kp('Half-day sign-ups', SL ? SL.totalSignups : '–', SL ? 'ISA report · ' + SL.dayLabel : '') +
@@ -126,7 +126,7 @@
     ofBuild();
     var P = OF.people || [], line = function (o) { var b = [o.p.name + ' (' + o.p.dept + ')', o.present ? 'in' : 'not in'];
       if (o.z) b.push('Zoom ' + ofPT(o.z.j) + (o.z.l ? '–' + ofPT(o.z.l) : ' still in')); if (o.huddle) b.push('huddle ' + (o.huddle === 'late' ? o.late + ' min late' : o.huddle));
-      if (o.td) b.push('Time Doctor ' + (o.td.state === 'idle' ? 'idle ' + o.td.mins + ' min' : o.td.state)); if (o.brk) b.push('break check ' + o.brk.st + ' ' + o.brk.d);
+      if (o.td) b.push('Time Doctor ' + (o.td.state === 'idle' ? 'idle ' + o.td.mins + ' min' + (o.idleAs ? ' (counted as ' + o.idleAs + ')' : '') : o.td.state)); if (o.brk) b.push('break check ' + o.brk.st + ' ' + o.brk.d);
       if (o.eod) b.push('EOD ' + o.eod.date + (o.eod.blockers ? ' blocker: ' + o.eod.blockers.slice(0, 80) : '')); if (o.slack) b.push('calls ' + (o.slack.calls != null ? o.slack.calls : '?') + ', sign-ups ' + (o.slack.signups != null ? o.slack.signups : '?'));
       if (o.attn && o.attn.length) b.push('ATTENTION: ' + o.attn.join('; ')); return b.join(', '); };
     return '\nLIVE TEAM (' + (OF.zoom ? 'Zoom day ' + OF.zoom.date + (OF.zoomFresh ? ', live' : ', not live') : 'no Zoom data') + (OF.td ? '; Time Doctor as of ' + ofPT(OF.td.at) : '') + '):\n' + P.map(line).join('\n') +

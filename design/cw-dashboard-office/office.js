@@ -130,7 +130,7 @@
     Object.keys(by).forEach(function (k) {
       var b = by[k], p = who(k); if (!p) return;
       var mins = Math.max(0, Math.round((now - b.last) / 60000)), brk = /break/i.test(b.mode);
-      out[p.id] = { name: k, first: b.first, last: b.last, mins: mins, state: brk && mins < 20 ? 'break' : mins <= 7 ? 'working' : 'idle', breakStart: brk ? b.lastStart : null };
+      out[p.id] = { name: k, first: b.first, last: b.last, mins: mins, state: brk && mins < 20 ? 'break' : mins <= 5 ? 'working' : 'idle', breakStart: brk ? b.lastStart : null };
     });
     return out;
   }
@@ -230,18 +230,19 @@
       if (o.z) { var late = Math.round((Date.parse(o.z.j) - hud) / 60000); o.huddle = late <= 0 ? 'on' : 'late'; o.late = late; } else o.huddle = doc ? 'missed' : null;
       o.inNow = !!(fresh && o.z && o.z.open);
       o.td = OF.tdMap[p.id] || null;
-      var tdHere = !!(o.td && (o.td.state !== 'idle' || o.td.mins < 45));
+      o.idleAs = o.td && o.td.state === 'idle' && !p.boss ? (o.td.mins > 120 || Date.now() - o.td.first > 9 * 3600000 ? 'off' : o.td.mins > 15 ? 'lunch' : 'break') : null;
+      var tdHere = !!(o.td && o.idleAs !== 'off');
       if (OF.replay != null && doc) {
         var at = ofHuddleAt(doc.date, ('0' + Math.floor(OF.replay / 60)).slice(-2) + ':' + ('0' + OF.replay % 60).slice(-2));
         o.present = !!(o.z && o.z.s.some(function (q) { return Date.parse(q[0]) <= at && (!q[1] || Date.parse(q[1]) >= at); }));
-      } else o.present = p.boss ? true : OF.eff === 'day' ? !!(o.z || o.td) : (o.inNow || tdHere);
+      } else o.present = p.boss ? true : OF.eff === 'day' ? !!(o.z || o.td) : o.idleAs === 'off' ? false : (o.inNow || tdHere);
       o.slack = ofSlackFor(p);
       o.away = null; o.bo = null;
       if (o.z && o.z.b && fresh && OF.replay == null) o.bo = (OF.breakouts || []).filter(function (r) { return r.b === o.z.b; })[0] || null;
       if (OF.replay == null && o.present && !p.boss && o.bo && o.bo.clients.length) {
         o.away = { kind: 'client', room: 'client', mins: 0, name: 'with ' + o.bo.clients.map(function (c) { return c.n; }).join(', ') };
       } else if (OF.replay == null && o.present && !p.boss) {
-        var aw = o.z && o.z.away && (fresh || OF.eff === 'now') ? o.z.away : o.td && o.td.state === 'break' ? { kind: 'break', since: o.td.breakStart || Date.now(), name: 'Time Doctor break' } : null;
+        var aw = o.z && o.z.away && (fresh || OF.eff === 'now') ? o.z.away : o.td && o.td.state === 'break' ? { kind: 'break', since: o.td.breakStart || Date.now(), name: 'Time Doctor break' } : o.idleAs === 'lunch' || o.idleAs === 'break' ? { kind: o.idleAs, since: o.td.last, name: 'Idle ' + o.td.mins + ' min in Time Doctor' } : null;
         if (aw) {
           var minsAway = Math.max(0, Math.round((Date.now() - aw.since) / 60000)), room = aw.kind === 'lunch' ? 'pantry' : aw.kind === 'rr' ? 'rr' : 'lounge';
           if (/^miguel/i.test(p.name) && aw.kind !== 'rr') room = minsAway < 15 ? 'pantry' : 'smoke';   // Miguel: 15 min pantry, then the smoking area
@@ -264,7 +265,7 @@
       if (zToday && wk && hr >= 8 && o.huddle === 'missed' && !o.td) R.push('Not in Zoom or Time Doctor today');
       if (o.p.group === 'isa' && o.brk && o.brk.st === 'Action') R.push('Break check: Action (' + ofDayLabel(o.brk.d) + ')');
       if (o.st === 'help') R.push('Asked for help in their EOD');
-      if (o.td && o.td.state === 'idle' && o.td.mins >= 20 && o.td.mins < 240 && wk && hr >= 6 && hr < 17) R.push('Idle ' + o.td.mins + ' min in Time Doctor');
+      if (o.idleAs === 'off' && o.td.mins <= 240 && Date.now() - o.td.first <= 9 * 3600000 && wk) R.push('Idle ' + Math.floor(o.td.mins / 60) + 'h ' + (o.td.mins % 60) + 'm in Time Doctor during their shift: counted as off');
       o.attn = R;
     });
   }
@@ -1348,8 +1349,8 @@
     var cnt = function (st) { return isa.filter(function (o) { return o.st === st; }).length; };
     var when = OF.replay != null && doc ? 'Replay · ' + ofDayLabel(doc.date) + ' · ' + $('#of-rp-t').textContent : !doc && OF.td ? 'Live · Time Doctor as of ' + ofPT(OF.td.at) + ' PT' : !doc ? 'Zoom: no data yet' : OF.eff === 'day' ? (OF.zoomFresh ? 'Today' : 'Office closed · showing ' + ofDayLabel(doc.date)) + ' · everyone who clocked in' : OF.zoomFresh ? 'Live · Zoom as of ' + ofPT(doc.at) + ' PT' : 'Office closed · last Zoom day ' + ofDayLabel(doc.date);
     $('#of-hud-when').innerHTML = '<span class="lv" style="' + (OF.zoomFresh && OF.eff === 'now' ? '' : 'background:#9aa0b8;box-shadow:none') + '"></span>' + esc(when);
-    var tdN = function (st) { return P.filter(function (o) { return o.td && o.td.state === st; }).length; };
-    $('#of-hud-td').innerHTML = OF.td ? '<small>Time Doctor ' + esc(ofPT(OF.td.at)) + '</small> <i class="k" style="background:#46c37b"></i><b>' + tdN('working') + '</b> <small>working</small> <i class="k" style="background:#ffb547"></i><b>' + tdN('idle') + '</b> <small>idle</small> <i class="k" style="background:#9aa0b8"></i><b>' + tdN('break') + '</b> <small>break</small>'
+    var tdN = function (st) { return P.filter(function (o) { return o.td && !o.p.boss && (st === 'working' ? o.td.state === 'working' : st === 'break' ? (o.td.state === 'break' || o.idleAs === 'break') : o.idleAs === st); }).length; };
+    $('#of-hud-td').innerHTML = OF.td ? '<small>Time Doctor ' + esc(ofPT(OF.td.at)) + '</small> <i class="k" style="background:#46c37b"></i><b>' + tdN('working') + '</b> <small>working</small> <i class="k" style="background:#ffb547"></i><b>' + tdN('break') + '</b> <small>break</small> <i class="k" style="background:#ff9b5a"></i><b>' + tdN('lunch') + '</b> <small>lunch</small> <i class="k" style="background:#9aa0b8"></i><b>' + tdN('off') + '</b> <small>off</small>'
       : OF.tdErr === 'not_granted' ? '<small>Time Doctor isn’t allowed for this page</small>' : OF.tdErr ? '<small>Time Doctor didn’t load</small> <button type="button" class="link" id="of-td-retry" style="color:#8fb8ff">Retry</button>' : '<small>Loading Time Doctor…</small>';
     var tr = $('#of-td-retry'); if (tr) tr.onclick = function () { OF.tdErr = null; ofTdLoad(); ofHud(); };
     $('#of-hud-n').innerHTML = '<b>' + here(adm) + '</b>/' + adm.length + ' <small>Admins in</small> &nbsp; <b>' + here(isa) + '</b>/' + isa.length + ' <small>ISAs &amp; RMs in</small>';
@@ -1389,7 +1390,7 @@
     if (o.away && o.away.kind === 'client') rows.push(['Right now', 'In the Client Room · Zoom breakout ' + esc(o.away.name)]);
     else if (o.away) rows.push(['Right now', ({ lunch: 'on lunch', break: 'on a break', rr: 'restroom' }[o.away.kind]) + ' · ' + o.away.mins + ' min · ' + ({ pantry: 'Pantry', lounge: 'Lounge', smoke: 'Smoking Area', rr: 'by the restrooms' }[o.away.room])]);
     if (o.bo && !(o.away && o.away.kind === 'client')) { var mates = o.bo.staff.filter(function (x) { return x !== o.p.id; }).map(function (x) { var q = OF.people.filter(function (y) { return y.p.id === x; })[0]; return q ? q.p.name : ''; }).concat(o.bo.applicants.map(function (a) { return a.n + ' (applicant)'; })).filter(Boolean); rows.push(['Zoom', 'In a breakout room' + (mates.length ? ' with ' + esc(mates.join(', ')) : '')]); }
-    if (o.td) { rows.push(['Time Doctor', o.td.state === 'working' ? 'working now' : o.td.state === 'break' ? 'on a break' : 'idle ' + o.td.mins + ' min']); rows.push(['First activity', ofPT(o.td.first)]); }
+    if (o.td) { rows.push(['Time Doctor', o.td.state === 'working' ? 'working now' : o.td.state === 'break' ? 'on a break' : 'idle ' + o.td.mins + ' min' + (o.idleAs ? ' · counted as ' + (o.idleAs === 'off' ? 'off' : o.idleAs) : '')]); rows.push(['First activity', ofPT(o.td.first)]); }
     else if (OF.td) rows.push(['Time Doctor', 'no activity today']);
     if (o.slack) { if (o.slack.calls != null) rows.push(['Calls (ISA report)', String(o.slack.calls)]); if (o.slack.signups != null) rows.push(['Half-day sign-ups', String(o.slack.signups)]); }
     var extraA = o.attn && o.attn.length ? '<p><span>Needs attention</span>' + o.attn.map(esc).join('<br>') + '</p>' : '';
