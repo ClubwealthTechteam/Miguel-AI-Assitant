@@ -5,7 +5,7 @@
      room, first join = clock-in, last leave = clock-out), written by a Claude routine into this page's db doc zoom/attendance.
      The ring under each ISA is their last ISA break check (ISA Break Check Log); admins show their latest EOD report.
      Roster: the recruiting CRM's "Team (Onboarding)" tab (Club Wealth staff only), plus any ISA new to the break check log. */
-  var OF_ISA_KNOWN = {};   // name -> [name, full name, nicknames]: keeps nicknames when the list comes from the sheet
+  var OF_ISA_KNOWN = {}, OF_RM_KNOWN = {};   // name -> [name, full name, nicknames]: keeps nicknames when the list comes from the sheet
   var OF_ROSTER = (function () {
     var out = [];
     function add(group, dept, name, full, o) { o = o || {}; out.push({ id: 'p' + out.length, group: group, dept: dept, name: name, full: full, alias: o.alias || [], eod: o.eod || '', brk: o.brk || '' }); }
@@ -43,29 +43,46 @@
       ['Melchan Portugal', 'Melchan Portugal', ['melchan', 'mel']], ['RJ Torsiende', 'RJ Torsiende', ['rj']], ['Rod Velasco', 'Rod Velasco', ['rod']],
       ['Rome Flores', 'Jerome Flores', ['rome', 'jerome']], ['Ruth Lagahit', 'Ruth Ann L. Lagahit', ['ruth']], ['Shayne Balmes', 'Nilma Shayne Balmes', ['shayne']]
     ].forEach(function (r) { OF_ISA_KNOWN[r[0].toLowerCase()] = r; add('isa', 'ISA', r[0], r[1], { alias: r[2], brk: r[0] }); });
+    out.forEach(function (p) { if (p.group === 'rm') OF_RM_KNOWN[p.name.toLowerCase()] = p; });
     return out;
   })();
 
   /* Slack member ids (Club Wealth workspace) for the card's "Message on Slack" button: opens a DM in Slack, sends nothing */
   var OF_SLACK_TEAM = 'T01SHQLDXTR', OF_SLACK = {"Camille": "U0A9JTDE0SH", "Jowelyn Masangya": "U0BU6FQJ3DL", "Joshua Ymmanuel M. Espulgar": "U0AKE2S1JJU", "Jizel Verdida Cañada": "U0AJ4ASMJVD", "Andrea Uy": "U0AJX1UUZKK", "Amrissa Marbella": "U0AJFQK7J4W", "Liz Sarreal": "U0AJBMGH96F", "Ali-Ace Berico": "U0AJJ7HK9MY", "Kathleen": "U0AJFNKSSBY", "Jay Mar Avelino": "U0AJ2CDD215", "Randy Lopez": "U0AJNL7BALC", "Becky Namarome": "U0AJY09K35F", "Joe Aynndrian A. Leonidas": "U0AJKRCUXPC", "Maria Vanessa G. Sembrano": "U0AKE3VNR40", "Andrew Kuji Kimura": "U0AKE3WA7KJ", "Beula Kryss Jambalos": "U0AJPDK0QBW", "Ebimo Dogubo": "U0AJ4C45LS3", "Francis Narciso": "U0AJGCVCCGM", "Marcia": "U0AJPDKGPL4", "Ron Anderson": "U03JLAF5P17", "Krishan Miguel Ababon": "U0C6BGGHY3C", "Omerson Cruz": "U0AJBDP2HCK", "Faith \"Aaevah\" Akpan": "U0AJQUYFQ3F", "Alleah Joy Galam": "U0AKNL23CRE", "Brian Ceniza": "U0C9Y1ANQ68", "Ma. Christina Labadia": "U0BHV3FDL91", "Dave Tamparong": "U0BJ38FNKND", "Epifanio Jhan Elvinze Melano": "U0C60CAEPDL", "Emie Jane Esclamado": "U0C6AF6LKL6", "Gabriel Garin": "U0BJL2SCGTU", "Hazel Bonayon": "U0C9N3KUL11", "Gehaimy Jam David": "U0C69K0HJ86", "Jefferson Napisa": "U0C9P1RB3A9", "Jeriza Trasmil": "U0AJSABG0Q6", "Jonalisa Arabiana Caponpon": "U0C69K1GCF8", "Katrina Buan": "U0AJUC1C9DY", "L.A Patulan": "U0C60C6M1F0", "Lily Delantes": "U0AJQUYBJ05", "Lolita Mae Esma": "U0C649AF3S5", "Mark Jayson Abarcar": "U0AJCU99M1D", "Melchan Portugal": "U0C6F8AC1L4", "RJ Torsiende": "U0AJY0ATLTW", "Rod Velasco": "U0BHL0AA7T9", "Jerome Flores": "U0C626G4LCS", "Ruth Ann L. Lagahit": "U0AJY0ARPFE", "Nilma Shayne Balmes": "U0BJ527KATW"};
   var OF_ACTIVE_SHEET = '1ahOwILkD6_S_YDoEiy_zg4hmqkvEUgsMVoXXfW0t3Bg', OF_ACTIVE = { p: null, ok: false };
+  function ofReadActive(mcp, tab) {
+    return mcp.callTool('Google Sheets', 'get_values', { spreadsheetId: OF_ACTIVE_SHEET, range: "'" + tab + "'!A1:I200" }, { cache: { staleTime: 600000, refresh: true } }).then(function (r) {
+      var p = r.payload; if (typeof p === 'string') { try { p = JSON.parse(p); } catch (e) {} }
+      var v = (p && p.values) || [], h = (v[0] || []).map(function (x) { return String(x).trim().toLowerCase(); });
+      var ci = function (n) { return h.indexOf(n); }, cF = ci('first'), cL = ci('last'), cT = ci('time doctor'), cA = ci('active');
+      if (cF < 0 || cA < 0) return null;
+      var list = v.slice(1).filter(function (row) { return String(row[cA]).toUpperCase() === 'TRUE' && (row[cF] || row[cL]); }).map(function (row) {
+        var td = cT >= 0 ? String(row[cT] || '').trim() : '', fl = (String(row[cF] || '').trim() + ' ' + String(row[cL] || '').trim()).trim();
+        return { name: td && !/^\(/.test(td) ? td : fl, first: String(row[cF] || '').trim(), last: String(row[cL] || '').trim(), full: fl };
+      });
+      return list.length ? list : null;
+    }, function () { return null; });
+  }
   function ofLoadActive() {
     if (OF_ACTIVE.p) return OF_ACTIVE.p;
     OF_ACTIVE.p = (window.claude && claude.use ? claude.use('mcp') : Promise.resolve(null)).then(function (mcp) {
       if (!mcp) return null;
-      return mcp.callTool('Google Sheets', 'get_values', { spreadsheetId: OF_ACTIVE_SHEET, range: "'Active ISAs'!A1:I200" }, { cache: { staleTime: 600000, refresh: true } }).then(function (r) {
-        var p = r.payload; if (typeof p === 'string') { try { p = JSON.parse(p); } catch (e) {} }
-        var v = (p && p.values) || [], h = (v[0] || []).map(function (x) { return String(x).trim().toLowerCase(); });
-        var ci = function (n) { return h.indexOf(n); }, cF = ci('first'), cL = ci('last'), cT = ci('time doctor'), cA = ci('active');
-        if (cF < 0 || cA < 0) return null;
-        var list = v.slice(1).filter(function (row) { return String(row[cA]).toUpperCase() === 'TRUE' && (row[cF] || row[cL]); }).map(function (row) {
-          var td = cT >= 0 ? String(row[cT] || '').trim() : '', nm = td && !/^\(/.test(td) ? td : (String(row[cF] || '').trim() + ' ' + String(row[cL] || '').trim()).trim();
-          return { name: nm, first: String(row[cF] || '').trim() };
-        });
-        return list.length ? list : null;
-      });
-    }).then(function (list) { if (list) ofSetIsas(list); return list; }, function () { return null; });
+      return Promise.all([ofReadActive(mcp, 'Active ISAs'), ofReadActive(mcp, 'Active RMs')]);
+    }).then(function (res) {
+      if (!res) return null;
+      if (res[0]) ofSetIsas(res[0]);
+      if (res[1]) ofSetRms(res[1]);
+      return res[0] || res[1] ? res : null;
+    }, function () { return null; });
     return OF_ACTIVE.p;
+  }
+  function ofSetRms(list) {
+    for (var k = OF_ROSTER.length - 1; k >= 0; k--) if (OF_ROSTER[k].group === 'rm') OF_ROSTER.splice(k, 1);
+    var n = 0; OF_ROSTER.forEach(function (p) { n = Math.max(n, +p.id.slice(1) + 1); });
+    list.forEach(function (x) {
+      var kn = OF_RM_KNOWN[x.first.toLowerCase()];
+      OF_ROSTER.push({ id: 'p' + (n++), group: 'rm', dept: 'RM', name: x.first, full: kn ? kn.full : x.name, alias: kn ? kn.alias : [x.first.toLowerCase()], eod: '', brk: '' });
+    });
   }
   function ofSetIsas(list) {
     for (var k = OF_ROSTER.length - 1; k >= 0; k--) if (OF_ROSTER[k].group === 'isa') OF_ROSTER.splice(k, 1);
