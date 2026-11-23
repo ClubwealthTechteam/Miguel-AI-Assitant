@@ -36,10 +36,10 @@
       ['Clint Lequin', 'Clint Ivan Dominic Lequin', ['clint']], ['Dave Tamparong', 'Dave Tamparong', ['dave']], ['Dona Dionglay', 'Ma. Dona Dionglay', ['dona']],
       ['Ejay Melano', 'Epifanio Jhan Elvinze Melano', ['ejay']], ['Emie Esclamado', 'Emie Jane Esclamado', ['emie']],
       ['Gabriel Garin', 'Gabriel Garin', ['gabriel']], ['Hazel Bonayon', 'Hazel Bonayon', ['hazel']], ['Jam David', 'Gehaimy Jam David', ['jam']],
-      ['Jeff Napisa', 'Jefferson Napisa', ['jeff', 'jefferson']], ['Jeriza Trasmil', 'Jeriza Trasmil', ['jeriza']], ['Jonalisa Caponpon', 'Jonalisa Arabiana Caponpon', ['jonalisa']],
+      ['Jeff Napisa', 'Jefferson Napisa', ['jeff', 'jefferson']], ['Jeriza Trasmil', 'Jeriza Trasmil', ['jeriza', 'jeri']], ['Jonalisa Caponpon', 'Jonalisa Arabiana Caponpon', ['jonalisa']],
       ['Katrina Buan', 'Katrina Buan', ['katrina']], ['L.A Patulan', 'L.A Patulan', ['l a', 'la', 'sam']], ['Lily Delantes', 'Lily Delantes', ['lily']],
       ['Lolita Esma', 'Lolita Mae Esma', ['lolita']], ['Mark Abarcar', 'Mark Jayson Abarcar', ['mark']], ['Mary Jane Llaban', 'Mary Jane Llaban', ['mary jane']],
-      ['Melchan Portugal', 'Melchan Portugal', ['melchan']], ['RJ Torsiende', 'RJ Torsiende', ['rj']], ['Rod Velasco', 'Rod Velasco', ['rod']],
+      ['Melchan Portugal', 'Melchan Portugal', ['melchan', 'mel']], ['RJ Torsiende', 'RJ Torsiende', ['rj']], ['Rod Velasco', 'Rod Velasco', ['rod']],
       ['Rome Flores', 'Jerome Flores', ['rome', 'jerome']], ['Ruth Lagahit', 'Ruth Ann L. Lagahit', ['ruth']], ['Shayne Balmes', 'Nilma Shayne Balmes', ['shayne']]
     ].forEach(function (r) { add('isa', 'ISA', r[0], r[1], { alias: r[2], brk: r[0] }); });
     return out;
