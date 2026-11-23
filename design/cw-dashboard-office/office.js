@@ -782,11 +782,7 @@
     box(3.6, .06, .8, '#e9e2d6', -27.4, .76, -7.2); box(.05, .72, .7, frameC, -29.1, .38, -7.2); box(.05, .72, .7, frameC, -25.7, .38, -7.2);
     [-28.5, -27.4, -26.3].forEach(function (mx) { box(.55, .34, .03, '#141519', mx, 1.1, -7.45); box(.05, .25, .05, '#2a2d33', mx, .9, -7.45); put('SchoolChair_01', null, mx, 0, -6.55, Math.PI, { h: .92 }, '#3a3a3c'); });
     box(2.4, 1.2, .05, '#f8f8f6', -30.3, 1.5, -4.6).rotation.y = Math.PI / 2; plant(-29.9, -3.0, 1.0);
-    // Phone booths (front): quiet spots for private calls
-    booth(-29.3, -.9, '#2346c8'); booth(-27.5, -.9, '#2f8f6a'); booth(-25.7, -.9, '#c2416b');
-    box(2.2, .08, .5, '#b98d62', -26.5, .45, 3.6); box(.06, .45, .45, frameC, -27.5, .22, 3.6); box(.06, .45, .45, frameC, -25.5, .22, 3.6);
     plant(-23.0, 3.9, 1.0); plant(-30.0, 3.9, .9);
-    decal([{ text: 'PHONE BOOTHS', font: '800 100px Inter, system-ui, sans-serif', color: '#6b6f8a', y: 75, ls: '10px' }], 3.0, .45, -27.5, 1.6, 0, .5);
     /* AI & Tech corner: server racks, a data screen, and A.C.E + Claude at work talking to each other */
     (function () {
       var rackM = mat('#1b1e26', { roughness: .45, metalness: .4 });
