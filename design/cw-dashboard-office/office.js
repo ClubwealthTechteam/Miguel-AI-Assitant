@@ -807,7 +807,7 @@
          Claude: RobotExpressive by Tomás Laulhé (Quaternius), gold. A.C.E: "Leela" from Quaternius' Animated Mech Pack, white and cyan.
          They chat (speech bubbles from the live data) and now and then take a walk around the floor and come back. */
       S.robots = [];
-      var HOME = { CLAUDE: [-19.5, -6.55, -Math.PI / 2 + .35], 'A.C.E': [-21.0, -6.55, Math.PI / 2 - .35] };
+      var HOME = { CLAUDE: [-26.6, -5.0, -Math.PI / 2 + .3], 'A.C.E': [-28.2, -5.0, Math.PI / 2 - .3] };   // in front of the lab bench
       function robot(g, label, col, h, recolor) {
         var root = g.scene;
         root.traverse(function (o) { if (o.isMesh) { o.frustumCulled = false; o.castShadow = false; o.userData.keep = 1; if (o.material) { o.material = o.material.clone(); recolor(o.material); } } });
@@ -825,7 +825,7 @@
       }
       if (AS.robot) robot(AS.robot, 'CLAUDE', '#d97757', 1.35, function (m) { if (m.name === 'Main') { m.color = new T.Color('#c9a24a').convertSRGBToLinear(); m.metalness = .8; m.roughness = .3; } });
       if (AS.ace) robot(AS.ace, 'A.C.E', '#36c3f0', 1.2, function (m) { if (m.name === 'Main' || m.name === 'Grey') m.color = new T.Color(m.name === 'Main' ? '#f2f4f7' : '#c9d3de').convertSRGBToLinear(); if (m.name === 'Accent' || m.name === 'Eye') { m.color = new T.Color('#36c3f0').convertSRGBToLinear(); m.emissive = new T.Color('#36c3f0').convertSRGBToLinear(); m.emissiveIntensity = m.name === 'Eye' ? 1 : .25; } });
-      decal([{ text: 'A.C.E  ·  CLAUDE', font: '800 110px Inter, system-ui, sans-serif', color: '#6b6f8a', y: 80, ls: '10px' }], 2.4, .3, -20.25, -5.75, 0, .55);
+      decal([{ text: 'A.C.E  ·  CLAUDE', font: '800 110px Inter, system-ui, sans-serif', color: '#6b6f8a', y: 80, ls: '10px' }], 2.4, .3, -27.4, -4.15, 0, .55);
     })();
     var wallC2 = document.createElement('canvas'); wallC2.width = 1600; wallC2.height = 700;
     var wallT = new T.CanvasTexture(wallC2); wallT.encoding = T.sRGBEncoding; S.wallCanvas = wallC2; S.wallTex = wallT;
@@ -1053,7 +1053,7 @@
     });
     S.dirty = true; ofAiMove(1400);
   }
-  var OF_ROUTE = [[-20.25, -5.6], [-17.5, -5.2], [-15.0, -5.2], [-14.6, -5.9], [-4.6, -5.9], [-1.4, -3.4], [-1.4, 2.8]];
+  var OF_ROUTE = [[-27.4, -5.0], [-20.25, -5.25], [-17.5, -5.2], [-15.0, -5.2], [-14.6, -5.9], [-4.6, -5.9], [-1.4, -3.4], [-1.4, 2.8]];
   function ofWalkStart() {
     var S = OF.three; if (!S || !S.robots || S.robots.length < 2 || S.walk || !OF.running || document.hidden) return;
     var P = OF_ROUTE, segs = [], L = 0; for (var i = 1; i < P.length; i++) { var d = Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]); segs.push(d); L += d; }
