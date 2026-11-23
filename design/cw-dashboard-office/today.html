@@ -1,0 +1,45 @@
+    <section class="view td-view" data-view="today" hidden aria-label="Today">
+      <div class="td-hero">
+        <div class="td-hero-l">
+          <span class="td-eyebrow" id="td-date">Today</span>
+          <h2 id="td-hello">Good morning, Tara</h2>
+          <p id="td-sum">Pulling in Zoom, Time Doctor, break checks and EOD reports…</p>
+        </div>
+        <button type="button" class="td-voice" id="td-voice"><span class="td-orb" aria-hidden="true"></span><span><b>Ask by voice</b><small>“Who’s idle right now?”</small></span></button>
+      </div>
+      <div class="td-kpis" id="td-kpis"></div>
+      <div class="td-grid">
+        <article class="td-card td-span2" id="td-attn-card">
+          <header><h3>Needs attention</h3><span class="td-sub" id="td-attn-sub"></span></header>
+          <ul class="td-attn" id="td-attn"></ul>
+        </article>
+        <article class="td-card">
+          <header><h3>Team right now</h3><button type="button" class="td-link" data-go="office">Open 3D office →</button></header>
+          <ul class="td-depts" id="td-depts"></ul>
+        </article>
+        <article class="td-card">
+          <header><h3>Sales · 2026</h3><button type="button" class="td-link" data-go="main">Sales overview →</button></header>
+          <div class="td-sales" id="td-sales"></div>
+        </article>
+        <article class="td-card">
+          <header><h3>ISA &amp; RM floor</h3><button type="button" class="td-link" data-go="brk">Break check →</button></header>
+          <div class="td-isa" id="td-isa"></div>
+        </article>
+        <article class="td-card">
+          <header><h3>Visitors</h3><button type="button" class="td-link" data-go="office">See reception →</button></header>
+          <div class="td-vis" id="td-vis"></div>
+        </article>
+        <article class="td-card td-span2">
+          <header><h3>Latest automation reports</h3><span class="td-sub" id="td-rep-sub">from Slack</span></header>
+          <ul class="td-reps" id="td-reps"></ul>
+        </article>
+        <article class="td-card">
+          <header><h3>Jump to</h3></header>
+          <div class="td-jump">
+            <button type="button" data-go="main">Sales overview</button><button type="button" data-go="processed">Coaching sales</button><button type="button" data-go="roi">Event ROI</button><button type="button" data-go="bsm">BSM 2026</button>
+            <button type="button" data-go="team">ISA &amp; RM stats</button><button type="button" data-go="eod">EOD reports</button><button type="button" data-go="waiting">Waiting on onboarding</button><button type="button" data-go="coaches">Coach workload</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
