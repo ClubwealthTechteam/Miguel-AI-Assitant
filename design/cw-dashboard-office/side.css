@@ -18,3 +18,6 @@
   .app.side-mini .side-tog svg { transform: rotate(180deg); }
 }
 @media (max-width: 900px) { .side-tog { display: none; } }
+
+/* "Ask about sales" floating button removed: CW Voice answers sales questions from the same data */
+.ai-fab, .ai-panel { display: none !important; }
