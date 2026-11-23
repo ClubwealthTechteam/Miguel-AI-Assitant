@@ -78,7 +78,7 @@
   var VC = { dict: null, turns: [], busy: false, mute: false, heard: '' };
   (function () {
     var el = document.createElement('div'); el.className = 'vc'; el.id = 'vc'; el.hidden = true; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Voice assistant');
-    el.innerHTML = '<div class="vc-card"><div class="vc-top"><span><b>CW Voice</b><br><small>Answers from this dashboard’s live data · read-only</small></span><button type="button" class="vc-mute" id="vc-mute" aria-label="Mute the spoken answer" title="Mute">🔊</button><button type="button" id="vc-x" aria-label="Close">×</button></div>' +
+    el.innerHTML = '<div class="vc-card"><div class="vc-top"><span><b>CW Voice</b><br><small>Answers from this dashboard’s live data · read-only · <span id="vc-voice">Voice: Kokoro · Heart</span></small></span><button type="button" class="vc-mute" id="vc-mute" aria-label="Mute the spoken answer" title="Mute">🔊</button><button type="button" id="vc-x" aria-label="Close">×</button></div>' +
       '<div class="vc-stage"><button type="button" class="vc-orb" id="vc-orb" aria-label="Talk"></button><div class="vc-state" id="vc-state">Tap the orb and ask a question</div></div>' +
       '<div class="vc-log" id="vc-log" aria-live="polite"></div>' +
       '<form class="vc-form" id="vc-form"><input id="vc-in" placeholder="Or type: who is idle right now?" autocomplete="off" aria-label="Question"><button type="submit">Ask</button></form>' +
@@ -92,17 +92,24 @@
   function vcState(t) { $('#vc-state').textContent = t; }
   function vcOpen(listen) {
     $('#vc').hidden = false;
+    try { KK.ctx = KK.ctx || new (window.AudioContext || window.webkitAudioContext)(); KK.ctx.resume(); } catch (e) {}
+    kkLoad();
     if (listen) vcListen(); else $('#vc-in').focus();
   }
   function vcListen() {
-    try { window.speechSynthesis && speechSynthesis.cancel(); } catch (e) {}
+    try { window.speechSynthesis && speechSynthesis.cancel(); } catch (e) {} kkStop();
     if (!VC.dict) { vcState('Voice input isn’t available in this app — type your question below.'); $('#vc-in').focus(); return; }
     if ($('#vc').classList.contains('listening')) { VC.dict.stop().catch(function () {}); return; }
     VC.heard = ''; vcState('Listening…');
     VC.dict.start().catch(function (e) { vcState(e && e.code === 'not_granted' ? 'Microphone not allowed — type your question below.' : 'Couldn’t start listening — type your question below.'); });
   }
   function vcSpeak(text) {
-    if (VC.mute || !window.speechSynthesis) return;
+    if (VC.mute) return;
+    var clean = String(text).replace(/[*_#•]/g, '').replace(/\s+/g, ' ');
+    kkSpeak(clean).then(function (ok) { if (!ok && !VC.mute) vcBrowserSpeak(clean); }, function () { if (!VC.mute) vcBrowserSpeak(clean); });
+  }
+  function vcBrowserSpeak(text) {
+    if (!window.speechSynthesis) return;
     try { speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(text.replace(/[*_#•]/g, '').replace(/\s+/g, ' ')); var vs = speechSynthesis.getVoices(); var pick = vs.filter(function (v) { return /en-US/i.test(v.lang) && /Samantha|Google US English|Natural|Aria|Jenny/i.test(v.name); })[0] || vs.filter(function (v) { return /^en/i.test(v.lang); })[0]; if (pick) u.voice = pick; u.rate = 1.03; speechSynthesis.speak(u); } catch (e) {}
   }
   function vcLive() {
@@ -148,8 +155,8 @@
     $('#voice-top').addEventListener('click', function () { vcOpen(!!VC.dict); });
     $('#td-voice').addEventListener('click', function () { vcOpen(!!VC.dict); });
     $('#vc-orb').addEventListener('click', vcListen);
-    $('#vc-x').addEventListener('click', function () { $('#vc').hidden = true; try { speechSynthesis.cancel(); } catch (e) {} if (VC.dict && $('#vc').classList.contains('listening')) VC.dict.stop().catch(function () {}); });
-    $('#vc-mute').addEventListener('click', function () { VC.mute = !VC.mute; this.textContent = VC.mute ? '🔇' : '🔊'; if (VC.mute) try { speechSynthesis.cancel(); } catch (e) {} });
+    $('#vc-x').addEventListener('click', function () { $('#vc').hidden = true; kkStop(); try { speechSynthesis.cancel(); } catch (e) {} if (VC.dict && $('#vc').classList.contains('listening')) VC.dict.stop().catch(function () {}); });
+    $('#vc-mute').addEventListener('click', function () { VC.mute = !VC.mute; this.textContent = VC.mute ? '🔇' : '🔊'; if (VC.mute) { kkStop(); try { speechSynthesis.cancel(); } catch (e) {} } });
     $('#vc-form').addEventListener('submit', function (e) { e.preventDefault(); vcAsk($('#vc-in').value); });
     $('#vc').addEventListener('click', function (e) { if (e.target.id === 'vc') $('#vc-x').click(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('#vc').hidden) $('#vc-x').click(); });

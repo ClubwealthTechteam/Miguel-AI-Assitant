@@ -340,8 +340,10 @@
     function plane(w, d, c, x, y, z, par) { var m = new T.Mesh(new T.PlaneGeometry(w, d), c.isMaterial ? c : mat(c)); m.rotation.x = -Math.PI / 2; m.position.set(x, y, z); m.receiveShadow = true; (par || scene).add(m); return m; }
     function texMat(canvas, o) { var t = canvas.isTexture ? canvas : new T.CanvasTexture(canvas); t.encoding = T.sRGBEncoding; t.anisotropy = 8; return new T.MeshBasicMaterial(Object.assign({ map: t, transparent: true, toneMapped: false }, o || {})); }
     function decal(lines, w, d, x, z, rot, op) { var c = ofTextCanvas(lines, 1024, Math.round(1024 * d / w)); var m = new T.Mesh(new T.PlaneGeometry(w, d), texMat(c, { opacity: op || .9, depthWrite: false })); m.rotation.x = -Math.PI / 2; m.rotation.z = rot || 0; m.position.set(x, .03, z); m.userData.keep = 1; scene.add(m); return m; }
-    var glass = new T.MeshPhysicalMaterial({ color: new T.Color('#dfeff5').convertSRGBToLinear(), transparent: true, opacity: .16, roughness: .04, metalness: 0, depthWrite: false, envMapIntensity: 1.4 });
+    var glass = new T.MeshPhysicalMaterial({ color: new T.Color('#e8f4f8').convertSRGBToLinear(), transparent: true, opacity: .1, roughness: .04, metalness: 0, depthWrite: false, envMapIntensity: 1.4 });
     var frameC = '#1c1e22';
+    /* Interior partitions: frosted glass at about 40% opacity (outer windows stay clear) */
+    var frost = new T.MeshStandardMaterial({ color: new T.Color('#f2f6f8').convertSRGBToLinear(), transparent: true, opacity: .4, roughness: .6, metalness: 0, depthWrite: false, envMapIntensity: .5 });
 
     /* --- Instanced placement of downloaded models --- */
     var INST = {}, TPL = {};
@@ -396,12 +398,10 @@
       function at(a, y) { return alongX ? [a, y, fixed] : [fixed, y, a]; }
       segs.forEach(function (sg) {
         var L = sg[1] - sg[0], mid = (sg[0] + sg[1]) / 2, p = at(mid, H / 2 + .02);
-        var gm = new T.Mesh(new T.BoxGeometry(alongX ? L : .03, H, alongX ? .03 : L), glass); gm.position.set(p[0], p[1], p[2]); scene.add(gm);
-        [[.02, .05], [H, .05]].forEach(function (yy) { var q = at(mid, yy[0]); box(alongX ? L : .06, yy[1], alongX ? .06 : L, frameC, q[0], q[1], q[2], null, { metalness: .4, roughness: .45 }); });
-        var n = Math.max(1, Math.round(L / 1.5));
-        for (var i = 0; i <= n; i++) { var q2 = at(sg[0] + L * i / n, H / 2); box(.05, H, .05, frameC, q2[0], q2[1], q2[2], null, { metalness: .4, roughness: .45 }); }
+        var gm = new T.Mesh(new T.BoxGeometry(alongX ? L : .03, H, alongX ? .03 : L), frost); gm.position.set(p[0], p[1], p[2]); scene.add(gm);
+        // clean look: clear pane with a thin light edge, no vertical bars
+        [[.015, .03], [H, .025]].forEach(function (yy) { var q = at(mid, yy[0]); box(alongX ? L : .035, yy[1], alongX ? .035 : L, '#b8c0c8', q[0], q[1], q[2], null, { metalness: .5, roughness: .3, noShadow: true }); });
       });
-      (gaps || []).forEach(function (gp) { var q3 = at((gp[0] + gp[1]) / 2, H - .02); box(alongX ? gp[1] - gp[0] : .06, .05, alongX ? .06 : gp[1] - gp[0], frameC, q3[0], q3[1], q3[2]); });
     }
     var mossT = new T.CanvasTexture(ofMossCanvas()); mossT.encoding = T.sRGBEncoding; mossT.wrapS = mossT.wrapT = T.RepeatWrapping;
     function moss(w, h, x, y, z, ry) { var t = mossT.clone(); t.needsUpdate = true; t.repeat.set(w / 1.2, h / 1.2); var m = new T.Mesh(new T.BoxGeometry(w, h, .12), new T.MeshStandardMaterial({ map: t, roughness: 1 })); m.position.set(x, y, z); m.rotation.y = ry || 0; m.castShadow = m.receiveShadow = true; m.userData.keep = 1; scene.add(m); box(w + .1, .1, .2, '#c9a77c', x, y - h / 2 - .05, z).rotation.y = ry || 0; }
@@ -433,7 +433,7 @@
         var c = (sg[0] + sg[1]) / 2, L = sg[1] - sg[0], cx = alongX ? (x1 + x2) / 2 + c : x1, cz = alongX ? z1 : (z1 + z2) / 2 + c;
         box(alongX ? L : .3, .4, alongX ? .3 : L, '#3a3632', cx, .2, cz);
         var gm = new T.Mesh(new T.BoxGeometry(alongX ? L : .04, 2.95, alongX ? .04 : L), glass); gm.position.set(cx, 1.9, cz); scene.add(gm);
-        for (var t = sg[0]; t <= sg[1] + .01; t += 1.5) box(alongX ? .09 : .18, 3.0, alongX ? .18 : .09, frameC, alongX ? (x1 + x2) / 2 + t : x1, 1.9, alongX ? z1 : (z1 + z2) / 2 + t, null, { metalness: .3, roughness: .5 });
+        for (var t = sg[0]; t <= sg[1] + .01; t += 4.5) box(alongX ? .06 : .12, 3.0, alongX ? .12 : .06, frameC, alongX ? (x1 + x2) / 2 + t : x1, 1.9, alongX ? z1 : (z1 + z2) / 2 + t, null, { metalness: .3, roughness: .5 });
         box(alongX ? L : .32, .1, alongX ? .32 : L, frameC, cx, 3.4, cz);
       });
     }
@@ -553,8 +553,8 @@
     function booth(x, z, col) {
       box(1.5, .08, 1.5, frameC, x, 2.42, z); box(1.5, .06, 1.5, '#e9e4da', x, .03, z);
       box(.05, 2.4, 1.5, col, x - .73, 1.22, z); box(1.5, 2.4, .05, '#3f5a4e', x, 1.22, z - .73);
-      var g1 = new T.Mesh(new T.BoxGeometry(.03, 2.3, 1.4), glass); g1.position.set(x + .73, 1.2, z); scene.add(g1);
-      var g2 = new T.Mesh(new T.BoxGeometry(1.4, 2.3, .03), glass); g2.position.set(x, 1.2, z + .73); scene.add(g2);
+      var g1 = new T.Mesh(new T.BoxGeometry(.03, 2.3, 1.4), frost); g1.position.set(x + .73, 1.2, z); scene.add(g1);
+      var g2 = new T.Mesh(new T.BoxGeometry(1.4, 2.3, .03), frost); g2.position.set(x, 1.2, z + .73); scene.add(g2);
       box(.6, .04, .3, '#c9a77c', x - .45, 1.0, z); put('metal_stool_02', null, x, 0, z, 0, { h: .6 });
       box(1.2, .03, .08, lampMat('#fff3da'), x, 2.36, z, null, { noShadow: true });
     }
@@ -672,14 +672,18 @@
     depts.forEach(function (d, i) {
       var R = ROOMS[d], list = OF_ROSTER.filter(function (p) { return p.dept === d; }), cols = Math.min(3, Math.max(1, Math.ceil(list.length / 2)));
       var c = R ? R.c : spare[i % spare.length]; slots.push(c);
-      bench(c[0], c[1], cols, list, {});
+      // one desk per person, spaced out (no shared pods)
+      var n = list.length, dc = R && R.box[3] - R.box[1] < 5 ? n : Math.min(n, n > 4 ? 3 : 2), dr = Math.ceil(n / dc), sx2 = R ? Math.min(3.2, (R.box[2] - R.box[0] - 1.6) / Math.max(1, dc - 1 || 1)) : 2.6, sz2 = 2.9;
+      list.forEach(function (p, k) { var col = k % dc, row = Math.floor(k / dc); seat(c[0] + (col - (dc - 1) / 2) * sx2, c[1] + (row - (dr - 1) / 2) * sz2 + .3, 0, p, { w: 1.4 }); });
       if (R) {
         var b = R.box, mid = (b[0] + b[2]) / 2;
         plane(b[2] - b[0] - .1, b[3] - b[1] - .1, '#e6e2da', mid, .007, (b[1] + b[3]) / 2);
-        if (b[1] > -14.9) gwall(b[0], b[1], b[2], b[1], []);
-        gwall(b[0], b[3], b[2], b[3], [[mid - .7, mid + .7]]);
-        if (b[0] > -21.9) gwall(b[0], b[0] === -15 ? Math.max(b[1], -9) : b[1], b[0], b[3], []);
-        gwall(b[2], b[1], b[2], b[3], []);
+        if (d !== 'Admin & Events' && d !== 'Marketing') {   // Admin & Events and Marketing stay open; other departments get glass
+          if (b[1] > -14.9) gwall(b[0], b[1], b[2], b[1], []);
+          gwall(b[0], b[3], b[2], b[3], [[mid - .7, mid + .7]]);
+          if (b[0] > -21.9) gwall(b[0], b[0] === -15 ? Math.max(b[1], -9) : b[1], b[0], b[3], []);
+          gwall(b[2], b[1], b[2], b[3], []);
+        }
         deptSign(d, mid, b[3] - .55, '#6b6f8a');
       } else deptSign(d, c[0], c[1] - 2.25, '#6b6f8a');
     });

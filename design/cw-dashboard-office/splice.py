@@ -27,19 +27,14 @@ once("    if (id === 'eod') eodLoad(false);\n", "    if (id === 'eod') eodLoad(f
 once("  var start = (location.hash || '').slice(1);", js + "\n  var start = (location.hash || '').slice(1);")
 
 # ===== Remodel: Today home, Sales overview under Sales, voice mode =====
-tcss = open(os.path.join(d, 'today.css')).read(); thtml = open(os.path.join(d, 'today.html')).read(); tjs = open(os.path.join(d, 'today.js')).read()
+tcss = open(os.path.join(d, 'today.css')).read(); thtml = open(os.path.join(d, 'today.html')).read(); tjs = open(os.path.join(d, 'kokoro.js')).read() + open(os.path.join(d, 'today.js')).read()
 once('.tr-empty { background: var(--card); border: 1px dashed var(--line-2); border-radius: 12px; padding: 22px; text-align: center; color: var(--ink-2); }\n', '.tr-empty { background: var(--card); border: 1px dashed var(--line-2); border-radius: 12px; padding: 22px; text-align: center; color: var(--ink-2); }\n' + tcss)
 import re as _re
-i = s.index('      <button type="button" data-tab="main" aria-current="page">'); j = s.index('</button>', i) + len('</button>')
-mainBtn = s[i:j]
-s = s[:i] + '<button type="button" data-tab="today" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg>Today</button>' + s[j:]
-salesBtn = mainBtn.replace(' aria-current="page"', '').replace('Main dashboard', 'Sales overview')
-once('      <p class="side-h">Sales</p>', '      <p class="side-h">Sales</p>\n      ' + salesBtn.strip())
-once('<span class="m-current" id="m-current" aria-hidden="true">Main dashboard</span>', '<span class="m-current" id="m-current" aria-hidden="true">Today</span>')
-once('<section class="view" data-view="main" aria-label="Main dashboard">', thtml + '    <section class="view" data-view="main" hidden aria-label="Sales overview">')
-once("main: ['Main dashboard', 'Service sales at a glance']", "today: ['Today', 'Everything that needs you, live'], main: ['Sales overview', 'Service sales at a glance']")
+# Main dashboard stays the home page exactly as before; Today (live team) sits right under it
+once('      <button type="button" data-tab="tara">', '      <button type="button" data-tab="today"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg>Today · live team</button>\n      <button type="button" data-tab="tara">')
+once('<section class="view" data-view="main" aria-label="Main dashboard">', thtml + '    <section class="view" data-view="main" aria-label="Main dashboard">')
+once("main: ['Main dashboard', 'Service sales at a glance']", "today: ['Today · live team', 'Everything that needs you, live'], main: ['Main dashboard', 'Service sales at a glance']")
 once("if (id === 'office') officeOpen(); else officeClose();\n", "if (id === 'office') officeOpen(); else officeClose();\n    if (id === 'today') tdStart();\n")
-once("  var start = (location.hash || '').slice(1); if (TITLES[start]) tab(start); else $('.range').hidden = false;", "  var start = (location.hash || '').slice(1); tab(TITLES[start] ? start : 'today');")
 once('\n  }\n  liveLoad();\n})();', '\n' + tjs + '\n  }\n  liveLoad();\n})();')
 # office view: hide the date range + keep the main padding
 open(out, 'w').write(s)
