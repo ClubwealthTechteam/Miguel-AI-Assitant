@@ -6,7 +6,7 @@
     if (!TD.started) {
       TD.started = true;
       ofZoomSub(); ofTdLoad(); brkLoad(false); eodLoad(false);
-      setInterval(function () { if (!document.hidden) ofTdLoad(); }, 180000);
+      setInterval(function () { if (!document.hidden) ofTdLoad(); }, 60000);
     }
     if (!TD.timer) TD.timer = setInterval(function () {
       if ($('[data-view="today"]').hidden) { clearInterval(TD.timer); TD.timer = null; return; }

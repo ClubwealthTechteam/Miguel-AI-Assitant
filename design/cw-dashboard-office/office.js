@@ -230,6 +230,7 @@
       if (o.z) { var late = Math.round((Date.parse(o.z.j) - hud) / 60000); o.huddle = late <= 0 ? 'on' : 'late'; o.late = late; } else o.huddle = doc ? 'missed' : null;
       o.inNow = !!(fresh && o.z && o.z.open);
       o.td = OF.tdMap[p.id] || null;
+      if (o.td && o.td.state !== 'break') { o.td.mins = Math.max(0, Math.round((Date.now() - o.td.last) / 60000)); o.td.state = o.td.mins <= 5 ? 'working' : 'idle'; }
       o.idleAs = o.td && o.td.state === 'idle' && !p.boss ? (o.td.mins > 120 || Date.now() - o.td.first > 9 * 3600000 ? 'off' : o.td.mins > 15 ? 'lunch' : 'break') : null;
       var tdHere = !!(o.td && o.idleAs !== 'off');
       if (OF.replay != null && doc) {
@@ -1484,14 +1485,14 @@
         setTimeout(ofWalkStart, 40000); setInterval(ofWalkStart, 180000);
       }).catch(function (e) { console.error(e); $('#of-load').innerHTML = '<p>The 3D office didn’t load. Check the connection and open this tab again.</p>'; OF.started = false; });
       ofZoomSub(); ofTdLoad();
-      setInterval(function () { if (OF.running && !document.hidden) ofTdLoad(); }, 180000);
+      setInterval(function () { if (OF.running && !document.hidden) ofTdLoad(); }, 60000);   // Time Doctor every minute
       brkLoad(false); eodLoad(false);
       var waited = 0, poll = setInterval(function () {
         waited += 1;
         if ((brkData && !OF.hadBrk) || (eodData && !OF.hadEod)) { OF.hadBrk = !!brkData; OF.hadEod = !!eodData; ofBuild(); if (OF.three) ofApply(); }
         if ((OF.hadBrk && OF.hadEod) || waited > 90) clearInterval(poll);
       }, 700);
-      setInterval(function () { if (OF.started === 'ready' && OF.light === 'auto') { var h = ofHourPT(); ofSetNight(h < 6 || h >= 18.5); } if (OF.started === 'ready') { ofBuild(); ofApply(); } }, 120000);
+      setInterval(function () { if (OF.started === 'ready' && OF.light === 'auto') { var h = ofHourPT(); ofSetNight(h < 6 || h >= 18.5); } if (OF.started === 'ready') { ofBuild(); ofApply(); } }, 60000);
     } else if (OF.started === 'ready' && !wasRunning) { ofResize(); OF.three.dirty = true; ofLoop(); }
   }
   function officeClose() { if (OF) OF.running = false; }
