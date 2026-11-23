@@ -662,17 +662,26 @@
     /* Admin departments (left wing). Admin & Events and Marketing stay open; every other department gets glass. */
     var depts = []; OF_ROSTER.forEach(function (p) { if (p.group === 'admin' && depts.indexOf(p.dept) < 0) depts.push(p.dept); });
     depts.sort(function (a, b) { return OF_ROSTER.filter(function (p) { return p.dept === b; }).length - OF_ROSTER.filter(function (p) { return p.dept === a; }).length; });
-    var slots = [[-9.6, -11.6], [-9.6, -5.2], [-18.6, -4.9], [-9.6, .9], [-18.6, 1.1]];
+    /* Each admin department gets its own glass room with space around the desks */
+    var ROOMS = {
+      'Admin & Events': { c: [-9.2, -10.9], box: [-15, -14.95, -3.3, -6.9] },
+      'Marketing': { c: [-9.2, -4.6], box: [-15, -6.5, -3.3, -2.4] },
+      'AI & Tech': { c: [-18.5, -5.5], box: [-21.95, -8.6, -15.4, -2.4] }
+    };
+    var spare = [[-9.2, 1.2], [-18.5, 1.2]], slots = [];
     depts.forEach(function (d, i) {
-      var fixedSlot = { 'Admin & Events': 0, 'Marketing': 1, 'AI & Tech': 2 }[d];
-      var s = slots[fixedSlot != null ? fixedSlot : (i + 3) % slots.length], list = OF_ROSTER.filter(function (p) { return p.dept === d; }), cols = Math.min(3, Math.max(1, Math.ceil(list.length / 2)));
-      bench(s[0], s[1], cols, list, {});
-      deptSign(d, s[0], s[1] - 2.25, '#6b6f8a');
-      if (d !== 'Admin & Events' && d !== 'Marketing') {
-        var hw = cols * .75 + 1.5, x0 = Math.max(-21.95, s[0] - hw), x1 = s[0] + hw, z0 = s[1] - 2.9, z1 = Math.min(s[1] + 2.1, -1.2);
-        gwall(x0, z0, x1, z0, [[s[0] - .7, s[0] + .7]]); gwall(x1, z0, x1, z1, []); gwall(x0, z1, x1, z1, []);
-        if (x0 > -21.9) gwall(x0, z0, x0, z1, []);
-      }
+      var R = ROOMS[d], list = OF_ROSTER.filter(function (p) { return p.dept === d; }), cols = Math.min(3, Math.max(1, Math.ceil(list.length / 2)));
+      var c = R ? R.c : spare[i % spare.length]; slots.push(c);
+      bench(c[0], c[1], cols, list, {});
+      if (R) {
+        var b = R.box, mid = (b[0] + b[2]) / 2;
+        plane(b[2] - b[0] - .1, b[3] - b[1] - .1, '#e6e2da', mid, .007, (b[1] + b[3]) / 2);
+        if (b[1] > -14.9) gwall(b[0], b[1], b[2], b[1], []);
+        gwall(b[0], b[3], b[2], b[3], [[mid - .7, mid + .7]]);
+        if (b[0] > -21.9) gwall(b[0], b[0] === -15 ? Math.max(b[1], -9) : b[1], b[0], b[3], []);
+        gwall(b[2], b[1], b[2], b[3], []);
+        deptSign(d, mid, b[3] - .55, '#6b6f8a');
+      } else deptSign(d, c[0], c[1] - 2.25, '#6b6f8a');
     });
     plant(-4.2, -14.2, 1.2); plant(-12.6, 3.6, .9);
     var wallC2 = document.createElement('canvas'); wallC2.width = 1600; wallC2.height = 700;
@@ -816,9 +825,29 @@
     if (n < maxLines && line) g.fillText(line, x, y + n * lh);
   }
   function ofPlain(t) { return String(t || '').replace(/:[a-z0-9_+-]+:/g, '').replace(/[*_`]/g, '').replace(/\|/g, ' ').replace(/\s+/g, ' ').trim(); }
+  /* Report wall: plain titles, grouped by area, duplicate @-notification posts dropped */
+  var OF_REP_CAT = { 'cw-isa': 'ISA', 'cw-squad-leaders-isa': 'ISA', 'cw-squad-leaders-with-ali': 'ISA', 'cw-relationship-managers': 'RMs', 'cw-admin-va': 'RMs',
+    'cw-halfday-event-forms-automation': 'Half-day events', 'cw-half-day-registration-forms-automation': 'Half-day events', 'cwhalfday-yappi-interested': 'Half-day events', 'cwhalfday-getpaid-interested': 'Half-day events',
+    'cw-team': 'Team', 'cw-events': 'Team', 'cw-referrals': 'Team', 'cw-assistant': 'Alerts & system checks' };
+  var OF_REP_ORDER = ['Alerts & system checks', 'ISA', 'RMs', 'Half-day events', 'Team', 'Other'];
+  function ofRep(it) {
+    var raw = ofPlain(it.title).replace(/@someone\s*/g, '').replace(/#channel/g, '').replace(/!\s*/, '').trim();
+    var head = raw, sum = '';
+    var c = raw.indexOf(': '); if (c > 0 && c < 90) { head = raw.slice(0, c); sum = raw.slice(c + 2); }
+    head = head.replace(/\s*[—–-]\s*\d{1,2}[\/.]\d{1,2}[\/.]\d{2,4}\b/g, '').replace(/\s*[—–]\s*/g, ' · ').replace(/\s*·\s*(Mon|Tue|Wed|Thu|Fri|Sat|Sun)[a-z]*,?\s+[A-Z][a-z]+\s+\d{1,2}(,?\s*\d{4})?/g, '').replace(/\s*·\s*\d{1,2}:\d{2}\s*[AP]M\s*PT/g, '').replace(/\s*\((week of[^)]*)\)/i, ' · $1').trim();
+    if (!sum) { var body = ofPlain(it.text.split('\n').slice(1).join(' ')); sum = body; }
+    if (head.length > 64) { var cutAt = head.slice(0, 64).lastIndexOf(' '); head = head.slice(0, cutAt > 30 ? cutAt : 64).replace(/[\s·(-]+$/, '') + '…'; }
+    sum = sum.replace(/,?\s*CSV sent in\s*for[^.]*\.?/i, '').replace(/\s+/g, ' ').trim();
+    if (sum.length > 150) sum = sum.slice(0, 147).replace(/\s+\S*$/, '') + '…';
+    return { head: head || 'Report', sum: sum, cat: OF_REP_CAT[it.chName] || 'Other', ch: it.chName, posted: it.posted, text: it.text, alert: /stopped|failed|error|can.t/i.test(raw) };
+  }
+  function ofReps() {
+    var R = OF.reports; if (!R || !R.items) return [];
+    return R.items.filter(function (it) { return !/^@someone[^:]*from (yesterday|richmond|.*\(nov)/i.test(ofPlain(it.title)) && !/^Happy Weekend/i.test(ofPlain(it.title)); }).map(ofRep);
+  }
   function ofDrawWall() {
     var S = OF.three; if (!S || !S.wallCanvas) return;
-    var c = S.wallCanvas, g = c.getContext('2d'), R = OF.reports, items = R && R.items ? R.items.slice(0, 6) : [];
+    var c = S.wallCanvas, g = c.getContext('2d'), R = OF.reports, items = ofReps().slice(0, 6);
     g.fillStyle = '#0b0f24'; g.fillRect(0, 0, 1600, 700);
     g.textAlign = 'left'; g.textBaseline = 'alphabetic';
     g.fillStyle = '#36c3f0'; g.font = '700 34px Inter, system-ui, sans-serif'; g.fillText('REPORT WALL · SLACK AUTOMATIONS', 44, 62);
@@ -827,9 +856,9 @@
       var x = 44 + (i % 3) * 512, y = 96 + Math.floor(i / 3) * 296, W = 488;
       g.fillStyle = '#151b3d'; g.fillRect(x, y, W, 276);
       g.fillStyle = '#36c3f0'; g.fillRect(x, y, 6, 276);
-      g.fillStyle = '#9aa0c4'; g.font = '600 20px Inter, system-ui, sans-serif'; g.fillText('#' + it.chName + ' · ' + ofAgo(it.posted), x + 24, y + 38);
-      g.fillStyle = '#ffffff'; g.font = '700 27px Inter, system-ui, sans-serif'; ofWrap(g, ofPlain(it.title), x + 24, y + 80, W - 44, 34, 2);
-      g.fillStyle = '#c6cae4'; g.font = '400 21px Inter, system-ui, sans-serif'; ofWrap(g, ofPlain(it.text.split('\n').slice(1).join(' ')), x + 24, y + 160, W - 44, 28, 4);
+      g.fillStyle = it.alert ? '#ff8a7a' : '#9aa0c4'; g.font = '700 20px Inter, system-ui, sans-serif'; g.fillText(it.cat.toUpperCase() + ' · ' + ofAgo(it.posted), x + 24, y + 38);
+      g.fillStyle = '#ffffff'; g.font = '700 28px Inter, system-ui, sans-serif'; ofWrap(g, it.head, x + 24, y + 82, W - 44, 34, 2);
+      g.fillStyle = '#c6cae4'; g.font = '400 22px Inter, system-ui, sans-serif'; ofWrap(g, it.sum, x + 24, y + 162, W - 44, 29, 3);
     });
     S.wallTex.needsUpdate = true;
   }
@@ -858,10 +887,16 @@
         '<p class="of-win-note">Listed by name. Calls and sign-ups are from the #cw-isa end-of-shift report.</p>');
     }
     if (id === 'wall') {
-      var R = OF.reports;
-      if (!R) return ofWin('Report wall', '<p>Reports show here once the hourly refresh runs.</p>');
-      return ofWin('Report wall · Slack automations', '<p class="of-win-note">Newest post of each automated report from the last 7 days · updated ' + ofPT(R.at) + ' PT</p>' +
-        R.items.map(function (it) { return '<details class="of-win-item"><summary><b>' + esc(ofPlain(it.title)) + '</b><small>#' + esc(it.chName) + ' · ' + ofAgo(it.posted) + '</small></summary><div class="of-win-rep">' + ofSlackHtml(it.text) + '</div></details>'; }).join(''));
+      var R = OF.reports, L = ofReps();
+      if (!R || !L.length) return ofWin('Report wall', '<p>Reports show here once the hourly refresh runs.</p>');
+      var html = '<p class="of-win-note" style="margin:0 0 6px">Latest automated Slack reports · last 7 days · updated ' + ofPT(R.at) + ' PT</p>';
+      OF_REP_ORDER.forEach(function (cat) {
+        var G = L.filter(function (x) { return x.cat === cat; }); if (!G.length) return;
+        html += '<h4>' + esc(cat) + '</h4><div class="of-rep-grid">' + G.map(function (x) {
+          return '<details class="of-rep-card' + (x.alert ? ' alert' : '') + '"><summary><b>' + esc(x.head) + '</b>' + (x.sum ? '<span>' + esc(x.sum) + '</span>' : '') + '<small>' + ofAgo(x.posted) + ' · #' + esc(x.ch) + ' · <u>full report</u></small></summary><div class="of-win-rep">' + ofSlackHtml(x.text) + '</div></details>';
+        }).join('') + '</div>';
+      });
+      return ofWin('Report wall', html);
     }
     if (id === 'applicants') {
       var A = OF.applicants || [];
@@ -950,7 +985,19 @@
     });
     function up(e) { delete pts[e.pointerId]; pinch = 0; el.classList.remove('drag'); if (start && moved < 6 && e.type === 'pointerup') ofPick(e); start = null; }
     el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
-    el.addEventListener('wheel', function (e) { e.preventDefault(); S.goal = null; S.zoom = Math.max(.45, Math.min(4.5, S.zoom * Math.exp(-e.deltaY * .0015))); ofCam(); }, { passive: false });
+    /* Zoom gestures anywhere over the office (canvas, name tags, buttons) zoom the 3D view only, never the page.
+       Trackpad pinch and Ctrl+scroll arrive as wheel events with ctrlKey; Safari sends gesture events. */
+    var stage = $('#of-stage');
+    stage.addEventListener('wheel', function (e) {
+      if (e.target.closest('.of-win-b')) { if (!e.ctrlKey) return; }
+      e.preventDefault(); S.goal = null;
+      var k = e.ctrlKey ? .01 : .0015, dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
+      S.zoom = Math.max(.45, Math.min(4.5, S.zoom * Math.exp(-dy * k))); ofCam();
+    }, { passive: false });
+    var gz = 1;
+    stage.addEventListener('gesturestart', function (e) { e.preventDefault(); gz = S.zoom; }, { passive: false });
+    stage.addEventListener('gesturechange', function (e) { e.preventDefault(); S.zoom = Math.max(.45, Math.min(4.5, gz * e.scale)); ofCam(); }, { passive: false });
+    stage.addEventListener('gestureend', function (e) { e.preventDefault(); }, { passive: false });
     function clampT() { S.target.x = Math.max(-30, Math.min(48, S.target.x)); S.target.z = Math.max(-18, Math.min(20, S.target.z)); }
   }
   function ofPick(e) {

@@ -59,7 +59,7 @@
     // reports
     var R = OF.reports;
     $('#td-rep-sub').textContent = R ? 'from Slack · updated ' + ofPT(R.at) + ' PT' : 'from Slack';
-    $('#td-reps').innerHTML = R && R.items ? R.items.slice(0, 7).map(function (it, i) { return '<li><b>' + esc(ofPlain(it.title)) + '</b><time>' + ofAgo(it.posted) + '</time><small>#' + esc(it.chName) + ' · ' + esc(ofPlain(it.text.split('\n').slice(1).join(' ')).slice(0, 140)) + '</small></li>'; }).join('') : '<li class="td-empty">Reports appear after the hourly refresh runs.</li>';
+    var RL = ofReps(); $('#td-reps').innerHTML = RL.length ? RL.slice(0, 7).map(function (x) { return '<li><b>' + esc(x.head) + '</b><time>' + ofAgo(x.posted) + '</time><small>' + esc(x.cat) + (x.sum ? ' · ' + esc(x.sum) : '') + '</small></li>'; }).join('') : '<li class="td-empty">Reports appear after the hourly refresh runs.</li>';
   }
   function tdOpenPerson(pid) {
     tab('office');
