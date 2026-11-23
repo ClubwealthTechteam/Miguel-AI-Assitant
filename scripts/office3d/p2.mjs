@@ -1,0 +1,11 @@
+import { NodeIO } from '@gltf-transform/core';
+import { ALL_EXTENSIONS } from '@gltf-transform/extensions';
+import { prune, dedup } from '@gltf-transform/functions';
+const io = new NodeIO().registerExtensions(ALL_EXTENSIONS);
+const f = process.argv[2]; const doc = await io.read(f);
+const root = doc.getRoot();
+const used = new Set(); root.listMeshes().forEach(m => m.listPrimitives().forEach(p => { p.listAttributes().forEach(a => used.add(a)); if (p.getIndices()) used.add(p.getIndices()); }));
+root.listSkins().forEach(s => { if (s.getInverseBindMatrices()) used.add(s.getInverseBindMatrices()); });
+let n = 0; root.listAccessors().forEach(a => { if (!used.has(a)) { a.dispose(); n++; } });
+await doc.transform(dedup(), prune());
+await io.write(f, doc); console.log(f, 'removed', n);
