@@ -96,8 +96,9 @@ def main():
     for name, j, l in sessions:
         if not j:
             continue
-        p = people.setdefault(name.strip(), {'n': name.strip(), 'j': j, 'l': l, 'open': False, 'sec': 0, 'k': 0})
+        p = people.setdefault(name.strip(), {'n': name.strip(), 'j': j, 'l': l, 'open': False, 'sec': 0, 'k': 0, 's': []})
         p['k'] += 1
+        p['s'].append([j[:16] + 'Z', (l[:16] + 'Z') if l else None])
         if j < p['j']:
             p['j'] = j
         if l is None:
@@ -108,6 +109,14 @@ def main():
             p['sec'] += max(0, (datetime.fromisoformat(l.replace('Z', '+00:00')) - datetime.fromisoformat(j.replace('Z', '+00:00'))).total_seconds())
     for p in people.values():
         p['m'] = round(p.pop('sec') / 60)
+        # merge overlapping/adjacent sessions (minute precision) for the dashboard's day replay
+        ss = sorted(p['s'], key=lambda x: x[0]); merged = []
+        for a, b in ss:
+            if merged and (merged[-1][1] is None or a <= merged[-1][1]):
+                if merged[-1][1] is not None and (b is None or b > merged[-1][1]): merged[-1][1] = b
+            else:
+                merged.append([a, b])
+        p['s'] = merged
         if p['open']:
             p['l'] = None
     doc = {
