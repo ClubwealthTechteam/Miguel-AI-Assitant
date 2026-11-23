@@ -1079,7 +1079,7 @@
       ['A.C.E', 'Anything Tara should see?'],
       ['Claude', attn ? attn + ' people on the Needs attention list.' : 'Nothing needs her right now.'],
       ['A.C.E', 'Next sync?'],
-      ['Claude', 'Every 10 min while the dashboard is open.']
+      ['Claude', 'Every 5 min while the dashboard is open.']
     ];
   }
   function ofDrawAi() {

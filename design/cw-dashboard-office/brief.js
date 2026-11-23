@@ -23,10 +23,10 @@
     });
   }
   document.addEventListener('click', function (e) { if (e.target.closest('.cw-refresh')) { OF.autoOff = false; ofRefreshNow(); } });
-  /* Auto-refresh every 10 minutes while the dashboard is open on screen (weekdays 5 AM–6 PM PT).
+  /* Auto-refresh every 5 minutes while the dashboard is open on screen (weekdays 5 AM–6 PM PT).
      Scheduled tasks can run at most hourly, so the open page starts the same refresh task itself; it skips
-     when the Zoom data is already under 10 minutes old (e.g. someone else just refreshed). */
-  var OF_AUTO_MS = 10 * 60000;
+     when the Zoom data is already under 5 minutes old (e.g. someone else just refreshed). */
+  var OF_AUTO_MS = 5 * 60000;
   setInterval(function () {
     if (OF.autoOff || document.hidden || !(window.claude && claude.use)) return;
     var now = new Date(), h = ofHourPT(), dow = new Date(ofTodayPT() + 'T12:00:00Z').getUTCDay();
