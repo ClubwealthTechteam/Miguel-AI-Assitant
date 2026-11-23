@@ -240,7 +240,7 @@
       .then(function () { return window.THREE; });
   }
   function ofLoadAssets(T, prog) {
-    var L = new T.GLTFLoader(), all = OF_ASSETS.concat(OF_PEOPLE.map(function (n) { return 'person_' + n; })), done = 0, out = {};
+    var L = new T.GLTFLoader(), all = OF_ASSETS.concat(OF_PEOPLE.map(function (n) { return 'person_' + n; })).concat(['robot', 'ace']), done = 0, out = {};
     return Promise.all(all.map(function (n) {
       return new Promise(function (res) {
         var fail = function () { done++; prog(done, all.length); res(); };
@@ -453,7 +453,7 @@
       });
     }
     curtain(-22.3, 15.15, 40.6, 15.15, [-11.35, -6.95]); curtain(40.45, -15.3, 40.45, 15.3, [7.3, 10.3]);
-    box(5.6, .12, 2.2, frameC, 0, 3.3, 16.1); plane(3.6, 1.6, '#3b3e48', 0, .012, 14.2);
+    box(5.6, .12, 2.2, frameC, 0, 3.3, 16.1); plane(3.6, 1.6, '#3b3e48', 0, .02, 14.2);
     [[-3, -9], [-3, 3]].forEach(function (c) { box(.5, 3.4, .5, '#ebe7df', c[0], 1.7, c[1]); });
 
     /* Desks: real metal desk + black chair (instanced), procedural monitor/keyboard (instanced), status ring under the chair */
@@ -482,7 +482,6 @@
     }
     function bench(cx, cz, cols, list, o) {
       var w = 1.5; o = o || {};
-      box(cols * w + .1, .55, .04, '#3f5a4e', cx, 1.04, cz, null, { roughness: 1 });
       for (var i = 0; i < cols * 2; i++) { var row = i < cols ? 0 : 1, col = i % cols, xx = cx + (col - (cols - 1) / 2) * w; seat(xx, row ? cz + .42 : cz - .42, row ? Math.PI : 0, list[i] || null, Object.assign({ w: w - .06 }, o)); }
     }
     function deptSign(text, x, z, col) { decal([{ text: text.toUpperCase(), font: '800 120px Inter, system-ui, sans-serif', color: col || '#6b6f8a', y: 90, ls: '14px' }], 6, 1.05, x, z, 0, .5); }
@@ -496,23 +495,49 @@
     var tl = new T.TextureLoader(), logoW = tl.load('office3d/logo-white.png', function () { S.dirty = true; }), logoK = tl.load('office3d/logo-black.png', function () { S.dirty = true; });
     var lw = new T.Mesh(new T.PlaneGeometry(6.4, 1.745), texMat(logoW)); lw.position.set(0, 2.15, 5.8); lw.userData.keep = 1; scene.add(lw);
     moss(2.2, 3.0, -5.9, 1.6, 5.55); moss(2.2, 3.0, 5.9, 1.6, 5.55);
-    recp.forEach(function (p, i) { seat((i - (recp.length - 1) / 2) * 1.75, 8.45, 0, p, { w: 1.5, top: '#e9e2d6' }); });
-    box(6.6, .98, .42, '#f7f5f1', 0, .49, 9.25); box(6.9, .06, .72, '#d8cdbd', 0, 1.01, 9.15, null, { roughness: .3 });
-    box(.42, .98, 1.6, '#f7f5f1', -3.3, .49, 8.6); box(.42, .98, 1.6, '#f7f5f1', 3.3, .49, 8.6);
-    var ld = new T.Mesh(new T.PlaneGeometry(4.6, 1.255), texMat(logoK)); ld.position.set(0, .52, 9.465); ld.userData.keep = 1; scene.add(ld);
+    recp.forEach(function (p, i) { seat((i - (recp.length - 1) / 2) * 1.75, 7.9, 0, p, { w: 1.5, top: '#e9e2d6' }); });
+    /* Front desk: one sweeping curved counter. White solid-surface body, fluted walnut front, light stone top with a
+       raised transaction ledge, soft cyan LED strips, a flat feature panel with the logo, ring pendants above. */
+    (function () {
+      var CX = 0, CZ = 3.0, A = .57;
+      function arcSlab(r1, r2, y0, h, m, a0, a1) {
+        a0 = a0 == null ? -A : a0; a1 = a1 == null ? A : a1;
+        var sh = new T.Shape(), n = 40, i, a;
+        for (i = 0; i <= n; i++) { a = a0 + (a1 - a0) * i / n; var x = CX + r2 * Math.sin(a), z = CZ + r2 * Math.cos(a); if (i) sh.lineTo(x, -z); else sh.moveTo(x, -z); }
+        for (i = n; i >= 0; i--) { a = a0 + (a1 - a0) * i / n; sh.lineTo(CX + r1 * Math.sin(a), -(CZ + r1 * Math.cos(a))); }
+        var g = new T.ExtrudeGeometry(sh, { depth: h, bevelEnabled: false, curveSegments: 1 }); g.rotateX(-Math.PI / 2); g.translate(0, y0, 0);
+        var mm = new T.Mesh(g, m.isMaterial ? m : mat(m)); mm.castShadow = true; mm.receiveShadow = true; scene.add(mm); return mm;
+      }
+      var glow = new T.MeshBasicMaterial({ color: 0x7fe3ff, toneMapped: false });
+      arcSlab(5.9, 6.3, 0, .95, mat('#f4f1ec', { roughness: .35 }));                       // body
+      arcSlab(6.3, 6.34, .1, .78, mat('#5b3d29', { roughness: .6 }));                      // walnut front
+      for (var k = -A + .012; k < A; k += .019) { var xx = CX + 6.36 * Math.sin(k), zz = CZ + 6.36 * Math.cos(k), sl = box(.035, .74, .035, '#7a5236', xx, .49, zz, null, { noShadow: true }); sl.rotation.y = k; }   // flutes
+      arcSlab(6.29, 6.33, .035, .03, glow); arcSlab(5.85, 6.45, .95, .05, mat('#ece7df', { roughness: .25 }));        // kick LED, stone top
+      arcSlab(6.18, 6.48, 1.18, .05, mat('#ece7df', { roughness: .25 })); arcSlab(6.2, 6.3, 1.0, .18, mat('#f4f1ec', { roughness: .35 }));   // raised ledge
+      arcSlab(6.42, 6.46, 1.155, .02, glow);                                                // LED under the ledge lip
+      // flat feature panel with the logo at the centre of the curve
+      box(2.5, .58, .06, '#f8f6f2', 0, .58, 9.42, null, { roughness: .3 });
+      var ld = new T.Mesh(new T.PlaneGeometry(2.0, .545), texMat(logoK)); ld.position.set(0, .58, 9.455); ld.userData.keep = 1; scene.add(ld);
+      // ring pendants over the counter
+      [-1.75, 0, 1.75].forEach(function (x) {
+        cyl(.008, .008, .75, frameC, x, 2.82, 8.55, null, 6);
+        var r = new T.Mesh(new T.TorusGeometry(.32, .025, 10, 48), new T.MeshBasicMaterial({ color: 0xfff1d6, toneMapped: false })); r.rotation.x = Math.PI / 2; r.position.set(x, 2.45, 8.55); scene.add(r);
+      });
+      plane(5.6, 1.9, '#d8cfc2', 0, .009, 10.55);                                           // rug in front of the desk
+      [[-3.95, 9.2], [3.95, 9.2]].forEach(function (q) { cyl(.32, .26, .9, mat('#2b2d33', { roughness: .5 }), q[0], .45, q[1], null, 24); plant(q[0], q[1], 1.0); });
+    })();
     sofa(-5.2, 12.4, Math.PI / 2); sofa(-1.2, 12.4, -Math.PI / 2);
     if (!put('modern_coffee_table_01', null, -3.2, 0, 12.4, Math.PI / 2, { w: 1.2 })) cyl(.55, .55, .06, '#c9a77c', -3.2, .42, 12.4);
     put('side_table_01', null, -5.2, 0, 13.9, 0, {});
-    /* Client Room: a client who comes to the front desk is taken here and a Client Care rep assists them */
-    gwall(3.4, 9.9, 8.2, 9.9, []); gwall(3.4, 9.9, 3.4, 15, [[11.3, 12.6]]);
+    /* Open waiting nook beside reception (the Client Room moved next door, into the inner half of the old Applicant Lounge) */
     plane(4.7, 5, '#d9cdbb', 5.8, .013, 12.45);
-    cyl(.6, .6, .05, '#efe9de', 6.0, .74, 12.6, null, 32); cyl(.06, .08, .72, frameC, 6.0, .37, 12.6, null, 12);
-    var crChairs = [[6.0, 11.55, 0], [7.05, 12.6, -Math.PI / 2], [6.0, 13.65, Math.PI], [4.95, 12.6, Math.PI / 2]];
-    crChairs.forEach(function (q) { put('modern_arm_chair_01', null, q[0], 0, q[1], q[2], { h: .95 }); });
+    cyl(.45, .45, .05, '#efe9de', 6.0, .5, 12.6, null, 32); cyl(.05, .07, .48, frameC, 6.0, .25, 12.6, null, 12);
+    put('modern_arm_chair_01', null, 4.95, 0, 12.6, Math.PI / 2, { h: .95 }); put('modern_arm_chair_01', null, 7.05, 0, 12.6, -Math.PI / 2, { h: .95 });
+    plant(7.7, 14.5, .9);
+    var crChairs = [[11.7, 5.85, 0], [12.75, 6.9, -Math.PI / 2], [11.7, 7.95, Math.PI], [10.65, 6.9, Math.PI / 2]];
     S.clientSeats = [[-5.05, 11.75, Math.PI / 2], [-5.05, 12.4, Math.PI / 2], [-5.05, 13.05, Math.PI / 2], [-1.35, 11.75, -Math.PI / 2], [-1.35, 12.4, -Math.PI / 2], [-1.35, 13.05, -Math.PI / 2]].concat(crChairs);
-    var cTv = new T.Mesh(new T.PlaneGeometry(2.2, 1.24), new T.MeshBasicMaterial({ color: 0x0d2b86, toneMapped: false })); cTv.position.set(5.8, 1.7, 10.0); cTv.userData.keep = 1; cTv.userData.screen = 'client'; scene.add(cTv);
-    box(2.3, 1.34, .06, '#111216', 5.8, 1.7, 9.95); plant(7.7, 14.5, .9);
-    decal([{ text: 'CLIENT ROOM', font: '800 120px Inter, system-ui, sans-serif', color: '#7a6448', y: 80, ls: '14px' }], 3.2, .55, 5.8, 14.4, 0, .55);
+    var cTv = new T.Mesh(new T.PlaneGeometry(2.2, 1.24), new T.MeshBasicMaterial({ color: 0x0d2b86, toneMapped: false })); cTv.position.set(11.7, 1.7, 4.42); cTv.userData.keep = 1; cTv.userData.screen = 'client'; scene.add(cTv);
+    box(2.3, 1.34, .06, '#111216', 11.7, 1.7, 4.37);
     S.screenMeshes = [cTv];
     plant(-5.7, 7.3, 1.2); plant(5.7, 7.3, 1.2); plant(-2.9, 14.2, 1.1); plant(2.9, 14.2, 1.1);
     plane(5.4, 3.6, '#cfc6b6', 0, .012, 12.4);
@@ -521,23 +546,23 @@
     /* Huddle Room: round table cut like a pie (Admins slice, ISA & RM slice) facing the huddle screen */
     var hx = -15;
     gwall(-8.15, 4.8, -8.15, 15, [[5.2, 7.6]]); gwall(-22, 4.8, -8.15, 4.8, []);
-    var pcx = hx, pcz = 10.15, rIn = 1.25, rOut = 3.55, rChair = 4.25, gap = 12 * Math.PI / 180, nSeats = 0;
+    var KX = 1.45, KZ = .92, pcx = hx, pcz = 10.15, rIn = 1.2, rOut = 3.3, rChair = 4.0, gap = 12 * Math.PI / 180, nSeats = 0;
     var nAdm = OF_ROSTER.filter(function (p) { return p.group === 'manager' || p.group === 'reception' || p.group === 'admin'; }).length + 2;
     var nIsa = OF_ROSTER.filter(function (p) { return p.group === 'isa' || p.group === 'rm'; }).length + 3;
     var span = Math.PI * 2 - 2 * gap, aAdm = span * nAdm / (nAdm + nIsa), aIsa = span - aAdm, a0 = Math.PI / 2 - aAdm / 2;
     function slice(from, len, col, label, seats) {
       var sh = new T.Shape(), n = 40;
-      for (var i = 0; i <= n; i++) { var a = from + len * i / n; sh[i ? 'lineTo' : 'moveTo'](Math.sin(a) * rOut, Math.cos(a) * rOut); }
-      for (var j = n; j >= 0; j--) { var bb = from + len * j / n; sh.lineTo(Math.sin(bb) * rIn, Math.cos(bb) * rIn); }
+      for (var i = 0; i <= n; i++) { var a = from + len * i / n; sh[i ? 'lineTo' : 'moveTo'](Math.sin(a) * rOut * KX, Math.cos(a) * rOut * KZ); }
+      for (var j = n; j >= 0; j--) { var bb = from + len * j / n; sh.lineTo(Math.sin(bb) * rIn * KX, Math.cos(bb) * rIn * KZ); }
       var m = new T.Mesh(new T.ExtrudeGeometry(sh, { depth: .07, bevelEnabled: false, curveSegments: 4 }), mat(col, { roughness: .35 })); m.rotation.x = Math.PI / 2; m.position.set(pcx, .8, pcz); m.castShadow = m.receiveShadow = true; scene.add(m);
-      for (var k = 0; k < 3; k++) { var la = from + len * (k + .5) / 3; cyl(.05, .05, .74, frameC, pcx + Math.sin(la) * 2.4, .37, pcz + Math.cos(la) * 2.4, null, 8); }
-      for (var c = 0; c < seats; c++) { var ca = from + len * (c + .5) / seats, x = pcx + Math.sin(ca) * rChair, z = pcz + Math.cos(ca) * rChair; hChair(x, z, Math.atan2(pcx - x, pcz - z)); nSeats++; }
+      for (var k = 0; k < 3; k++) { var la = from + len * (k + .5) / 3; cyl(.05, .05, .74, frameC, pcx + Math.sin(la) * 2.3 * KX, .37, pcz + Math.cos(la) * 2.3 * KZ, null, 8); }
+      for (var c = 0; c < seats; c++) { var ca = from + len * (c + .5) / seats, x = pcx + Math.sin(ca) * rChair * KX, z = pcz + Math.cos(ca) * rChair * KZ; hChair(x, z, Math.atan2(pcx - x, pcz - z)); nSeats++; }
       var mid = from + len / 2, cv = ofTextCanvas([{ text: label, font: '800 110px Inter, system-ui, sans-serif', color: '#f6efe2', y: 75, ls: '12px' }], 1024, 150);
       var lm = new T.Mesh(new T.PlaneGeometry(2.6, .38), texMat(cv, { opacity: .95, depthWrite: false })); lm.rotation.x = -Math.PI / 2; lm.rotation.z = mid + (Math.sin(mid) < 0 ? Math.PI : 0);
-      lm.position.set(pcx + Math.sin(mid) * 2.4, .885, pcz + Math.cos(mid) * 2.4); lm.userData.keep = 1; scene.add(lm);
+      lm.position.set(pcx + Math.sin(mid) * 2.3 * KX, .885, pcz + Math.cos(mid) * 2.3 * KZ); lm.userData.keep = 1; scene.add(lm);
     }
     slice(a0, aAdm, '#7a563a', 'ADMINS', nAdm); slice(a0 + aAdm + gap, aIsa, '#3e2b1f', 'ISA & RM', nIsa);
-    cyl(.75, .85, .5, '#e9e4da', pcx, .25, pcz); plant(pcx, pcz, .8);
+    var ped = cyl(.75, .85, .5, '#e9e4da', pcx, .25, pcz); ped.scale.set(KX, 1, KZ); plant(pcx, pcz, .8);
     S.huddleSeats = nSeats;
     var hudC = document.createElement('canvas'); hudC.width = 1024; hudC.height = 576;
     var hudT = new T.CanvasTexture(hudC); hudT.encoding = T.sRGBEncoding; S.hudCanvas = hudC; S.hudTex = hudT;
@@ -555,16 +580,15 @@
     /* ISA Coach office: centre aisle, facing the ISA floor but apart from the agents */
     var coach = OF_ROSTER.filter(function (p) { return p.group === 'coach'; });
     if (coach.length) {
-      gwall(-2.7, -8.2, 2.9, -8.2, []); gwall(-2.7, -1.8, 2.9, -1.8, [[-1.6, -.4]]); gwall(-2.7, -8.2, -2.7, -1.8, []);
-      plane(5.5, 6.3, '#c6b49a', .1, .012, -5.0);
-      coach.forEach(function (p, i) { seat(.2, -5.6 + i * 1.6, Math.PI / 2, p, { w: 1.6, top: '#3e2a1d', chair: 'lounge' }); });
-      put('modern_arm_chair_01', null, -1.9, 0, -3.0, Math.PI / 4, { h: .95 }); plant(-2.1, -7.6, .9);
-      decal([{ text: 'ISA COACH', font: '800 110px Inter, system-ui, sans-serif', color: '#6b5a44', y: 80, ls: '14px' }], 3.2, .55, 0, -2.4, 0, .6);
+      gwall(-.3, -8.2, 2.9, -8.2, []); gwall(-.3, -4.4, 2.9, -4.4, [[.4, 1.4]]); gwall(-.3, -8.2, -.3, -4.4, []);
+      plane(3.1, 3.7, '#c6b49a', 1.3, .012, -6.3);
+      coach.forEach(function (p, i) { seat(1.3, -6.6 + i * 1.6, Math.PI / 2, p, { w: 1.4, top: '#3e2a1d', chair: 'lounge' }); });
+      plant(2.5, -7.7, .8);
+      decal([{ text: 'ISA COACH', font: '800 110px Inter, system-ui, sans-serif', color: '#6b5a44', y: 80, ls: '14px' }], 2.4, .42, 1.3, -4.85, 0, .6);
     }
     /* ISA & RM floor: glass all round so callers can focus */
-    gwall(3.3, -15, 3.3, 4.2, [[-1.6, -.1]]); gwall(3.3, 4.2, 22.2, 4.2, [[11.6, 13.1]]); gwall(22.2, -15, 22.2, 4.2, [[-3.6, -2.1]]);
+    gwall(3.3, -15, 3.3, 4.2, [[-1.6, -.1]]); gwall(3.3, 4.2, 22.2, 4.2, [[5.2, 6.6]]); gwall(22.2, -15, 22.2, 4.2, [[-3.6, -2.1]]);
     var felt = mat('#3f5a4e', { roughness: 1 });
-    [-8.5, -2.3].forEach(function (zr) { [[4.6, 11.6], [13.8, 20.8]].forEach(function (xr) { box(xr[1] - xr[0], 1.5, .08, felt, (xr[0] + xr[1]) / 2, .75, zr); box(xr[1] - xr[0], .05, .12, frameC, (xr[0] + xr[1]) / 2, 1.52, zr); }); });
     function booth(x, z, col) {
       box(1.5, .08, 1.5, frameC, x, 2.42, z); box(1.5, .06, 1.5, '#e9e4da', x, .03, z);
       box(.05, 2.4, 1.5, col, x - .73, 1.22, z); box(1.5, 2.4, .05, '#3f5a4e', x, 1.22, z - .73);
@@ -585,13 +609,20 @@
 
     /* Applicant Lounge (left) and Applicant Room (right), right next to reception and the entrance.
        Applicants rename themselves in Zoom as Name_Position. */
-    gwall(8.2, 4.2, 8.2, 15, [[6.2, 7.7]]); gwall(22.2, 4.2, 22.2, 15, []); gwall(15.2, 4.2, 15.2, 15, [[11.6, 13.0]]);
-    plane(6.9, 10.6, '#cdbba3', 11.7, .008, 9.65); plane(6.9, 10.6, '#d9d2c6', 18.7, .008, 9.65);
-    sofa(10.0, 6.4, 0); sofa(13.4, 6.4, 0); sofa(10.0, 12.6, Math.PI); sofa(13.4, 12.6, Math.PI);
-    put('coffee_table_round_01', null, 11.7, 0, 9.5, 0, { w: 1.2 });
-    box(.6, 1.1, .6, '#e9edf2', 14.6, .55, 14.4); cyl(.16, .16, .45, mat('#bfe3f5', { roughness: .1, transparent: true, opacity: .7 }), 14.6, 1.33, 14.4, null, 16);
-    plant(8.9, 14.4, 1.1); plant(14.6, 4.9, .9);
-    decal([{ text: 'APPLICANT LOUNGE', font: '800 100px Inter, system-ui, sans-serif', color: '#7a6448', y: 75, ls: '10px' }], 5.6, .8, 11.7, 14.3, 0, .5);
+    gwall(8.2, 4.2, 8.2, 15, [[6.2, 7.7], [11.4, 12.8]]); gwall(22.2, 4.2, 22.2, 15, []); gwall(15.2, 4.2, 15.2, 15, [[11.6, 13.0]]);
+    gwall(8.2, 9.6, 15.2, 9.6, []);   // splits the old lounge: Client Room (inner half) | Applicant Lounge (street half)
+    plane(6.9, 5.3, '#d9cdbb', 11.7, .008, 6.9); plane(6.9, 5.3, '#cdbba3', 11.7, .008, 12.3); plane(6.9, 10.6, '#d9d2c6', 18.7, .008, 9.65);
+    /* Client Room: a client who comes to the front desk is taken here and a Client Care rep assists them */
+    cyl(.6, .6, .05, '#efe9de', 11.7, .74, 6.9, null, 32); cyl(.06, .08, .72, frameC, 11.7, .37, 6.9, null, 12);
+    crChairs.forEach(function (q) { put('modern_arm_chair_01', null, q[0], 0, q[1], q[2], { h: .95 }); });
+    plant(14.6, 4.9, .9); plant(8.8, 5.0, .9);
+    decal([{ text: 'CLIENT ROOM', font: '800 120px Inter, system-ui, sans-serif', color: '#7a6448', y: 80, ls: '14px' }], 3.2, .5, 11.7, 9.15, 0, .55);
+    /* Applicant Lounge: the half facing the street */
+    sofa(10.0, 10.45, 0); sofa(13.4, 10.45, 0); sofa(10.0, 13.75, Math.PI); sofa(13.4, 13.75, Math.PI);
+    put('coffee_table_round_01', null, 11.7, 0, 12.1, 0, { w: 1.1 });
+    box(.6, 1.1, .6, '#e9edf2', 14.75, .55, 14.55); cyl(.16, .16, .45, mat('#bfe3f5', { roughness: .1, transparent: true, opacity: .7 }), 14.75, 1.33, 14.55, null, 16);
+    plant(8.75, 14.55, 1.0);
+    decal([{ text: 'APPLICANT LOUNGE', font: '800 100px Inter, system-ui, sans-serif', color: '#7a6448', y: 75, ls: '10px' }], 4.6, .5, 11.7, 14.7, 0, .5);
     /* Applicant Room: one long table with 10 chairs (4 per side + one at each end) */
     box(1.6, .06, 6.0, '#3e2a1d', 18.7, .76, 9.4, null, { roughness: .4 }); box(1.2, .72, .08, frameC, 18.7, .38, 6.8); box(1.2, .72, .08, frameC, 18.7, .38, 12.0);
     var arChairs = [[17.55, 7.3, Math.PI / 2], [17.55, 8.7, Math.PI / 2], [17.55, 10.1, Math.PI / 2], [17.55, 11.5, Math.PI / 2], [19.85, 7.3, -Math.PI / 2], [19.85, 8.7, -Math.PI / 2], [19.85, 10.1, -Math.PI / 2], [19.85, 11.5, -Math.PI / 2], [18.7, 5.75, 0], [18.7, 13.05, Math.PI]];
@@ -599,7 +630,7 @@
     var aTv = new T.Mesh(new T.PlaneGeometry(2.6, 1.46), new T.MeshBasicMaterial({ color: 0x0d2b86, toneMapped: false })); aTv.position.set(18.7, 1.7, 4.36); aTv.userData.keep = 1; aTv.userData.screen = 'applicants'; scene.add(aTv); S.screenMeshes.push(aTv);
     box(2.7, 1.56, .06, '#111216', 18.7, 1.7, 4.3); plant(21.4, 14.4, 1);
     decal([{ text: 'APPLICANT ROOM', font: '800 100px Inter, system-ui, sans-serif', color: '#55607a', y: 75, ls: '10px' }], 5.2, .75, 18.7, 14.3, 0, .5);
-    S.applicantSeats = [[9.4, 6.55, 0], [10.6, 6.55, 0], [12.8, 6.55, 0], [14.0, 6.55, 0], [9.4, 12.45, Math.PI], [10.6, 12.45, Math.PI], [12.8, 12.45, Math.PI], [14.0, 12.45, Math.PI],
+    S.applicantSeats = [[9.4, 10.6, 0], [10.6, 10.6, 0], [12.8, 10.6, 0], [14.0, 10.6, 0], [9.4, 13.6, Math.PI], [10.6, 13.6, Math.PI], [12.8, 13.6, Math.PI], [14.0, 13.6, Math.PI],
     ].concat(arChairs);
 
     /* East wing: Pantry & Dining (back) and Game & Leisure (front), glass between them, Smoking Area outside */
@@ -611,7 +642,7 @@
     put('CoffeeCart_01', null, 24.6, 0, -13.4, 0, { w: 1.8 });
     box(5, .92, 1.2, '#22252c', 30.5, .46, -11.6); box(5.2, .05, 1.4, '#efe9de', 30.5, .94, -11.6, null, { roughness: .25 });
     for (var st2 = 0; st2 < 5; st2++) put('metal_stool_02', null, 28.5 + st2, 0, -10.55, 0, { h: .66 });
-    [[25.6, -7.2], [31.3, -7.2], [37, -7.2], [25.6, -4.1], [31.3, -4.1], [37, -4.1]].forEach(function (t) {
+    [[25.6, -7.2], [31.3, -7.2], [37, -7.2]].forEach(function (t) {
       box(2.3, .05, 1, '#c79d70', t[0], .76, t[1], null, { roughness: .45 }); box(.06, .72, .7, frameC, t[0] - .95, .38, t[1]); box(.06, .72, .7, frameC, t[0] + .95, .38, t[1]);
       for (var k = 0; k < 3; k++) { hChair(t[0] - .75 + k * .75, t[1] - .75, 0); hChair(t[0] - .75 + k * .75, t[1] + .75, Math.PI); }
       put('modern_ceiling_lamp_01', null, t[0], 2.35, t[1], 0, { h: .95 });
@@ -667,21 +698,26 @@
     sofa(-21.2, -11.6, Math.PI / 2); plant(-15.8, -14.2, 1.2);
     decal([{ text: 'PRIVATE OFFICE', font: '800 110px Inter, system-ui, sans-serif', color: '#6b5a44', y: 90, ls: '12px' }], 4, .8, -18.5, -10.2, 0, .6);
 
-    /* Head Admin office: Tara and Camille */
-    var mgr = OF_ROSTER.filter(function (p) { return p.group === 'manager'; });
+    /* Tara's office, with Camille's small Head Admin office right beside it (left) */
+    var mgr = OF_ROSTER.filter(function (p) { return p.group === 'manager'; }), boss = mgr.filter(function (p) { return p.boss; }), heads = mgr.filter(function (p) { return !p.boss; });
     plane(5.7, 5.6, '#c6b49a', 0, .012, -12.2);
     gwall(-2.9, -9.35, 2.9, -9.35, [[-.6, .6]]); gwall(-2.9, -15, -2.9, -9.35, []); gwall(2.9, -15, 2.9, -9.35, []);
-    mgr.forEach(function (p, i) { seat((i - (mgr.length - 1) / 2) * 1.9, -12.4, 0, p, { w: 1.75, top: '#3e2a1d', chair: 'lounge' }); });
+    boss.forEach(function (p, i) { seat(i * 1.9, -12.4, 0, p, { w: 1.75, top: '#3e2a1d', chair: 'lounge' }); });
     sofa(-2.1, -14.0, Math.PI / 2); plant(2.4, -14.5, 1.1);
     put('wall_clock', null, 0, 2.55, -14.97, 0, { w: .4 });
-    decal([{ text: 'HEAD ADMIN OFFICE', font: '800 96px Inter, system-ui, sans-serif', color: '#6b5a44', y: 70, ls: '10px' }], 4.6, .7, 0, -10.1, 0, .6);
+    decal([{ text: 'TARA’S OFFICE', font: '800 96px Inter, system-ui, sans-serif', color: '#6b5a44', y: 70, ls: '10px' }], 4.0, .7, 0, -10.1, 0, .6);
+    plane(3.1, 5.6, '#c6b49a', -4.5, .012, -12.2);
+    gwall(-6.1, -9.35, -2.9, -9.35, [[-5.0, -4.0]]); gwall(-6.1, -15, -6.1, -9.35, []);
+    heads.forEach(function (p, i) { seat(-4.5, -12.6 + i * 1.8, 0, p, { w: 1.5, top: '#3e2a1d', chair: 'lounge' }); });
+    plant(-5.6, -14.5, .9);
+    decal([{ text: 'HEAD ADMIN', font: '800 96px Inter, system-ui, sans-serif', color: '#6b5a44', y: 70, ls: '10px' }], 2.6, .55, -4.5, -10.0, 0, .6);
 
     /* Admin departments (left wing). Admin & Events and Marketing stay open; every other department gets glass. */
     var depts = []; OF_ROSTER.forEach(function (p) { if (p.group === 'admin' && depts.indexOf(p.dept) < 0) depts.push(p.dept); });
     depts.sort(function (a, b) { return OF_ROSTER.filter(function (p) { return p.dept === b; }).length - OF_ROSTER.filter(function (p) { return p.dept === a; }).length; });
     /* Each admin department gets its own glass room with space around the desks */
     var ROOMS = {
-      'Admin & Events': { c: [-9.2, -10.9], box: [-15, -14.95, -3.3, -6.9] },
+      'Admin & Events': { c: [-10.65, -10.9], box: [-15, -14.95, -6.3, -6.9] },
       'Marketing': { c: [-9.2, -4.6], box: [-15, -6.5, -3.3, -2.4] },
       'AI & Tech': { c: [-18.5, -5.5], box: [-21.95, -8.6, -15.4, -2.4] }
     };
@@ -691,7 +727,8 @@
       var c = R ? R.c : spare[i % spare.length]; slots.push(c);
       // one desk per person, spaced out (no shared pods)
       var n = list.length, dc = R && R.box[3] - R.box[1] < 5 ? n : Math.min(n, n > 4 ? 3 : 2), dr = Math.ceil(n / dc), sx2 = R ? Math.min(3.2, (R.box[2] - R.box[0] - 1.6) / Math.max(1, dc - 1 || 1)) : 2.6, sz2 = 2.9;
-      list.forEach(function (p, k) { var col = k % dc, row = Math.floor(k / dc); seat(c[0] + (col - (dc - 1) / 2) * sx2, c[1] + (row - (dr - 1) / 2) * sz2 + .3, 0, p, { w: 1.4 }); });
+      list.forEach(function (p, k) { var col = k % dc, row = Math.floor(k / dc); if (d === 'AI & Tech' && k === 0) { col = 1; row = 1; }   // Ali sits where the servers were; servers + robots take the back-left corner
+        seat(c[0] + (col - (dc - 1) / 2) * sx2, c[1] + (row - (dr - 1) / 2) * sz2 + .3, 0, p, { w: 1.4 }); });
       if (R) {
         var b = R.box, mid = (b[0] + b[2]) / 2;
         plane(b[2] - b[0] - .1, b[3] - b[1] - .1, '#e6e2da', mid, .007, (b[1] + b[3]) / 2);
@@ -699,17 +736,50 @@
           if (b[1] > -14.9) gwall(b[0], b[1], b[2], b[1], []);
           gwall(b[0], b[3], b[2], b[3], [[mid - .7, mid + .7]]);
           if (b[0] > -21.9) gwall(b[0], b[0] === -15 ? Math.max(b[1], -9) : b[1], b[0], b[3], []);
-          gwall(b[2], b[1], b[2], b[3], []);
+          gwall(b[2], b[1], b[2], b[3], d === 'AI & Tech' ? [[-5.7, -4.7]] : []);
         }
         deptSign(d, mid, b[3] - .55, '#6b6f8a');
       } else deptSign(d, c[0], c[1] - 2.25, '#6b6f8a');
     });
-    plant(-4.2, -14.2, 1.2); plant(-12.6, 3.6, .9);
+    plant(-12.6, 3.6, .9);
+    /* AI & Tech corner: server racks, a data screen, and A.C.E + Claude at work talking to each other */
+    (function () {
+      var rackM = mat('#1b1e26', { roughness: .45, metalness: .4 });
+      [-21.15, -20.38].forEach(function (x, i) {   // two racks against the back wall, fronts facing the room
+        box(.72, 2.1, .9, rackM, x, 1.05, -8.05);
+        box(.62, 1.9, .02, mat('#0c0e13', { roughness: .2 }), x, 1.05, -7.59);
+        for (var k = 0; k < 9; k++) { var on = (k + i) % 3; box(.3, .03, .02, new T.MeshBasicMaterial({ color: on === 0 ? 0x46c37b : on === 1 ? 0x36c3f0 : 0x2a6cff, toneMapped: false }), x - .12, .25 + k * .2, -7.57, null, { noShadow: true }); box(.06, .02, .02, new T.MeshBasicMaterial({ color: 0xffb547, toneMapped: false }), x + .2, .25 + k * .2, -7.57, null, { noShadow: true }); }
+      });
+      decal([{ text: 'SERVERS · DATA', font: '800 100px Inter, system-ui, sans-serif', color: '#6b6f8a', y: 75, ls: '10px' }], 1.5, .26, -20.77, -7.3, 0, .55);
+      /* A.C.E and Claude, two downloaded CC0 robots, at home in the AI & Tech room in front of the servers.
+         Claude: RobotExpressive by Tomás Laulhé (Quaternius), gold. A.C.E: "Leela" from Quaternius' Animated Mech Pack, white and cyan.
+         They chat (speech bubbles from the live data) and now and then take a walk around the floor and come back. */
+      S.robots = [];
+      var HOME = { CLAUDE: [-19.5, -6.55, -Math.PI / 2 + .35], 'A.C.E': [-21.0, -6.55, Math.PI / 2 - .35] };
+      function robot(g, label, col, h, recolor) {
+        var root = g.scene;
+        root.traverse(function (o) { if (o.isMesh) { o.frustumCulled = false; o.castShadow = false; o.userData.keep = 1; if (o.material) { o.material = o.material.clone(); recolor(o.material); } } });
+        var bb = new T.Box3().setFromObject(root), k = h / Math.max(.01, bb.max.y - bb.min.y), hm = HOME[label];
+        root.scale.setScalar(k); root.position.set(hm[0], 0, hm[1]); root.rotation.y = hm[2]; scene.add(root);
+        var mix = new T.AnimationMixer(root), clips = {}; g.animations.forEach(function (c) { clips[c.name] = c; });
+        var hit = new T.Mesh(new T.BoxGeometry(.7, h, .7), new T.MeshBasicMaterial()); hit.visible = false; hit.position.set(hm[0], h / 2, hm[1]); hit.userData.screen = 'aiops'; scene.add(hit); S.screenMeshes.push(hit);
+        var bc = document.createElement('canvas'); bc.width = 768; bc.height = 300; var bt = new T.CanvasTexture(bc); bt.encoding = T.sRGBEncoding;
+        var sp = new T.Sprite(new T.SpriteMaterial({ map: bt, transparent: true, depthWrite: false, toneMapped: false })); sp.scale.set(2.0, .78, 1); sp.position.set(hm[0], h + .75, hm[1]); sp.visible = false; sp.userData.screen = 'aiops'; scene.add(sp); S.screenMeshes.push(sp);
+        var r = { name: label, col: col, root: root, mix: mix, clips: clips, act: null, bubble: sp, bc: bc, bt: bt, hit: hit, h: h, home: hm };
+        r.play = function (name) { var c = clips[name] || clips.Idle; if (!c) return; var a = mix.clipAction(c); if (r.act === a) return; if (r.act) r.act.fadeOut(.25); a.reset().fadeIn(.25).play(); r.act = a; };
+        r.tick = function (dt) { mix.update(dt); };
+        r.place = function (x, z, rot) { root.position.set(x, 0, z); root.rotation.y = rot; hit.position.set(x, h / 2, z); sp.position.set(x, h + .75, z); };
+        r.play('Idle'); mix.update(.4); S.robots.push(r); S.dirty = true;
+      }
+      if (AS.robot) robot(AS.robot, 'CLAUDE', '#d97757', 1.35, function (m) { if (m.name === 'Main') { m.color = new T.Color('#c9a24a').convertSRGBToLinear(); m.metalness = .8; m.roughness = .3; } });
+      if (AS.ace) robot(AS.ace, 'A.C.E', '#36c3f0', 1.2, function (m) { if (m.name === 'Main' || m.name === 'Grey') m.color = new T.Color(m.name === 'Main' ? '#f2f4f7' : '#c9d3de').convertSRGBToLinear(); if (m.name === 'Accent' || m.name === 'Eye') { m.color = new T.Color('#36c3f0').convertSRGBToLinear(); m.emissive = new T.Color('#36c3f0').convertSRGBToLinear(); m.emissiveIntensity = m.name === 'Eye' ? 1 : .25; } });
+      decal([{ text: 'A.C.E  ·  CLAUDE', font: '800 110px Inter, system-ui, sans-serif', color: '#6b6f8a', y: 80, ls: '10px' }], 2.4, .3, -20.25, -5.75, 0, .55);
+    })();
     var wallC2 = document.createElement('canvas'); wallC2.width = 1600; wallC2.height = 700;
     var wallT = new T.CanvasTexture(wallC2); wallT.encoding = T.sRGBEncoding; S.wallCanvas = wallC2; S.wallTex = wallT;
-    box(7.4, 3.3, .1, '#111216', -9.75, 1.8, -14.9);
-    var wallTv = new T.Mesh(new T.PlaneGeometry(7.2, 3.15), new T.MeshBasicMaterial({ map: wallT, toneMapped: false })); wallTv.position.set(-9.75, 1.8, -14.84); wallTv.userData.keep = 1; wallTv.userData.screen = 'wall'; scene.add(wallTv); S.screenMeshes.push(wallTv);
-    decal([{ text: 'REPORT WALL', font: '800 120px Inter, system-ui, sans-serif', color: '#6b6f8a', y: 80, ls: '14px' }], 3.6, .55, -9.75, -13.9, 0, .5);
+    box(7.4, 3.3, .1, '#111216', -10.65, 1.8, -14.9);
+    var wallTv = new T.Mesh(new T.PlaneGeometry(7.2, 3.15), new T.MeshBasicMaterial({ map: wallT, toneMapped: false })); wallTv.position.set(-10.65, 1.8, -14.84); wallTv.userData.keep = 1; wallTv.userData.screen = 'wall'; scene.add(wallTv); S.screenMeshes.push(wallTv);
+    decal([{ text: 'REPORT WALL', font: '800 120px Inter, system-ui, sans-serif', color: '#6b6f8a', y: 80, ls: '14px' }], 3.6, .55, -10.65, -13.9, 0, .5);
 
     /* Restrooms: Men and Women, 2 stalls each */
     function restroom(x0, label, accent) {
@@ -770,7 +840,7 @@
       pantry: [[24.85, -7.95, 0], [25.6, -7.95, 0], [26.35, -7.95, 0], [30.55, -7.95, 0], [31.3, -7.95, 0], [32.05, -7.95, 0], [24.85, -6.45, Math.PI], [25.6, -6.45, Math.PI], [30.55, -6.45, Math.PI], [31.3, -6.45, Math.PI], [36.25, -7.95, 0], [37, -7.95, 0]],
       lounge: [[30.65, 8.55, 0], [31.3, 8.55, 0], [31.95, 8.55, 0], [30.65, 12.85, Math.PI], [31.3, 12.85, Math.PI], [31.95, 12.85, Math.PI], [28.1, 10.7, Math.PI / 2], [34.5, 10.7, -Math.PI / 2], [37.7, 13.05, Math.PI], [38.9, 13.05, Math.PI]],
       smoke: [[45.6, 6.0, 0], [45.6, 7.2, Math.PI], [45.6, 10.8, 0], [45.6, 12.0, Math.PI], [43.6, 8.6, Math.PI / 2], [43.6, 9.4, Math.PI / 2]],
-      client: [[7.05, 12.6, -Math.PI / 2], [4.95, 12.6, Math.PI / 2]],
+      client: [[12.75, 6.9, -Math.PI / 2], [10.65, 6.9, Math.PI / 2]],
       rr: [[-21.0, -1.75, Math.PI], [-20.3, -1.75, Math.PI], [-19.6, -1.75, Math.PI], [-17.0, -1.75, Math.PI], [-16.3, -1.75, Math.PI]]
     };
     box(2.4, .08, .5, '#b98d62', -20.3, .45, -1.75); box(.06, .45, .45, frameC, -21.4, .22, -1.75); box(.06, .45, .45, frameC, -19.2, .22, -1.75);
@@ -893,6 +963,82 @@
       return '<tr><td>' + esc(r.label) + '</td><td>' + esc(r.staff.map(nm).filter(Boolean).join(', ') || '—') + '</td><td>' + esc(r.clients.map(function (c) { return c.n; }).concat(r.applicants.map(function (a) { return a.n + ' (applicant)'; })).join(', ') || '—') + '</td></tr>';
     }).join('') + '</table>';
   }
+  function ofAiLines() {
+    var P = OF.people || [], adm = P.filter(function (o) { return o.p.group !== 'isa' && o.p.group !== 'rm' && !o.p.boss; }), isa = P.filter(function (o) { return o.p.group === 'isa' || o.p.group === 'rm'; });
+    var here = function (L) { return L.filter(function (o) { return o.present; }).length; }, Z = OF.zoom, R = ofReps(), al = R.filter(function (x) { return x.alert; });
+    var act = brkData ? isa.filter(function (o) { return o.brk && o.brk.st === 'Action'; }).length : null, bo = (OF.breakouts || []).length, attn = P.filter(function (o) { return o.attn && o.attn.length; }).length;
+    return [
+      ['A.C.E', 'Claude, pull the Help Desk Zoom.'],
+      ['Claude', Z ? (OF.zoomFresh ? 'Live as of ' + ofPT(Z.at) + ': ' + here(adm) + ' admins and ' + here(isa) + ' ISAs & RMs in.' : 'Room isn’t live. Last day ' + ofDayLabel(Z.date) + '.') : 'No Zoom data yet. Waiting on the refresh.'],
+      ['A.C.E', 'Breakout rooms?'],
+      ['Claude', bo ? bo + ' open · ' + (OF.clients || []).filter(function (c) { return c.room === 'client'; }).length + ' client(s) with the team.' : 'None open right now.'],
+      ['A.C.E', 'Any automation alerts today?'],
+      ['Claude', al.length ? al.length + ' alert: ' + al[0].head + '.' : R.length + ' report' + (R.length === 1 ? '' : 's') + ' posted today, no alerts.'],
+      ['A.C.E', 'Break check on the ISA floor?'],
+      ['Claude', act == null ? 'Still loading the sheet.' : act + ' Action' + (act === 1 ? '' : 's') + ' on the last check.'],
+      ['A.C.E', 'Anything Tara should see?'],
+      ['Claude', attn ? attn + ' people on the Needs attention list.' : 'Nothing needs her right now.'],
+      ['A.C.E', 'Next sync?'],
+      ['Claude', 'Every 10 min while the dashboard is open.']
+    ];
+  }
+  function ofDrawAi() {
+    var S = OF.three; if (!S || !S.robots || !S.robots.length || S.walk) return;
+    var L = ofAiLines(), i = (OF.aiStep || 0) % L.length, m = L[i];
+    S.robots.forEach(function (r) {
+      var speaking = r.name.toUpperCase() === m[0].toUpperCase();
+      r.bubble.visible = speaking;
+      if (speaking) {
+        var g = r.bc.getContext('2d'); g.clearRect(0, 0, 768, 300);
+        g.fillStyle = 'rgba(11,15,36,.94)'; g.beginPath(); if (g.roundRect) g.roundRect(8, 8, 752, 236, 34); else g.rect(8, 8, 752, 236); g.fill();
+        g.beginPath(); g.moveTo(350, 240); g.lineTo(384, 292); g.lineTo(418, 240); g.fill();
+        g.fillStyle = r.col; g.fillRect(8, 40, 10, 170);
+        g.font = '800 34px Inter, system-ui, sans-serif'; g.textAlign = 'left'; g.fillText(r.name, 44, 62);
+        g.fillStyle = '#ffffff'; g.font = '600 40px Inter, system-ui, sans-serif'; ofWrap(g, m[1], 44, 122, 690, 50, 3);
+        r.bt.needsUpdate = true;
+        if (r.name === 'A.C.E') r.play(/\?$/.test(m[1]) ? 'Hello' : 'Yes'); else r.play(/\?$/.test(m[1]) ? 'Wave' : (OF.aiStep || 0) % 4 < 2 ? 'Yes' : 'ThumbsUp');
+      } else r.play('Idle');
+    });
+    S.dirty = true; ofAiMove(1400);
+  }
+  var OF_ROUTE = [[-20.25, -5.6], [-17.5, -5.2], [-15.0, -5.2], [-14.6, -5.9], [-4.6, -5.9], [-1.4, -3.4], [-1.4, 2.8]];
+  function ofWalkStart() {
+    var S = OF.three; if (!S || !S.robots || S.robots.length < 2 || S.walk || !OF.running || document.hidden) return;
+    var P = OF_ROUTE, segs = [], L = 0; for (var i = 1; i < P.length; i++) { var d = Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]); segs.push(d); L += d; }
+    S.walk = { t0: performance.now(), L: L, segs: segs, speed: 1.1, lag: 1.3, pause: 3 };
+    S.robots.forEach(function (r) { r.bubble.visible = false; r.play(r.clips.Walking ? 'Walking' : 'Walk'); });
+    var last = performance.now();
+    S.walkT = setInterval(function () {
+      var now = performance.now(), dt = (now - last) / 1000; last = now;
+      if (!OF.running) return;
+      var w = S.walk, s = (now - w.t0) / 1000 * w.speed, half = w.L + w.pause * w.speed, done = true;
+      S.robots.forEach(function (r, ri) {
+        var d = s - ri * w.lag, back = false;
+        if (d > half) { d = w.L - (d - half); back = true; }
+        if (d < 0 && !back) d = 0;
+        if (back && d <= 0) { r.place(r.home[0], r.home[1], r.home[2]); r.play('Idle'); r.tick(dt); return; }
+        done = false;
+        var dd = Math.min(Math.max(d, 0), w.L), i = 0; while (i < w.segs.length - 1 && dd > w.segs[i]) { dd -= w.segs[i]; i++; }
+        var a = P[i], b = P[i + 1], f = Math.min(1, dd / w.segs[i]), x = a[0] + (b[0] - a[0]) * f, z = a[1] + (b[1] - a[1]) * f;
+        var pausing = !back && s - ri * w.lag > w.L, dir = back ? -1 : 1;
+        r.place(x, z, pausing ? r.root.rotation.y : Math.atan2((b[0] - a[0]) * dir, (b[1] - a[1]) * dir));
+        r.play(pausing ? (r.clips.Wave ? 'Wave' : 'Hello') : (r.clips.Walking ? 'Walking' : 'Walk'));
+        r.tick(dt);
+      });
+      S.dirty = true;
+      if (done) { clearInterval(S.walkT); S.walk = null; ofDrawAi(); }
+    }, 66);
+  }
+  /* a short burst of animation (about 15 frames a second) each time a line changes; the office stays still otherwise */
+  function ofAiMove(ms) {
+    var S = OF.three; if (!S || !S.robots) return;
+    var end = performance.now() + ms, last = performance.now();
+    clearInterval(S.aiAnim);
+    S.aiAnim = setInterval(function () {
+      var now = performance.now(); S.robots.forEach(function (r) { r.tick((now - last) / 1000); }); last = now; S.dirty = true;
+      if (now > end || !OF.running) clearInterval(S.aiAnim);
+    }, 66);
+  }
   function ofWin(title, html) {
     var w = $('#of-win'); $('#of-win-t').textContent = title; $('#of-win-b').innerHTML = html; w.hidden = false; $('#of-win-b').scrollTop = 0;
   }
@@ -929,6 +1075,9 @@
         }).join('') + '</div>';
       });
       return ofWin('Report wall', html);
+    }
+    if (id === 'aiops') {
+      return ofWin('A.C.E ⇄ Claude', '<p class="of-win-note" style="margin:0 0 8px">What the AI keeping this dashboard fed is doing, from the live data on this page.</p>' + '<table class="of-tbl"><tbody>' + ofAiLines().map(function (m) { return '<tr><td style="width:70px;font-weight:700;color:' + (m[0] === 'A.C.E' ? '#36c3f0' : '#d97757') + '">' + esc(m[0]) + '</td><td>' + esc(m[1]) + '</td></tr>'; }).join('') + '</tbody></table>');
     }
     if (id === 'applicants') {
       var A = OF.applicants || [];
@@ -980,7 +1129,7 @@
       S.applicantSeats.forEach(function (q, i) { S.applicantIm.setMatrixAt(i, i < OF.applicants.length ? AM.compose(new T.Vector3(q[0], 0, q[1]), AQ.setFromEuler(AE.set(0, q[2], 0)), one2) : OF_ZERO); });
       S.applicantIm.count = Math.min(OF.applicants.length, S.applicantSeats.length); S.applicantIm.visible = S.applicantIm.count > 0; S.applicantIm.instanceMatrix.needsUpdate = true;
     }
-    ofDrawHuddle(); ofDrawIsa(); ofDrawWall(); ofLabels(); ofList(); ofHud(); ofAttn(); ofReport();
+    ofDrawHuddle(); ofDrawIsa(); ofDrawWall(); ofDrawAi(); ofLabels(); ofList(); ofHud(); ofAttn(); ofReport();
     if (OF.sel) ofCard(OF.sel);
   }
 
@@ -1105,7 +1254,7 @@
     $('#of-hud-td').innerHTML = OF.td ? '<small>Time Doctor ' + esc(ofPT(OF.td.at)) + '</small> <i class="k" style="background:#46c37b"></i><b>' + tdN('working') + '</b> <small>working</small> <i class="k" style="background:#ffb547"></i><b>' + tdN('idle') + '</b> <small>idle</small> <i class="k" style="background:#9aa0b8"></i><b>' + tdN('break') + '</b> <small>break</small>'
       : OF.tdErr === 'not_granted' ? '<small>Time Doctor isn’t allowed for this page</small>' : OF.tdErr ? '<small>Time Doctor didn’t load</small> <button type="button" class="link" id="of-td-retry" style="color:#8fb8ff">Retry</button>' : '<small>Loading Time Doctor…</small>';
     var tr = $('#of-td-retry'); if (tr) tr.onclick = function () { OF.tdErr = null; ofTdLoad(); ofHud(); };
-    $('#of-hud-n').innerHTML = '<b>' + here(adm) + '</b>/' + adm.length + ' <small>staff in</small> &nbsp; <b>' + here(isa) + '</b>/' + isa.length + ' <small>ISAs &amp; RMs in</small>';
+    $('#of-hud-n').innerHTML = '<b>' + here(adm) + '</b>/' + adm.length + ' <small>Admins in</small> &nbsp; <b>' + here(isa) + '</b>/' + isa.length + ' <small>ISAs &amp; RMs in</small>';
     $('#of-hud-brk').innerHTML = brkData ? '<small>Last break check ' + esc(ofDayLabel(brkData.days[brkData.days.length - 1])) + '</small> <i class="k" style="background:#46c37b"></i><b>' + cnt('ok') + '</b> <i class="k" style="background:#ffb547"></i><b>' + cnt('review') + '</b> <i class="k" style="background:#ff6b5a"></i><b>' + cnt('action') + '</b>' : '<small>Loading break check…</small>';
   }
   function ofSub(o) {
@@ -1225,6 +1374,8 @@
         var h = ofHourPT(); ofSetNight(OF.light === 'night' || (OF.light !== 'day' && (h < 6 || h >= 18.5)));
         $('#of-load').hidden = true;
         ofLoop();
+        setInterval(function () { if (OF.running && !document.hidden) { OF.aiStep = (OF.aiStep || 0) + 1; ofDrawAi(); } }, 4000);
+        setTimeout(ofWalkStart, 40000); setInterval(ofWalkStart, 180000);
       }).catch(function (e) { console.error(e); $('#of-load').innerHTML = '<p>The 3D office didn’t load. Check the connection and open this tab again.</p>'; OF.started = false; });
       ofZoomSub(); ofTdLoad();
       setInterval(function () { if (OF.running && !document.hidden) ofTdLoad(); }, 180000);

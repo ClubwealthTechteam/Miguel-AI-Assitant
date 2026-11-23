@@ -1,7 +1,7 @@
 
   /* ---------- Refresh now: runs the scheduled "3D office refresh" task on demand (Claude Code Remote connector) ---------- */
   var OF_TRIG = 'trig_016yRr4L8f6JqW3xFhhX2TZN';
-  function ofRefreshNow() {
+  function ofRefreshNow(auto) {
     var bs = $$('.cw-refresh'), say = function (t, busy) { bs.forEach(function (b) { b.textContent = t; b.disabled = !!busy; }); };
     if (OF.refAt && Date.now() - OF.refAt < 150000) return;
     say('Starting refresh…', true);
@@ -17,11 +17,25 @@
       }, 3000);
     }, function (e) {
       var c = e && e.code;
+      if (auto && c !== 'rate_limited' && c !== 'timeout') OF.autoOff = true;   // e.g. connector not allowed: stop trying on its own
       say(c === 'not_granted' || c === 'server_not_connected' ? 'Refresh needs the Claude Code connector' : c === 'blocked_by_policy' ? 'Refresh isn’t allowed here' : 'Couldn’t start a refresh · try again', false);
       setTimeout(function () { say('Refresh now', false); }, 6000);
     });
   }
-  document.addEventListener('click', function (e) { if (e.target.closest('.cw-refresh')) ofRefreshNow(); });
+  document.addEventListener('click', function (e) { if (e.target.closest('.cw-refresh')) { OF.autoOff = false; ofRefreshNow(); } });
+  /* Auto-refresh every 10 minutes while the dashboard is open on screen (weekdays 5 AM–6 PM PT).
+     Scheduled tasks can run at most hourly, so the open page starts the same refresh task itself; it skips
+     when the Zoom data is already under 10 minutes old (e.g. someone else just refreshed). */
+  var OF_AUTO_MS = 10 * 60000;
+  setInterval(function () {
+    if (OF.autoOff || document.hidden || !(window.claude && claude.use)) return;
+    var now = new Date(), h = ofHourPT(), dow = new Date(ofTodayPT() + 'T12:00:00Z').getUTCDay();
+    if (dow === 0 || dow === 6 || h < 5 || h >= 18) return;
+    ofZoomSub();
+    var age = OF.zoom && OF.zoom.at ? now - Date.parse(OF.zoom.at) : Infinity;
+    if (age < OF_AUTO_MS || (OF.refAt && now - OF.refAt < OF_AUTO_MS)) return;
+    ofRefreshNow(true);
+  }, 60000);
 
   /* ---------- Morning brief: a ~20-second spoken summary, built from the live data on this page ---------- */
   function vcBriefText() {
