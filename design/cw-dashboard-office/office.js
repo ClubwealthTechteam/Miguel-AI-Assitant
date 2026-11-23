@@ -245,7 +245,8 @@
         var aw = o.z && o.z.away && (fresh || OF.eff === 'now') ? o.z.away : o.td && o.td.state === 'break' ? { kind: 'break', since: o.td.breakStart || Date.now(), name: 'Time Doctor break' } : o.idleAs === 'lunch' || o.idleAs === 'break' ? { kind: o.idleAs, since: o.td.last, name: 'Idle ' + o.td.mins + ' min in Time Doctor' } : null;
         if (aw) {
           var minsAway = Math.max(0, Math.round((Date.now() - aw.since) / 60000)), room = aw.kind === 'lunch' ? 'pantry' : aw.kind === 'rr' ? 'rr' : 'lounge';
-          if (/^miguel/i.test(p.name) && aw.kind !== 'rr') room = minsAway < 15 ? 'pantry' : 'smoke';   // Miguel: 15 min pantry, then the smoking area
+          if (/^miguel/i.test(p.name) && aw.kind === 'break') room = 'smoke';   // Miguel: breaks in the smoking area
+          else if (/^miguel/i.test(p.name) && aw.kind === 'lunch') room = minsAway < 15 ? 'pantry' : 'smoke';   // lunch: 15 min pantry, then the smoking area
           o.away = { kind: aw.kind, room: room, mins: minsAway, name: aw.name };
         }
       }
