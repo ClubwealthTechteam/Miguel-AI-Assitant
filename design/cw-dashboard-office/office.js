@@ -245,6 +245,7 @@
         var aw = o.z && o.z.away && (fresh || OF.eff === 'now') ? o.z.away : o.td && o.td.state === 'break' ? { kind: 'break', since: o.td.breakStart || Date.now(), name: 'Time Doctor break' } : o.idleAs === 'lunch' || o.idleAs === 'break' ? { kind: o.idleAs, since: o.td.last, name: 'Idle ' + o.td.mins + ' min in Time Doctor' } : null;
         if (aw) {
           var minsAway = Math.max(0, Math.round((Date.now() - aw.since) / 60000)), room = aw.kind === 'lunch' ? 'pantry' : aw.kind === 'rr' ? 'rr' : 'lounge';
+          if (aw.kind === 'break' && o.z && aw === o.z.away && /^(admin|manager|reception)$/.test(p.group)) room = 'game';   // admins on a Zoom '-break': Game & Leisure
           if (/^miguel/i.test(p.name) && aw.kind === 'break') room = 'smoke';   // Miguel: breaks in the smoking area
           else if (/^miguel/i.test(p.name) && aw.kind === 'lunch') room = minsAway < 15 ? 'pantry' : 'smoke';   // lunch: 15 min pantry, then the smoking area
           o.away = { kind: aw.kind, room: room, mins: minsAway, name: aw.name };
@@ -740,6 +741,7 @@
     [23.2, 24.3].forEach(function (x2, i) { box(1, 1.95, .8, ['#20243a', '#7a1f1f'][i], x2, .98, -1.85); box(.7, 1.3, .03, vend, x2, 1.15, -1.44, null, { noShadow: true }); });
     put('steel_frame_shelves_01', null, 38.6, 0, -1.8, 0, { h: 2.0 });
     plant(39.6, 5.6, 1); plant(23, 5.6, 1);
+    sofa(34.0, 5.6, Math.PI); sofa(23.6, 3.6, Math.PI / 2);   // break seats for admins
     decal([{ text: 'GAME & LEISURE', font: '800 110px Inter, system-ui, sans-serif', color: '#55607a', y: 80, ls: '12px' }], 6, .9, 31.3, -1.4, 0, .5);
 
     /* Training Room: front half of the east wing (Game & Leisure keeps the back half). Rows of tables facing the big screen. */
@@ -941,6 +943,7 @@
       lounge: [[-13.1, 7.35, 0], [-12.45, 7.35, 0], [-11.8, 7.35, 0], [-13.1, 12.55, Math.PI], [-12.45, 12.55, Math.PI], [-11.8, 12.55, Math.PI], [-15.2, 9.95, Math.PI / 2], [-9.7, 9.95, -Math.PI / 2], [-10.2, 13.8, Math.PI], [-9.0, 13.8, Math.PI]],
       smoke: [[45.6, 6.0, 0], [45.6, 7.2, Math.PI], [45.6, 10.8, 0], [45.6, 12.0, Math.PI], [43.6, 8.6, Math.PI / 2], [43.6, 9.4, Math.PI / 2]],
       client: [[12.75, 6.9, -Math.PI / 2], [10.65, 6.9, Math.PI / 2]],
+      game: [[33.35, 5.45, Math.PI], [34.0, 5.45, Math.PI], [34.65, 5.45, Math.PI], [23.75, 3.0, Math.PI / 2], [23.75, 3.6, Math.PI / 2], [23.75, 4.2, Math.PI / 2]],
       rr: [[-21.0, -1.75, Math.PI], [-20.3, -1.75, Math.PI], [-19.6, -1.75, Math.PI], [-17.0, -1.75, Math.PI], [-16.3, -1.75, Math.PI]]
     };
     box(2.4, .08, .5, '#b98d62', -20.3, .45, -1.75); box(.06, .45, .45, frameC, -21.4, .22, -1.75); box(.06, .45, .45, frameC, -19.2, .22, -1.75);
@@ -1389,7 +1392,7 @@
     else rows.push(['Zoom', OF.zoom ? 'not in the Help Desk room on ' + ofDayLabel(OF.zoom.date) : 'no data yet']);
     if (o.huddle) rows.push(['7:30 huddle', o.huddle === 'on' ? 'on time' : o.huddle === 'late' ? o.late + ' min late' : 'not in Zoom']);
     if (o.away && o.away.kind === 'client') rows.push(['Right now', 'In the Client Room · Zoom breakout ' + esc(o.away.name)]);
-    else if (o.away) rows.push(['Right now', ({ lunch: 'on lunch', break: 'on a break', rr: 'restroom' }[o.away.kind]) + ' · ' + o.away.mins + ' min · ' + ({ pantry: 'Pantry', lounge: 'Lounge', smoke: 'Smoking Area', rr: 'by the restrooms' }[o.away.room])]);
+    else if (o.away) rows.push(['Right now', ({ lunch: 'on lunch', break: 'on a break', rr: 'restroom' }[o.away.kind]) + ' · ' + o.away.mins + ' min · ' + ({ pantry: 'Pantry', lounge: 'Lounge', smoke: 'Smoking Area', rr: 'by the restrooms', game: 'Game & Leisure' }[o.away.room])]);
     if (o.bo && !(o.away && o.away.kind === 'client')) { var mates = o.bo.staff.filter(function (x) { return x !== o.p.id; }).map(function (x) { var q = OF.people.filter(function (y) { return y.p.id === x; })[0]; return q ? q.p.name : ''; }).concat(o.bo.applicants.map(function (a) { return a.n + ' (applicant)'; })).filter(Boolean); rows.push(['Zoom', 'In a breakout room' + (mates.length ? ' with ' + esc(mates.join(', ')) : '')]); }
     if (o.td) { rows.push(['Time Doctor', o.td.state === 'working' ? 'working now' : o.td.state === 'break' ? 'on a break' : 'idle ' + o.td.mins + ' min' + (o.idleAs ? ' · counted as ' + (o.idleAs === 'off' ? 'off' : o.idleAs) : '')]); rows.push(['First activity', ofPT(o.td.first)]); }
     else if (OF.td) rows.push(['Time Doctor', 'no activity today']);
