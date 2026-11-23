@@ -10,6 +10,10 @@
 //   SLACK_ALLOWED_CHANNELS optional comma-separated channel ids; default: every channel the bot is in
 //   FORMS_ROUTINE_TOKEN    claude.ai routine "Half-Day Event Forms → sheet + Keap check" > API token
 //   FORMS_ROUTINE_ID       optional; defaults to that routine's id below
+//   REALITY_ROUTINE_TOKEN  claude.ai routine "REality intro emails (Amrissa)" > API token
+//   REALITY_ROUTINE_ID     optional; defaults to that routine's id below
+// Slack app > Event Subscriptions > bot events must include reaction_added (scope reactions:read)
+// for the REality approvals.
 
 import crypto from 'node:crypto';
 
@@ -25,6 +29,12 @@ const DEFAULT_FORMS_ROUTINE_ID = 'trig_01FcH7xaGFM8euvCcku3ztta';
 // Kathleen or Miguel saying "done" (a reply in a forms thread, or one new message covering
 // several threads) starts the same routine's Keap check right away.
 const DONE_SAYERS = ['U0AJFNKSSBY', 'U0C6BGGHY3C'];
+// REality intro emails: a ✅ from Am (or Miguel, who approves the TEST runs) on one of the bot's
+// DMs starts the routine right away; the routine itself checks it is the right message and person.
+const DEFAULT_REALITY_ROUTINE_ID = 'trig_01D598veDZKKh5h5c4C2Y5N3';
+const BOT_USER = 'U0C8DNAJ82F';
+const REALITY_APPROVERS = ['U0AJFQK7J4W', 'U0C6BGGHY3C'];
+const CHECKS = ['white_check_mark', 'heavy_check_mark', 'ballot_box_with_check'];
 
 async function readRaw(req) {
   const chunks = [];
@@ -75,10 +85,24 @@ export function isFormsDone(ev) {
   return ev.thread_ts && ev.thread_ts !== ev.ts ? /^done\W*$/i.test(text) : /\bdone\b/i.test(text);
 }
 
+// A ✅ from Am or Miguel on a message the bot posted in a DM.
+export function isRealityApproval(ev) {
+  return ev.type === 'reaction_added' && CHECKS.includes(String(ev.reaction || '').split('::')[0])
+    && REALITY_APPROVERS.includes(ev.user) && ev.item_user === BOT_USER
+    && (ev.item || {}).type === 'message' && String((ev.item || {}).channel || '').startsWith('D');
+}
+
+const ROUTINES = {
+  replies: { id: () => process.env.CLAUDE_ROUTINE_ID || DEFAULT_ROUTINE_ID, token: () => process.env.CLAUDE_ROUTINE_TOKEN, label: 'the replies routine' },
+  forms: { id: () => process.env.FORMS_ROUTINE_ID || DEFAULT_FORMS_ROUTINE_ID, token: () => process.env.FORMS_ROUTINE_TOKEN, label: 'the forms routine' },
+  reality: { id: () => process.env.REALITY_ROUTINE_ID || DEFAULT_REALITY_ROUTINE_ID, token: () => process.env.REALITY_ROUTINE_TOKEN, label: 'the REality routine' },
+};
+
 async function fireRoutine(text, forms = false) {
-  const id = forms ? process.env.FORMS_ROUTINE_ID || DEFAULT_FORMS_ROUTINE_ID : process.env.CLAUDE_ROUTINE_ID || DEFAULT_ROUTINE_ID;
-  const token = forms ? process.env.FORMS_ROUTINE_TOKEN : process.env.CLAUDE_ROUTINE_TOKEN;
-  if (!token) throw new Error(`no routine token for ${forms ? 'the forms routine' : 'the replies routine'}`);
+  const r = ROUTINES[forms === true ? 'forms' : forms || 'replies'];
+  const id = r.id();
+  const token = r.token();
+  if (!token) throw new Error(`no routine token for ${r.label}`);
   const res = await fetch(`https://api.anthropic.com/v1/claude_code/routines/${id}/fire`, {
     method: 'POST',
     headers: {
@@ -112,6 +136,14 @@ export default async function handler(req, res) {
   if (req.headers['x-slack-retry-num']) return res.status(200).json({ ok: true, skipped: 'retry' });
 
   const ev = body.event || {};
+  if (body.type === 'event_callback' && isRealityApproval(ev)) {
+    try {
+      await fireRoutine(`Approval ✅ by ${ev.user} on the bot's DM message ts ${ev.item.ts} (channel ${ev.item.channel}). Run now.`, 'reality');
+    } catch (e) {
+      console.error('slack-events (reality approval):', e.message);
+    }
+    return res.status(200).json({ ok: true });
+  }
   // Forms PDF in the forms channel: the forms routine reads the channel itself, so it only
   // needs a nudge. A tag on the same post is left alone so the replies routine doesn't answer it.
   if (body.type === 'event_callback' && isFormsChannelPost(ev)) {
