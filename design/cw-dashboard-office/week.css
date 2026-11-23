@@ -1,0 +1,33 @@
+/* Weekly patterns */
+.wk-legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--ink-2); margin: 2px 0 10px; }
+.wk-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+.wk-chart { display: flex; align-items: stretch; gap: 8px; height: 220px; padding-top: 6px; }
+.wk-chart.wk-small { height: 160px; }
+.wk-col { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.wk-col .wk-stack { flex: 1; width: 100%; max-width: 46px; display: flex; flex-direction: column-reverse; border-radius: 6px; overflow: hidden; background: #eef0f5; }
+.wk-col .wk-stack i { display: block; width: 100%; }
+.wk-col b { font-size: 12px; font-variant-numeric: tabular-nums; }
+.wk-col small { font-size: 11px; color: var(--ink-2); white-space: nowrap; }
+.wk-col.today small { color: #2346c8; font-weight: 700; }
+.wk-note { margin: 8px 0 0; font-size: 12px; color: var(--ink-2); }
+.td-span3 { grid-column: 1 / -1; }
+.wk-grid-wrap { overflow-x: auto; }
+.wk-grid { border-collapse: collapse; width: 100%; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.wk-grid th, .wk-grid td { padding: 6px 8px; border-bottom: 1px solid var(--line); text-align: center; white-space: nowrap; }
+.wk-grid th:first-child, .wk-grid td:first-child { text-align: left; position: sticky; left: 0; background: var(--card, #fff); }
+.wk-grid thead th { font-size: 11px; color: var(--ink-2); font-weight: 600; }
+.wk-grid tr.wk-team td { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); background: #f6f7fa; }
+.wk-grid td.on { color: #1d5f3a; }
+.wk-grid td.late { color: #9a5b00; background: #fff6e6; }
+.wk-grid td.miss { color: #a7abbd; }
+.wk-grid td small { display: block; font-size: 10.5px; color: var(--ink-2); }
+
+/* Refresh + morning brief buttons */
+.of-refresh { cursor: pointer; border: 1px solid rgba(255, 255, 255, .16); color: #fff; }
+.of-refresh:hover { background: rgba(35, 70, 200, .95); }
+.of-refresh:disabled, .td-act:disabled { opacity: .75; cursor: default; }
+.td-acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; position: relative; z-index: 1; }
+.td-act { height: 34px; padding: 0 14px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .24); background: rgba(255, 255, 255, .1); color: #fff; font: 600 13px var(--font); cursor: pointer; }
+.td-act:hover { background: rgba(255, 255, 255, .18); }
+.vc-brief { margin-top: 10px; height: 32px; padding: 0 14px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .2); background: rgba(255, 255, 255, .08); color: #fff; font: 600 12.5px var(--font); cursor: pointer; }
+.vc-brief:hover { background: rgba(255, 255, 255, .16); }

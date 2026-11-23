@@ -11,6 +11,7 @@ Names are left exactly as people typed them in Zoom; the dashboard matches them 
 
 Usage:  python3 scripts/zoom-helpdesk-attendance.py [YYYY-MM-DD]   (default: today in Pacific time)
 Needs:  ZOOM_ACCOUNT_ID in the environment; the session's proxy adds the Zoom app credentials.
+Breakouts: a person in a breakout room carries "b" (the room id; same id = same room).
 Scopes: meeting:read:admin (past instances/participants), dashboard_meetings:read:admin (live room).
 """
 import json, os, sys, urllib.error, urllib.parse, urllib.request
@@ -76,7 +77,7 @@ def main():
         if err:
             notes.append('past %s: %s' % (i['start_time'], err.get('_error')))
         for p in ps:
-            sessions.append((p.get('name') or '', p.get('join_time'), p.get('leave_time') or None))
+            sessions.append((p.get('name') or '', p.get('join_time'), p.get('leave_time') or None, ''))
 
     # The room that is open right now, if any (people still in it have no leave time).
     live = False
@@ -86,14 +87,15 @@ def main():
         for p in ps:
             j = p.get('join_time')
             if j and pt_date(j) == day:
-                sessions.append((p.get('user_name') or '', j, p.get('leave_time') or None))
+                # bo_mtg_id / groupId mark a participant who is in a breakout room right now (same id = same room)
+                sessions.append((p.get('user_name') or '', j, p.get('leave_time') or None, p.get('bo_mtg_id') or p.get('groupId') or ''))
     elif err and err.get('_error') not in (404,):
         # 3301-style "meeting not live" comes back as 404/400; anything else is worth noting.
         if 'not' not in err.get('_body', '').lower():
             notes.append('live: %s' % err.get('_error'))
 
     people = {}
-    for name, j, l in sessions:
+    for name, j, l, bo in sessions:
         if not j:
             continue
         p = people.setdefault(name.strip(), {'n': name.strip(), 'j': j, 'l': l, 'open': False, 'sec': 0, 'k': 0, 's': []})
@@ -103,6 +105,8 @@ def main():
             p['j'] = j
         if l is None:
             p['open'] = True
+            if bo:
+                p['b'] = bo
         elif p['l'] is None or l > p['l']:
             p['l'] = l
         if l:
@@ -123,6 +127,7 @@ def main():
         'date': day, 'at': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'), 'meetingId': MEETING_ID,
         'room': 'Club Wealth Help Desk', 'huddle': HUDDLE_PT, 'live': live,
         'people': sorted(people.values(), key=lambda x: x['j']), 'notes': notes,
+        'breakouts': len({p['b'] for p in people.values() if p.get('b')}),
     }
     json.dump(doc, sys.stdout, ensure_ascii=False, separators=(',', ':'))
     print()

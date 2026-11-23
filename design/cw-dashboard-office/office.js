@@ -133,6 +133,7 @@
       var brk = String(z.n).match(/[-_ (]+\s*(break|lunch|rr|cr|restroom|bio)\b/i), openS = ss.filter(function (q) { return !q[1]; }).pop();
       if (!m) m = map[hit.p.id] = { j: z.j, l: z.l, open: !!z.open, m: z.m || 0, names: [z.n], s: ss.slice() };
       else { if (z.j < m.j) m.j = z.j; if (z.open) m.open = true; if (z.l && (!m.l || z.l > m.l)) m.l = z.l; m.m += z.m || 0; m.names.push(z.n); m.s = m.s.concat(ss); }
+      if (z.open && z.b) m.b = z.b;
       if (brk && z.open && openS) { var k = brk[1].toLowerCase(); m.away = { kind: k === 'lunch' ? 'lunch' : k === 'break' ? 'break' : 'rr', since: Date.parse(openS[0]), name: z.n }; }
     });
     Object.keys(map).forEach(function (k) { if (map[k].open) map[k].l = null; });
@@ -160,8 +161,17 @@
       return fresh ? !!z.open : true;
     };
     var guests = Z.other.filter(function (z) { return !internal.test(z.n) && visiting(z); });
-    OF.applicants = guests.filter(function (z) { return /_/.test(z.n); }).map(function (z) { var bits = z.n.split('_'); return { n: bits[0].trim() || z.n, pos: bits.slice(1).join(' ').trim(), raw: z.n, j: z.j, l: z.l, open: !!z.open }; });
-    OF.clients = guests.filter(function (z) { return !/_/.test(z.n); }).map(function (z) { return { n: z.n, j: z.j, l: z.l, open: !!z.open }; });
+    OF.applicants = guests.filter(function (z) { return /_/.test(z.n); }).map(function (z) { var bits = z.n.split('_'); return { n: bits[0].trim() || z.n, pos: bits.slice(1).join(' ').trim(), raw: z.n, j: z.j, l: z.l, open: !!z.open, b: fresh && atT == null && z.open ? z.b || '' : '' }; });
+    OF.clients = guests.filter(function (z) { return !/_/.test(z.n); }).map(function (z) { return { n: z.n, j: z.j, l: z.l, open: !!z.open, b: fresh && atT == null && z.open ? z.b || '' : '' }; });
+    /* Zoom breakout rooms (live only): people who share a breakout id are in the same room */
+    var BO = {}, boOf = function (b) { return BO[b] = BO[b] || { b: b, staff: [], clients: [], applicants: [] }; };
+    if (fresh && atT == null) {
+      Object.keys(Z.map).forEach(function (pid) { var m = Z.map[pid]; if (m.open && m.b) boOf(m.b).staff.push(pid); });
+      OF.clients.forEach(function (c) { if (c.b) boOf(c.b).clients.push(c); });
+      OF.applicants.forEach(function (a) { if (a.b) boOf(a.b).applicants.push(a); });
+    }
+    OF.breakouts = Object.keys(BO).map(function (k) { return BO[k]; });
+    OF.breakouts.forEach(function (r, i) { r.label = 'Breakout ' + (i + 1); r.clients.forEach(function (c) { c.room = r.staff.length ? 'client' : ''; c.with = r; }); r.applicants.forEach(function (a) { a.with = r; }); });
     var tdLive = Object.keys(OF.tdMap).some(function (k) { return OF.tdMap[k].state !== 'idle' || OF.tdMap[k].mins < 45; });
     OF.eff = OF.viewAuto ? (fresh || tdLive ? 'now' : 'day') : OF.view;
     $$('#of-view button').forEach(function (x) { x.setAttribute('aria-pressed', String(OF.replay != null ? x.dataset.v === 'replay' : x.dataset.v === OF.eff)); });
@@ -178,8 +188,11 @@
         o.present = !!(o.z && o.z.s.some(function (q) { return Date.parse(q[0]) <= at && (!q[1] || Date.parse(q[1]) >= at); }));
       } else o.present = p.boss ? true : OF.eff === 'day' ? !!(o.z || o.td) : (o.inNow || tdHere);
       o.slack = ofSlackFor(p);
-      o.away = null;
-      if (OF.replay == null && o.present && !p.boss) {
+      o.away = null; o.bo = null;
+      if (o.z && o.z.b && fresh && OF.replay == null) o.bo = (OF.breakouts || []).filter(function (r) { return r.b === o.z.b; })[0] || null;
+      if (OF.replay == null && o.present && !p.boss && o.bo && o.bo.clients.length) {
+        o.away = { kind: 'client', room: 'client', mins: 0, name: 'with ' + o.bo.clients.map(function (c) { return c.n; }).join(', ') };
+      } else if (OF.replay == null && o.present && !p.boss) {
         var aw = o.z && o.z.away && (fresh || OF.eff === 'now') ? o.z.away : o.td && o.td.state === 'break' ? { kind: 'break', since: o.td.breakStart || Date.now(), name: 'Time Doctor break' } : null;
         if (aw) {
           var minsAway = Math.max(0, Math.round((Date.now() - aw.since) / 60000)), room = aw.kind === 'lunch' ? 'pantry' : aw.kind === 'rr' ? 'rr' : 'lounge';
@@ -319,15 +332,15 @@
   function ofInit(AS) {
     var T = window.THREE, stage = $('#of-stage');
     var renderer = new T.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.6));
+    var hiDpr = Math.min(window.devicePixelRatio || 1, 1.5); renderer.setPixelRatio(hiDpr);
     renderer.outputEncoding = T.sRGBEncoding; renderer.toneMapping = T.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
-    renderer.shadowMap.enabled = true; renderer.shadowMap.type = T.PCFSoftShadowMap; renderer.shadowMap.autoUpdate = false;
+    renderer.shadowMap.enabled = true; renderer.shadowMap.type = T.PCFShadowMap; renderer.shadowMap.autoUpdate = false;
     stage.insertBefore(renderer.domElement, stage.firstChild);
     var scene = new T.Scene();
     var pm = new T.PMREMGenerator(renderer); scene.environment = pm.fromScene(new T.RoomEnvironment(), .04).texture; pm.dispose();
     var cam = new T.OrthographicCamera(-10, 10, 10, -10, 1, 400);
     var S = OF.three = { T: T, renderer: renderer, scene: scene, cam: cam, mats: {}, persons: [], lamps: [], night: null, dirty: true, pick: [],
-      theta: .72, phi: .6, zoom: .62, target: new T.Vector3(7, 0, 0), goal: null, size: [1, 1] };
+      theta: .72, phi: .6, zoom: .62, target: new T.Vector3(7, 0, 0), goal: null, size: [1, 1], hiDpr: hiDpr, lowK: Math.min(1, hiDpr), low: false, moveAt: 0, ft: 16, lastF: 0 };
     var hemi = new T.HemisphereLight(0xffffff, 0xd8d0c0, .35); scene.add(hemi);
     var sun = new T.DirectionalLight(0xfff3e2, 1.25); sun.position.set(35, 48, 24); sun.target.position.set(0, 0, 0); scene.add(sun.target); sun.castShadow = true;
     sun.shadow.mapSize.set(4096, 4096); var sc = sun.shadow.camera; sc.left = -60; sc.right = 60; sc.top = 40; sc.bottom = -40; sc.near = 1; sc.far = 140; sun.shadow.bias = -.0003; sun.shadow.normalBias = .03; sun.shadow.radius = 3;
@@ -753,6 +766,7 @@
       pantry: [[24.85, -7.95, 0], [25.6, -7.95, 0], [26.35, -7.95, 0], [30.55, -7.95, 0], [31.3, -7.95, 0], [32.05, -7.95, 0], [24.85, -6.45, Math.PI], [25.6, -6.45, Math.PI], [30.55, -6.45, Math.PI], [31.3, -6.45, Math.PI], [36.25, -7.95, 0], [37, -7.95, 0]],
       lounge: [[30.65, 8.55, 0], [31.3, 8.55, 0], [31.95, 8.55, 0], [30.65, 12.85, Math.PI], [31.3, 12.85, Math.PI], [31.95, 12.85, Math.PI], [28.1, 10.7, Math.PI / 2], [34.5, 10.7, -Math.PI / 2], [37.7, 13.05, Math.PI], [38.9, 13.05, Math.PI]],
       smoke: [[45.6, 6.0, 0], [45.6, 7.2, Math.PI], [45.6, 10.8, 0], [45.6, 12.0, Math.PI], [43.6, 8.6, Math.PI / 2], [43.6, 9.4, Math.PI / 2]],
+      client: [[7.05, 12.6, -Math.PI / 2], [4.95, 12.6, Math.PI / 2]],
       rr: [[-21.0, -1.75, Math.PI], [-20.3, -1.75, Math.PI], [-19.6, -1.75, Math.PI], [-17.0, -1.75, Math.PI], [-16.3, -1.75, Math.PI]]
     };
     box(2.4, .08, .5, '#b98d62', -20.3, .45, -1.75); box(.06, .45, .45, frameC, -21.4, .22, -1.75); box(.06, .45, .45, frameC, -19.2, .22, -1.75);
@@ -847,7 +861,8 @@
   }
   function ofReps() {
     var R = OF.reports; if (!R || !R.items) return [];
-    return R.items.filter(function (it) { return !/^@someone[^:]*from (yesterday|richmond|.*\(nov)/i.test(ofPlain(it.title)) && !/^Happy Weekend/i.test(ofPlain(it.title)); }).map(ofRep);
+    var today = ofTodayPT();   // the wall shows today's reports only (Pacific time)
+    return R.items.filter(function (it) { return it.posted && new Date(it.posted).toLocaleDateString('en-CA', { timeZone: 'America/Los_Angeles' }) === today; }).filter(function (it) { return !/^@someone[^:]*from (yesterday|richmond|.*\(nov)/i.test(ofPlain(it.title)) && !/^Happy Weekend/i.test(ofPlain(it.title)); }).map(ofRep);
   }
   function ofDrawWall() {
     var S = OF.three; if (!S || !S.wallCanvas) return;
@@ -855,7 +870,8 @@
     g.fillStyle = '#0b0f24'; g.fillRect(0, 0, 1600, 700);
     g.textAlign = 'left'; g.textBaseline = 'alphabetic';
     g.fillStyle = '#36c3f0'; g.font = '700 34px Inter, system-ui, sans-serif'; g.fillText('REPORT WALL · SLACK AUTOMATIONS', 44, 62);
-    g.fillStyle = '#8e94b8'; g.font = '500 24px Inter, system-ui, sans-serif'; g.fillText(R ? 'Updated ' + ofPT(R.at) + ' PT · click for every report' : 'Reports show here once the hourly refresh runs', 1556 - g.measureText(R ? 'Updated ' + ofPT(R.at) + ' PT · click for every report' : 'Reports show here once the hourly refresh runs').width, 62);
+    g.fillStyle = '#8e94b8'; g.font = '500 24px Inter, system-ui, sans-serif'; var sub = R ? 'Today · updated ' + ofPT(R.at) + ' PT' + (items.length ? ' · click for every report' : '') : 'Reports show here once the hourly refresh runs'; g.fillText(sub, 1556 - g.measureText(sub).width, 62);
+    if (R && !items.length) { g.fillStyle = '#c6cae4'; g.font = '500 34px Inter, system-ui, sans-serif'; g.textAlign = 'center'; g.fillText('No automation reports posted yet today', 800, 380); g.textAlign = 'left'; }
     items.forEach(function (it, i) {
       var x = 44 + (i % 3) * 512, y = 96 + Math.floor(i / 3) * 296, W = 488;
       g.fillStyle = '#151b3d'; g.fillRect(x, y, W, 276);
@@ -865,6 +881,13 @@
       g.fillStyle = '#c6cae4'; g.font = '400 22px Inter, system-ui, sans-serif'; ofWrap(g, it.sum, x + 24, y + 162, W - 44, 29, 3);
     });
     S.wallTex.needsUpdate = true;
+  }
+  function ofBoHtml() {
+    var L = OF.breakouts || [], nm = function (pid) { var q = (OF.people || []).filter(function (y) { return y.p.id === pid; })[0]; return q ? q.p.name : ''; };
+    if (!L.length) return '<h4>Zoom breakout rooms</h4><p>' + (OF.zoomFresh ? 'No one is in a breakout room right now.' : 'Shown while the Help Desk room is live.') + '</p>';
+    return '<h4>Zoom breakout rooms · ' + L.length + '</h4><table class="of-tbl"><thead><tr><th>Room</th><th>Staff</th><th>Visitors</th></tr></thead>' + L.map(function (r) {
+      return '<tr><td>' + esc(r.label) + '</td><td>' + esc(r.staff.map(nm).filter(Boolean).join(', ') || '—') + '</td><td>' + esc(r.clients.map(function (c) { return c.n; }).concat(r.applicants.map(function (a) { return a.n + ' (applicant)'; })).join(', ') || '—') + '</td></tr>';
+    }).join('') + '</table>';
   }
   function ofWin(title, html) {
     var w = $('#of-win'); $('#of-win-t').textContent = title; $('#of-win-b').innerHTML = html; w.hidden = false; $('#of-win-b').scrollTop = 0;
@@ -892,8 +915,9 @@
     }
     if (id === 'wall') {
       var R = OF.reports, L = ofReps();
-      if (!R || !L.length) return ofWin('Report wall', '<p>Reports show here once the hourly refresh runs.</p>');
-      var html = '<p class="of-win-note" style="margin:0 0 6px">Latest automated Slack reports · last 7 days · updated ' + ofPT(R.at) + ' PT</p>';
+      if (!R) return ofWin('Report wall', '<p>Reports show here once the hourly refresh runs.</p>');
+      if (!L.length) return ofWin('Report wall', '<p>No automated Slack reports posted yet today. Checked ' + ofPT(R.at) + ' PT.</p>');
+      var html = '<p class="of-win-note" style="margin:0 0 6px">Today’s automated Slack reports · updated ' + ofPT(R.at) + ' PT</p>';
       OF_REP_ORDER.forEach(function (cat) {
         var G = L.filter(function (x) { return x.cat === cat; }); if (!G.length) return;
         html += '<h4>' + esc(cat) + '</h4><div class="of-rep-grid">' + G.map(function (x) {
@@ -910,7 +934,7 @@
     if (id === 'client') {
       var cc = P.filter(function (o) { return o.p.group === 'reception' && o.present; }).map(function (o) { return esc(o.p.name); });
       return ofWin('Client Room', (OF.clients.length ? '<table class="of-tbl"><thead><tr><th>Client (Zoom name)</th><th class="n">Joined</th><th class="n">Left</th></tr></thead>' + rows(OF.clients.map(function (c) { return [esc(c.n), ofPT(c.j), c.l ? ofPT(c.l) : 'still in']; })) + '</table>' : '<p>No clients in the Help Desk room right now.</p>') +
-        '<h4>Client Care on duty</h4><p>' + (cc.join(', ') || 'No one at the front desk right now.') + '</p><p class="of-win-note">Visitors are people in the Club Wealth Help Desk Zoom who are not on the staff list and not named Name_Position (those are applicants). They wait on the reception sofas; extra visitors sit in the Client Room. Zoom does not report breakout rooms.</p>');
+        ofBoHtml() + '<h4>Client Care on duty</h4><p>' + (cc.join(', ') || 'No one at the front desk right now.') + '</p><p class="of-win-note">Visitors are people in the Club Wealth Help Desk Zoom who are not on the staff list and not named Name_Position (those are applicants). A client who is in a Zoom breakout room with a staff member sits in the Client Room with them; everyone else waits on the reception sofas. Breakout rooms are read from Zoom’s live participant list at each refresh; Zoom gives no room names, so they are numbered.</p>');
     }
   }
 
@@ -934,18 +958,23 @@
       if (ring) ring.setColorAt(r.ring, col.setHex(o.present ? (C[o.st] || C.none) : 0x5d6274));
     });
     Object.keys(S.peo).forEach(function (k) { S.peo[k].instanceMatrix.needsUpdate = true; });
-    Object.keys(S.awayIm || {}).forEach(function (k) { S.awayIm[k].instanceMatrix.needsUpdate = true; });
+    Object.keys(S.awayIm || {}).forEach(function (k) { S.awayIm[k].count = cnt[k] || 0; S.awayIm[k].visible = (cnt[k] || 0) > 0; S.awayIm[k].instanceMatrix.needsUpdate = true; });
     if (scr) scr.instanceColor.needsUpdate = true; if (ring) ring.instanceColor.needsUpdate = true;
     S.renderer.shadowMap.needsUpdate = true; S.dirty = true;
     if (S.clientIm) {
       var CM = new T.Matrix4(), CQ = new T.Quaternion(), CE = new T.Euler(), one = new T.Vector3(1, 1, 1);
-      S.clientSeats.forEach(function (q, i) { var on = i < OF.clients.length; S.clientIm.setMatrixAt(i, on ? CM.compose(new T.Vector3(q[0], 0, q[1]).add(new T.Vector3(Math.sin(q[2]), 0, Math.cos(q[2])).multiplyScalar(-.05)), CQ.setFromEuler(CE.set(0, q[2], 0)), one) : OF_ZERO); });
-      S.clientIm.instanceMatrix.needsUpdate = true;
+      /* clients in a breakout with a rep sit in the Client Room; everyone else waits on the reception sofas (overflow: Client Room) */
+      var free = [0, 1, 2, 3, 4, 5, 6, 8, 7, 9], roomC = [6, 8], n = 0;
+      OF.clients.forEach(function (c) { c.seat = null; });
+      OF.clients.forEach(function (c) { if (c.room === 'client' && roomC.length) { c.seat = roomC.shift(); free.splice(free.indexOf(c.seat), 1); } });
+      OF.clients.forEach(function (c) { if (c.seat == null && free.length) c.seat = free.shift(); });
+      OF.clients.forEach(function (c) { if (c.seat == null || n >= S.clientSeats.length) return; var q = S.clientSeats[c.seat]; S.clientIm.setMatrixAt(n++, CM.compose(new T.Vector3(q[0], 0, q[1]).add(new T.Vector3(Math.sin(q[2]), 0, Math.cos(q[2])).multiplyScalar(-.05)), CQ.setFromEuler(CE.set(0, q[2], 0)), one)); });
+      S.clientIm.count = n; S.clientIm.visible = n > 0; S.clientIm.instanceMatrix.needsUpdate = true;
     }
     if (S.applicantIm) {
       var AM = new T.Matrix4(), AQ = new T.Quaternion(), AE = new T.Euler(), one2 = new T.Vector3(1, 1, 1);
       S.applicantSeats.forEach(function (q, i) { S.applicantIm.setMatrixAt(i, i < OF.applicants.length ? AM.compose(new T.Vector3(q[0], 0, q[1]), AQ.setFromEuler(AE.set(0, q[2], 0)), one2) : OF_ZERO); });
-      S.applicantIm.instanceMatrix.needsUpdate = true;
+      S.applicantIm.count = Math.min(OF.applicants.length, S.applicantSeats.length); S.applicantIm.visible = S.applicantIm.count > 0; S.applicantIm.instanceMatrix.needsUpdate = true;
     }
     ofDrawHuddle(); ofDrawIsa(); ofDrawWall(); ofLabels(); ofList(); ofHud(); ofAttn(); ofReport();
     if (OF.sel) ofCard(OF.sel);
@@ -967,7 +996,7 @@
     var S = OF.three, w = S.size[0], h = S.size[1], vh = 36 / S.zoom, a = w / h;
     S.cam.left = -vh * a / 2; S.cam.right = vh * a / 2; S.cam.top = vh / 2; S.cam.bottom = -vh / 2; S.cam.updateProjectionMatrix();
     var d = 90; S.cam.position.set(S.target.x + d * Math.sin(S.theta) * Math.cos(S.phi), S.target.y + d * Math.sin(S.phi), S.target.z + d * Math.cos(S.theta) * Math.cos(S.phi));
-    S.cam.lookAt(S.target); S.dirty = true;
+    S.cam.lookAt(S.target); S.dirty = true; S.moveAt = performance.now();
   }
   function ofResize() {
     var S = OF.three; if (!S) return; var st = $('#of-stage'), w = st.clientWidth, h = st.clientHeight; if (!w || !h) return;
@@ -1025,10 +1054,11 @@
     S.persons.forEach(function (r) {
       var o = r.o; if (!o) return;
       var show = OF.filter === 'all' || OF.filter === o.p.group || (OF.filter === 'admin' && o.p.group === 'manager') || (OF.filter === 'isa' && (o.p.group === 'rm' || o.p.group === 'coach')), qm = !OF.q || (o.p.name + ' ' + o.p.full + ' ' + o.p.dept).toLowerCase().indexOf(OF.q) >= 0;
-      html += '<button type="button" class="of-chip' + (o.p.group === 'isa' ? ' isa' : o.p.group === 'manager' ? (o.p.boss ? ' boss' : ' mgr') : '') + ' st-' + o.st + (o.present ? '' : ' off') + (OF.sel === o.p.id ? ' sel' : '') + (o.attn && o.attn.length ? ' attn' : '') + (show && qm ? '' : ' dim') + '" data-pid="' + o.p.id + '" aria-label="' + esc(o.p.full) + '"><i></i>' + esc(o.p.name) + (o.badge && o.present ? '<em>' + esc(o.badge) + '</em>' : '') + (o.away ? '<em class="td-brk">' + ({ lunch: 'Lunch', break: 'Break', rr: 'RR' }[o.away.kind]) + ' ' + o.away.mins + 'm</em>' : o.present && o.td && o.td.state === 'idle' && o.td.mins >= 10 ? '<em class="td-idle">Idle ' + o.td.mins + 'm</em>' : o.present && o.td && o.td.state === 'break' ? '<em class="td-brk">Break</em>' : '') + '</button>';
+      html += '<button type="button" class="of-chip' + (o.p.group === 'isa' ? ' isa' : o.p.group === 'manager' ? (o.p.boss ? ' boss' : ' mgr') : '') + ' st-' + o.st + (o.present ? '' : ' off') + (OF.sel === o.p.id ? ' sel' : '') + (o.attn && o.attn.length ? ' attn' : '') + (show && qm ? '' : ' dim') + '" data-pid="' + o.p.id + '" aria-label="' + esc(o.p.full) + '"><i></i>' + esc(o.p.name) + (o.badge && o.present ? '<em>' + esc(o.badge) + '</em>' : '') + (o.away ? '<em class="td-brk">' + (o.away.kind === 'client' ? 'With client' : ({ lunch: 'Lunch', break: 'Break', rr: 'RR' }[o.away.kind]) + ' ' + o.away.mins + 'm') + '</em>' : o.present && o.td && o.td.state === 'idle' && o.td.mins >= 10 ? '<em class="td-idle">Idle ' + o.td.mins + 'm</em>' : o.present && o.td && o.td.state === 'break' ? '<em class="td-brk">Break</em>' : '') + '</button>';
     });
-    (OF.clients || []).slice(0, (S.clientSeats || []).length).forEach(function (c, i) {
-      html += '<button type="button" class="of-chip client" data-client="' + i + '" aria-label="Client ' + esc(c.n) + '"><i></i>' + esc(c.n.split(' ')[0]) + '<em>Client</em></button>';
+    (OF.clients || []).forEach(function (c, i) {
+      if (c.seat == null) return;
+      html += '<button type="button" class="of-chip client" data-client="' + c.seat + '" aria-label="Client ' + esc(c.n) + '"><i></i>' + esc(c.n.split(' ')[0]) + '<em>' + (c.room === 'client' ? 'In Client Room' : 'Client') + '</em></button>';
     });
     (OF.applicants || []).slice(0, (S.applicantSeats || []).length).forEach(function (a, i) {
       html += '<button type="button" class="of-chip client appl" data-appl="' + i + '" aria-label="Applicant ' + esc(a.n) + '"><i></i>' + esc(a.n.split(' ')[0]) + '<em>' + esc(a.pos || 'Applicant') + '</em></button>';
@@ -1037,7 +1067,7 @@
     S.chips = {}; $$('.of-chip', box).forEach(function (c) { S.chips[c.dataset.pid] = c; });
     S.dirty = true;
   }
-  function ofPlaceLabels() {
+  function ofPlaceLabels(moving) {
     var S = OF.three; if (!S || !S.chips) return;
     var v = new S.T.Vector3(), w = S.size[0], h = S.size[1];
     $$('#of-labels .of-chip.client:not(.appl)').forEach(function (c) {
@@ -1048,14 +1078,15 @@
       var q = S.applicantSeats[+c.dataset.appl]; v.set(q[0], (S.applicantHead || 1.3) + .3, q[1]).project(S.cam);
       c.style.transform = 'translate(' + ((v.x + 1) / 2 * w).toFixed(1) + 'px,' + ((1 - v.y) / 2 * h).toFixed(1) + 'px) translate(-50%,-100%)'; c.style.zIndex = '1600';
     });
-    $('#of-labels').classList.toggle('mini', S.zoom < 1.7);
+    var mini = S.zoom < 1.7; if (S.miniL !== mini) { S.miniL = mini; $('#of-labels').classList.toggle('mini', mini); }
     S.persons.forEach(function (r) {
       var c = S.chips[r.pid]; if (!c) return;
       if (r.awayPos) v.set(r.awayPos[0], r.headY + .32, r.awayPos[1]).project(S.cam); else v.set(r.pos.x, (r.o && r.o.present ? r.headY : 1.0) + .32, r.pos.z).project(S.cam);
       var x = (v.x + 1) / 2 * w, y = (1 - v.y) / 2 * h;
       if (x < -60 || x > w + 60 || y < -20 || y > h + 40) { c.style.visibility = 'hidden'; return; }
-      c.style.visibility = ''; c.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) translate(-50%,-100%)';
-      c.style.zIndex = String(1000 + Math.round((1 - v.z) * 500));
+      if (c.style.visibility) c.style.visibility = '';
+      c.style.transform = 'translate3d(' + x.toFixed(0) + 'px,' + y.toFixed(0) + 'px,0) translate(-50%,-100%)';
+      if (!moving) c.style.zIndex = String(1000 + Math.round((1 - v.z) * 500));
     });
   }
 
@@ -1104,7 +1135,9 @@
     if (o.z) { rows.push(['Zoom clock-in', ofPT(o.z.j)]); rows.push(['Zoom clock-out', o.z.l ? ofPT(o.z.l) : o.inNow ? 'still in' : '—']); rows.push(['Time in Zoom', Math.floor(o.z.m / 60) + 'h ' + (o.z.m % 60) + 'm']); }
     else rows.push(['Zoom', OF.zoom ? 'not in the Help Desk room on ' + ofDayLabel(OF.zoom.date) : 'no data yet']);
     if (o.huddle) rows.push(['7:30 huddle', o.huddle === 'on' ? 'on time' : o.huddle === 'late' ? o.late + ' min late' : 'not in Zoom']);
-    if (o.away) rows.push(['Right now', ({ lunch: 'on lunch', break: 'on a break', rr: 'restroom' }[o.away.kind]) + ' · ' + o.away.mins + ' min · ' + ({ pantry: 'Pantry', lounge: 'Lounge', smoke: 'Smoking Area', rr: 'by the restrooms' }[o.away.room])]);
+    if (o.away && o.away.kind === 'client') rows.push(['Right now', 'In the Client Room · Zoom breakout ' + esc(o.away.name)]);
+    else if (o.away) rows.push(['Right now', ({ lunch: 'on lunch', break: 'on a break', rr: 'restroom' }[o.away.kind]) + ' · ' + o.away.mins + ' min · ' + ({ pantry: 'Pantry', lounge: 'Lounge', smoke: 'Smoking Area', rr: 'by the restrooms' }[o.away.room])]);
+    if (o.bo && !(o.away && o.away.kind === 'client')) { var mates = o.bo.staff.filter(function (x) { return x !== o.p.id; }).map(function (x) { var q = OF.people.filter(function (y) { return y.p.id === x; })[0]; return q ? q.p.name : ''; }).concat(o.bo.applicants.map(function (a) { return a.n + ' (applicant)'; })).filter(Boolean); rows.push(['Zoom', 'In a breakout room' + (mates.length ? ' with ' + esc(mates.join(', ')) : '')]); }
     if (o.td) { rows.push(['Time Doctor', o.td.state === 'working' ? 'working now' : o.td.state === 'break' ? 'on a break' : 'idle ' + o.td.mins + ' min']); rows.push(['First activity', ofPT(o.td.first)]); }
     else if (OF.td) rows.push(['Time Doctor', 'no activity today']);
     if (o.slack) { if (o.slack.calls != null) rows.push(['Calls (ISA report)', String(o.slack.calls)]); if (o.slack.signups != null) rows.push(['Half-day sign-ups', String(o.slack.signups)]); }
@@ -1148,8 +1181,15 @@
     var S = OF.three; if (!OF.running || !S) return;
     requestAnimationFrame(ofLoop);
     if (S.goal) { S.target.lerp(S.goal.t, .14); S.zoom += (S.goal.z - S.zoom) * .14; if (S.target.distanceTo(S.goal.t) < .02 && Math.abs(S.goal.z - S.zoom) < .01) S.goal = null; ofCam(); }
+    var now = performance.now(), moving = now - S.moveAt < 160;
+    /* While dragging, rotating or zooming, draw at a lower resolution (lower still on slow GPUs);
+       one full-resolution frame follows as soon as the view stops. */
+    if (moving && S.dirty) {
+      if (S.lastF && now - S.lastF < 200) { S.ft = S.ft * .8 + (now - S.lastF) * .2; S.lowK = Math.max(.5, Math.min(Math.min(1, S.hiDpr), S.lowK * (S.ft > 26 ? .93 : S.ft < 17 ? 1.03 : 1))); }
+      if (!S.low || Math.abs(S.renderer.getPixelRatio() - S.lowK) > .08) { S.low = true; S.renderer.setPixelRatio(S.lowK); S.renderer.setSize(S.size[0], S.size[1], false); }
+    } else if (!moving && S.low) { S.low = false; S.renderer.setPixelRatio(S.hiDpr); S.renderer.setSize(S.size[0], S.size[1], false); S.dirty = true; }
     if (!S.dirty) return;
-    S.dirty = false; S.renderer.render(S.scene, S.cam); ofPlaceLabels();
+    S.dirty = false; S.lastF = now; S.renderer.render(S.scene, S.cam); ofPlaceLabels(moving);
   }
 
   function ofZoomSub() {

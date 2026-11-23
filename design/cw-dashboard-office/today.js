@@ -55,11 +55,12 @@
       mini('Calls · ' + (SL ? SL.dayLabel : 'last report'), SL ? Number(SL.totalCalls).toLocaleString('en-US') : '–', SL ? SL.totalSignups + ' half-day sign-ups' : '');
     // visitors
     var C = OF.clients || [], A = OF.applicants || [];
-    $('#td-vis').innerHTML = mini('Clients at reception', C.length, C.slice(0, 3).map(function (c) { return c.n; }).join(', ') || 'none right now', true) + mini('Applicants', A.length, A.slice(0, 3).map(function (a) { return a.n + (a.pos ? ' (' + a.pos + ')' : ''); }).join(', ') || 'none right now', true);
+    var CB = C.filter(function (c) { return c.room === 'client'; }).length;
+    $('#td-vis').innerHTML = mini('Clients', C.length, (C.slice(0, 3).map(function (c) { return c.n; }).join(', ') || 'none right now') + (CB ? ' · ' + CB + ' in a breakout room with the team' : ''), true) + mini('Applicants', A.length, A.slice(0, 3).map(function (a) { return a.n + (a.pos ? ' (' + a.pos + ')' : ''); }).join(', ') || 'none right now', true);
     // reports
     var R = OF.reports;
     $('#td-rep-sub').textContent = R ? 'from Slack · updated ' + ofPT(R.at) + ' PT' : 'from Slack';
-    var RL = ofReps(); $('#td-reps').innerHTML = RL.length ? RL.slice(0, 7).map(function (x) { return '<li><b>' + esc(x.head) + '</b><time>' + ofAgo(x.posted) + '</time><small>' + esc(x.cat) + (x.sum ? ' · ' + esc(x.sum) : '') + '</small></li>'; }).join('') : '<li class="td-empty">Reports appear after the hourly refresh runs.</li>';
+    var RL = ofReps(); $('#td-reps').innerHTML = RL.length ? RL.slice(0, 7).map(function (x) { return '<li><b>' + esc(x.head) + '</b><time>' + ofAgo(x.posted) + '</time><small>' + esc(x.cat) + (x.sum ? ' · ' + esc(x.sum) : '') + '</small></li>'; }).join('') : (R ? '<li class="td-empty">No automation reports posted yet today.</li>' : '<li class="td-empty">Reports appear after the hourly refresh runs.</li>');
   }
   function tdOpenPerson(pid) {
     tab('office');

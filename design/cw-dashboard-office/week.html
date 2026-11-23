@@ -1,0 +1,20 @@
+    <section class="view td-view wk-view" data-view="week" hidden aria-label="Weekly patterns">
+      <div class="td-kpis" id="wk-kpis"></div>
+      <div class="td-grid">
+        <article class="td-card td-span2">
+          <header><h3>Huddle and clock-ins by day</h3><span class="td-sub" id="wk-sub">Help Desk Zoom · last 10 working days + today</span></header>
+          <div class="wk-legend"><span><i style="background:#2346c8"></i>On time to the 7:30 huddle</span><span><i style="background:#f0a83a"></i>Late</span><span><i style="background:#d5d8e3"></i>Not in Zoom that day</span></div>
+          <div class="wk-chart" id="wk-chart" role="img" aria-label="Staff on time, late and missing per day"></div>
+        </article>
+        <article class="td-card">
+          <header><h3>Break check · Actions by day</h3><button type="button" class="td-link" data-go="brk">Break check →</button></header>
+          <div class="wk-chart wk-small" id="wk-brk" role="img" aria-label="Break-check Actions per day"></div>
+          <p class="wk-note" id="wk-brk-note"></p>
+        </article>
+        <article class="td-card td-span3">
+          <header><h3>Each person, day by day</h3><span class="td-sub">Grouped by team, A–Z · time = when they joined the Help Desk Zoom</span></header>
+          <div class="wk-grid-wrap"><table class="wk-grid" id="wk-grid"></table></div>
+        </article>
+      </div>
+    </section>
+

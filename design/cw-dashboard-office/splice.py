@@ -27,14 +27,15 @@ once("    if (id === 'eod') eodLoad(false);\n", "    if (id === 'eod') eodLoad(f
 once("  var start = (location.hash || '').slice(1);", js + "\n  var start = (location.hash || '').slice(1);")
 
 # ===== Remodel: Today home, Sales overview under Sales, voice mode =====
-tcss = open(os.path.join(d, 'today.css')).read(); thtml = open(os.path.join(d, 'today.html')).read(); tjs = open(os.path.join(d, 'kokoro.js')).read() + open(os.path.join(d, 'today.js')).read()
+tcss = open(os.path.join(d, 'today.css')).read(); thtml = open(os.path.join(d, 'today.html')).read(); tjs = open(os.path.join(d, 'kokoro.js')).read() + open(os.path.join(d, 'today.js')).read() + open(os.path.join(d, 'brief.js')).read() + open(os.path.join(d, 'week.js')).read()
+tcss += open(os.path.join(d, 'week.css')).read(); thtml += open(os.path.join(d, 'week.html')).read()
 once('.tr-empty { background: var(--card); border: 1px dashed var(--line-2); border-radius: 12px; padding: 22px; text-align: center; color: var(--ink-2); }\n', '.tr-empty { background: var(--card); border: 1px dashed var(--line-2); border-radius: 12px; padding: 22px; text-align: center; color: var(--ink-2); }\n' + tcss)
 import re as _re
 # Main dashboard stays the home page exactly as before; Today (live team) sits right under it
-once('      <button type="button" data-tab="tara">', '      <button type="button" data-tab="today"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg>Today · live team</button>\n      <button type="button" data-tab="tara">')
+once('      <button type="button" data-tab="tara">', '      <button type="button" data-tab="today"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg>Today · live team</button>\n      <button type="button" data-tab="week"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Weekly patterns</button>\n      <button type="button" data-tab="tara">')
 once('<section class="view" data-view="main" aria-label="Main dashboard">', thtml + '    <section class="view" data-view="main" aria-label="Main dashboard">')
-once("main: ['Main dashboard', 'Service sales at a glance']", "today: ['Today · live team', 'Everything that needs you, live'], main: ['Main dashboard', 'Service sales at a glance']")
-once("if (id === 'office') officeOpen(); else officeClose();\n", "if (id === 'office') officeOpen(); else officeClose();\n    if (id === 'today') tdStart();\n")
+once("main: ['Main dashboard', 'Service sales at a glance']", "today: ['Today · live team', 'Everything that needs you, live'], week: ['Weekly patterns', 'Huddle, clock-ins and break checks over the last two weeks · team totals first'], main: ['Main dashboard', 'Service sales at a glance']")
+once("if (id === 'office') officeOpen(); else officeClose();\n", "if (id === 'office') officeOpen(); else officeClose();\n    if (id === 'today') tdStart();\n    if (id === 'week') wkStart();\n")
 once('\n  }\n  liveLoad();\n})();', '\n' + tjs + '\n  }\n  liveLoad();\n})();')
 # office view: hide the date range + keep the main padding
 open(out, 'w').write(s)
