@@ -45,6 +45,8 @@
     return out;
   })();
 
+  /* Slack member ids (Club Wealth workspace) for the card's "Message on Slack" button: opens a DM in Slack, sends nothing */
+  var OF_SLACK_TEAM = 'T01SHQLDXTR', OF_SLACK = {"Camille": "U0A9JTDE0SH", "Jowelyn Masangya": "U0BU6FQJ3DL", "Joshua Ymmanuel M. Espulgar": "U0AKE2S1JJU", "Jizel Verdida Cañada": "U0AJ4ASMJVD", "Andrea Uy": "U0AJX1UUZKK", "Amrissa Marbella": "U0AJFQK7J4W", "Liz Sarreal": "U0AJBMGH96F", "Ali-Ace Berico": "U0AJJ7HK9MY", "Kathleen": "U0AJFNKSSBY", "Jay Mar Avelino": "U0AJ2CDD215", "Randy Lopez": "U0AJNL7BALC", "Becky Namarome": "U0AJY09K35F", "Joe Aynndrian A. Leonidas": "U0AJKRCUXPC", "Maria Vanessa G. Sembrano": "U0AKE3VNR40", "Andrew Kuji Kimura": "U0AKE3WA7KJ", "Beula Kryss Jambalos": "U0AJPDK0QBW", "Ebimo Dogubo": "U0AJ4C45LS3", "Francis Narciso": "U0AJGCVCCGM", "Marcia": "U0AJPDKGPL4", "Ron Anderson": "U03JLAF5P17", "Krishan Miguel Ababon": "U0C6BGGHY3C", "Omerson Cruz": "U0AJBDP2HCK", "Faith \"Aaevah\" Akpan": "U0AJQUYFQ3F", "Alleah Joy Galam": "U0AKNL23CRE", "Brian Ceniza": "U0C9Y1ANQ68", "Ma. Christina Labadia": "U0BHV3FDL91", "Dave Tamparong": "U0BJ38FNKND", "Epifanio Jhan Elvinze Melano": "U0C60CAEPDL", "Emie Jane Esclamado": "U0C6AF6LKL6", "Gabriel Garin": "U0BJL2SCGTU", "Hazel Bonayon": "U0C9N3KUL11", "Gehaimy Jam David": "U0C69K0HJ86", "Jefferson Napisa": "U0C9P1RB3A9", "Jeriza Trasmil": "U0AJSABG0Q6", "Jonalisa Arabiana Caponpon": "U0C69K1GCF8", "Katrina Buan": "U0AJUC1C9DY", "L.A Patulan": "U0C60C6M1F0", "Lily Delantes": "U0AJQUYBJ05", "Lolita Mae Esma": "U0C649AF3S5", "Mark Jayson Abarcar": "U0AJCU99M1D", "Melchan Portugal": "U0C6F8AC1L4", "RJ Torsiende": "U0AJY0ATLTW", "Rod Velasco": "U0BHL0AA7T9", "Jerome Flores": "U0C626G4LCS", "Ruth Ann L. Lagahit": "U0AJY0ARPFE", "Nilma Shayne Balmes": "U0BJ527KATW"};
   var OF_TD_CO = 'ZEmW6RI99WzV9fET';   // Time Doctor company: Club Wealth
   var OF = { applicants: [], reports: null, clients: [], td: null, tdMap: {}, slack: null, replay: null, started: false, three: null, people: [], zoom: null, view: 'now', viewAuto: true, eff: 'now', filter: 'all', q: '', sel: null, running: false };
   function ofNorm(s) { return String(s || '').split('_')[0].toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z ]+/g, ' ').trim().split(/\s+/).filter(Boolean); }
@@ -861,8 +863,8 @@
   }
   function ofReps() {
     var R = OF.reports; if (!R || !R.items) return [];
-    var today = ofTodayPT();   // the wall shows today's reports only (Pacific time)
-    return R.items.filter(function (it) { return it.posted && new Date(it.posted).toLocaleDateString('en-CA', { timeZone: 'America/Los_Angeles' }) === today; }).filter(function (it) { return !/^@someone[^:]*from (yesterday|richmond|.*\(nov)/i.test(ofPlain(it.title)) && !/^Happy Weekend/i.test(ofPlain(it.title)); }).map(ofRep);
+    var today = ofTodayPT(), seen = {};   // the wall shows today's reports only (Pacific time); the same report posted to two channels shows once
+    return R.items.filter(function (it) { return it.posted && new Date(it.posted).toLocaleDateString('en-CA', { timeZone: 'America/Los_Angeles' }) === today; }).filter(function (it) { return !/^@someone[^:]*from (yesterday|richmond|.*\(nov)/i.test(ofPlain(it.title)) && !/^Happy Weekend/i.test(ofPlain(it.title)); }).map(ofRep).filter(function (x) { var k = x.head + '|' + ofPlain(x.text).replace(/\s+/g, ' ').trim(); if (seen[k]) return false; seen[k] = 1; return true; });
   }
   function ofDrawWall() {
     var S = OF.three; if (!S || !S.wallCanvas) return;
@@ -1155,7 +1157,7 @@
     extra = extraA + extra;
     if (o.z && o.z.names.length) extra += '<p><span>Zoom name' + (o.z.names.length > 1 ? 's' : '') + '</span>' + esc(o.z.names.join(', ')) + '</p>';
     el.innerHTML = '<div class="of-card-h"><span><b>' + esc(o.p.full) + '</b><small>' + esc(o.p.group === 'reception' ? 'Reception · Client Care' : o.p.dept) + (o.present ? ' · at desk' : '') + '</small></span><button type="button" class="x" aria-label="Close">×</button></div><dl>' +
-      rows.map(function (r) { return '<dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd>'; }).join('') + '</dl>' + extra + go;
+      rows.map(function (r) { return '<dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd>'; }).join('') + '</dl>' + extra + '<div class="of-card-acts">' + go + (OF_SLACK[o.p.full] ? '<a class="slk" href="https://slack.com/app_redirect?team=' + OF_SLACK_TEAM + '&amp;channel=' + OF_SLACK[o.p.full] + '" target="_blank" rel="noopener" title="Opens a direct message in Slack. Nothing is sent until you send it there.">Message ' + esc(o.p.name) + ' on Slack</a>' : '') + '</div>';
     el.hidden = false;
     $('.x', el).onclick = function () { OF.sel = null; el.hidden = true; ofLabels(); ofList(); };
     var b = $('.go', el); if (b) b.onclick = function () {

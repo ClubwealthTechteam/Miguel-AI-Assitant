@@ -58,6 +58,9 @@
 .of-card dt { color: #8e94b8; } .of-card dd { margin: 0; text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .of-card p { margin: 0; color: #c6cae4; overflow-wrap: anywhere; }
 .of-card p span { color: #8e94b8; display: block; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 2px; }
+.of-card-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.of-card .slk { display: inline-flex; align-items: center; gap: 6px; background: #4a154b; color: #fff; font: 700 12px var(--font); padding: 7px 11px; border-radius: 8px; text-decoration: none; }
+.of-card .slk:hover { background: #611f69; }
 .of-card .go { align-self: flex-start; border: 0; background: #36c3f0; color: #070738; font: 700 12px var(--font); padding: 7px 11px; border-radius: 8px; cursor: pointer; }
 @media (max-width: 900px) {
   .of-wrap { grid-template-columns: 1fr; grid-template-rows: minmax(420px, 62vh) auto; height: auto; }
