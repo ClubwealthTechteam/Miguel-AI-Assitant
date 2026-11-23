@@ -2,6 +2,7 @@
   /* ---------- Today: one home screen that pulls the live team data and the sales numbers together ---------- */
   var TD = { ver: -1, timer: null, started: false };
   function tdStart() {
+    ofLoadActive().then(function (l) { if (l && !$('[data-view="today"]').hidden) { ofBuild(); tdRender(); } });
     if (!TD.started) {
       TD.started = true;
       ofZoomSub(); ofTdLoad(); brkLoad(false); eodLoad(false);

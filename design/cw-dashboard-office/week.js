@@ -1,6 +1,7 @@
   /* ---------- Weekly patterns: team totals per day from the Help Desk Zoom (last 10 working days) + break-check Actions ---------- */
   var WK = { doc: null, sub: false };
   function wkStart() {
+    ofLoadActive().then(function (l) { if (l) wkRender(); });
     ofZoomSub(); brkLoad(false);
     if (!WK.sub && window.claude && claude.use) {
       WK.sub = true;
