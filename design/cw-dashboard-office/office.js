@@ -592,13 +592,15 @@
     box(.6, 1.1, .6, '#e9edf2', 14.6, .55, 14.4); cyl(.16, .16, .45, mat('#bfe3f5', { roughness: .1, transparent: true, opacity: .7 }), 14.6, 1.33, 14.4, null, 16);
     plant(8.9, 14.4, 1.1); plant(14.6, 4.9, .9);
     decal([{ text: 'APPLICANT LOUNGE', font: '800 100px Inter, system-ui, sans-serif', color: '#7a6448', y: 75, ls: '10px' }], 5.6, .8, 11.7, 14.3, 0, .5);
-    box(1.6, .06, 4.2, '#3e2a1d', 18.7, .76, 9.4, null, { roughness: .4 }); box(1.2, .72, .08, frameC, 18.7, .38, 7.6); box(1.2, .72, .08, frameC, 18.7, .38, 11.2);
-    [[17.55, 8.2, Math.PI / 2], [17.55, 9.4, Math.PI / 2], [17.55, 10.6, Math.PI / 2], [19.85, 8.2, -Math.PI / 2], [19.85, 9.4, -Math.PI / 2], [19.85, 10.6, -Math.PI / 2]].forEach(function (q) { hChair(q[0], q[1], q[2]); });
+    /* Applicant Room: one long table with 10 chairs (4 per side + one at each end) */
+    box(1.6, .06, 6.0, '#3e2a1d', 18.7, .76, 9.4, null, { roughness: .4 }); box(1.2, .72, .08, frameC, 18.7, .38, 6.8); box(1.2, .72, .08, frameC, 18.7, .38, 12.0);
+    var arChairs = [[17.55, 7.3, Math.PI / 2], [17.55, 8.7, Math.PI / 2], [17.55, 10.1, Math.PI / 2], [17.55, 11.5, Math.PI / 2], [19.85, 7.3, -Math.PI / 2], [19.85, 8.7, -Math.PI / 2], [19.85, 10.1, -Math.PI / 2], [19.85, 11.5, -Math.PI / 2], [18.7, 5.75, 0], [18.7, 13.05, Math.PI]];
+    arChairs.forEach(function (q) { hChair(q[0], q[1], q[2]); });
     var aTv = new T.Mesh(new T.PlaneGeometry(2.6, 1.46), new T.MeshBasicMaterial({ color: 0x0d2b86, toneMapped: false })); aTv.position.set(18.7, 1.7, 4.36); aTv.userData.keep = 1; aTv.userData.screen = 'applicants'; scene.add(aTv); S.screenMeshes.push(aTv);
     box(2.7, 1.56, .06, '#111216', 18.7, 1.7, 4.3); plant(21.4, 14.4, 1);
     decal([{ text: 'APPLICANT ROOM', font: '800 100px Inter, system-ui, sans-serif', color: '#55607a', y: 75, ls: '10px' }], 5.2, .75, 18.7, 14.3, 0, .5);
     S.applicantSeats = [[9.4, 6.55, 0], [10.6, 6.55, 0], [12.8, 6.55, 0], [14.0, 6.55, 0], [9.4, 12.45, Math.PI], [10.6, 12.45, Math.PI], [12.8, 12.45, Math.PI], [14.0, 12.45, Math.PI],
-      [17.55, 8.2, Math.PI / 2], [17.55, 9.4, Math.PI / 2], [17.55, 10.6, Math.PI / 2], [19.85, 8.2, -Math.PI / 2], [19.85, 9.4, -Math.PI / 2], [19.85, 10.6, -Math.PI / 2]];
+    ].concat(arChairs);
 
     /* East wing: Pantry & Dining (back) and Game & Leisure (front), glass between them, Smoking Area outside */
     gwall(22.2, -2.4, 40.4, -2.4, [[30.4, 32.2]]);

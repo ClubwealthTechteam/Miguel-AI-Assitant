@@ -1,10 +1,12 @@
-/* Collapsible left menu: icons-only rail (desktop) */
-.side-tog { display: flex; align-items: center; gap: 10px; width: 100%; border: 0; background: none; color: #9fa3d1; font: 500 13px var(--font); padding: 8px 10px; border-radius: 8px; cursor: pointer; text-align: left; }
-.side-tog:hover { color: #fff; background: rgba(255, 255, 255, .06); }
-.side-tog svg { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s; }
+/* Collapsible left menu: icons-only rail (desktop). The toggle is a round tab on the menu's right edge. */
+.side-tog { position: fixed; z-index: 60; top: 30px; left: 223px; width: 26px; height: 26px; display: grid; place-items: center; padding: 0; border-radius: 50%; border: 1px solid rgba(7, 7, 56, .12); background: #fff; color: #070738; cursor: pointer; box-shadow: 0 2px 8px -2px rgba(7, 7, 56, .35); transition: left .2s ease, background .15s; }
+.side-tog:hover { background: #36c3f0; }
+.side-tog svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s; }
 @media (min-width: 901px) {
   .app { transition: grid-template-columns .2s ease; }
   .app.side-mini { grid-template-columns: 68px minmax(0, 1fr); background: linear-gradient(90deg, var(--navy) 68px, transparent 68px); }
+  .app.side-mini .side-tog { left: 55px; }
+  .app.side-mini .side-tog svg { transform: rotate(180deg); }
   .app.side-mini .side { padding-left: 12px; padding-right: 12px; overflow-x: hidden; }
   .app.side-mini .side-logo { justify-content: center; padding: 0 0 6px; }
   .app.side-mini .side-logo > span:not(.mark), .app.side-mini .side-user > span:not(.ava) { display: none; }
@@ -14,8 +16,6 @@
   .app.side-mini .side nav button[aria-current="page"]::before { left: -12px; }
   .app.side-mini .side .count { position: absolute; top: 5px; right: 7px; min-width: 0; width: 8px; height: 8px; padding: 0; font-size: 0; }
   .app.side-mini .side nav .subnav, .app.side-mini .side nav .caret { display: none !important; }
-  .app.side-mini .side-tog { justify-content: center; font-size: 0; gap: 0; padding: 10px 0; }
-  .app.side-mini .side-tog svg { transform: rotate(180deg); }
 }
 @media (max-width: 900px) { .side-tog { display: none; } }
 

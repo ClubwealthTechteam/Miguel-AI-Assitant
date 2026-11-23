@@ -2,8 +2,8 @@
   (function () {
     var app = document.getElementById('app'), user = document.querySelector('.side-user'); if (!app || !user) return;
     var b = document.createElement('button'); b.type = 'button'; b.className = 'side-tog'; b.id = 'side-tog';
-    b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/><path d="M20 4v16"/></svg><span>Collapse menu</span>';
-    user.parentNode.insertBefore(b, user);
+    b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>';
+    app.appendChild(b);
     document.querySelectorAll('.side nav button[data-tab], .side nav .nav-group').forEach(function (x) { if (!x.title) x.title = x.textContent.replace(/\s+/g, ' ').trim(); });
     var set = function (mini) {
       app.classList.toggle('side-mini', mini); b.setAttribute('aria-expanded', String(!mini));
