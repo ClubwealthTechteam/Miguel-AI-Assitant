@@ -437,7 +437,7 @@
 
     /* Building shell: light floors, white walls, black-framed glass outside */
     box(63, .32, 30.6, '#f1eee8', 9.15, -.16, 0);
-    [[-12.5, -5.5, 19, 19, '#ece9e3'], [12.75, -5.5, 18.9, 19, '#e2e4e7'], [0, 10, 14, 10, '#f5f2ed'], [-15, 10, 14, 10, '#c9a37a'], [15.2, 10, 14, 10, '#b98d62'], [0, -5.5, 6, 19, '#eeeae3']].forEach(function (f) { plane(f[2] - .1, f[3] - .1, f[4], f[0], .005, f[1]); });
+    [[-12.5, -5.5, 19, 19, '#ece9e3'], [12.75, -5.5, 18.9, 19, '#e2e4e7'], [0, 10, 14, 10, '#f5f2ed'], [-23.7, 10, 13.8, 10, '#c9a37a'], [15.2, 10, 14, 10, '#b98d62'], [0, -5.5, 6, 19, '#eeeae3']].forEach(function (f) { plane(f[2] - .1, f[3] - .1, f[4], f[0], .005, f[1]); });
     var wallC = '#f7f5f1';
     box(63, 3.4, .3, wallC, 9.15, 1.7, -15.15); 
     for (var wx = -18; wx <= 37; wx += 5.5) { if (Math.abs(wx) < 3 || wx === -12.5 || wx === -7) continue; box(4.2, 1.8, .05, mat('#a9cde0', { roughness: .08, metalness: .3 }), wx, 1.9, -14.98); box(4.3, 1.9, .04, frameC, wx, 1.9, -15.0, null, { noShadow: true }); }
@@ -452,10 +452,10 @@
         box(alongX ? L : .32, .1, alongX ? .32 : L, frameC, cx, 3.4, cz);
       });
     }
-    curtain(-22.3, 15.15, 40.6, 15.15, [-11.35, -6.95]); curtain(40.45, -15.3, 40.45, 15.3, [7.3, 10.3]);
+    curtain(-22.3, 15.15, 40.6, 15.15, [-11.35, -6.95]); curtain(40.45, -15.3, 40.45, 15.3, [4.4, 6.2]);
     /* Staff Lounge wing: right beside the Huddle Room */
     box(8.3, .32, 30.45, '#f1eee8', -26.45, -.16, -.075);
-    plane(8.1, 10.1, '#b98d62', -26.45, .006, 9.975); plane(5.2, 4.2, '#a99987', -26.45, .012, 9.95);
+    plane(8.5, 10.1, '#b98d62', -12.45, .006, 9.975); plane(5.2, 4.2, '#a99987', -12.45, .012, 9.95);
     plane(8.1, 20, '#ece9e3', -26.45, .005, -5.2);
     curtain(-30.6, -15.3, -30.6, 15.15); curtain(-30.6, 15.15, -22.3, 15.15);
     box(8.55, 3.4, .3, wallC, -26.45, 1.7, -15.15);
@@ -551,9 +551,9 @@
     decal([{ text: 'RECEPTION · CLIENT CARE', font: '800 92px Inter, system-ui, sans-serif', color: '#8a8070', y: 70, ls: '10px' }], 6.4, .85, 0, 10.6, 0, .5);
 
     /* Huddle Room: racetrack conference table (Admins | ISA & RM) facing the huddle screen */
-    var hx = -15;
-    gwall(-8.15, 4.8, -8.15, 15, [[5.2, 7.6]]); gwall(-22, 4.8, -8.15, 4.8, []);
-    gwall(-22.15, 4.8, -22.15, 15.15, [[9.0, 10.8]]); gwall(-30.6, 4.8, -22.3, 4.8, [[-25.4, -24.0]]);   // frosted wall + door between the Huddle Room and the Staff Lounge
+    var hx = -23.675;
+    gwall(-8.15, 4.8, -8.15, 15, [[5.2, 7.6]]); gwall(-30.6, 4.8, -8.15, 4.8, [[-27.2, -25.8], [-13.2, -11.8]]);
+    gwall(-16.75, 4.8, -16.75, 15.15, [[9.0, 10.8]]);   // frosted wall + door between the Huddle Room (left) and the Staff Lounge (right)
     /* Racetrack (stadium) conference table: straight sides, rounded ends, a dark cable slot down the middle.
        Split across the table: Admins at the right end, ISA & RM at the left end. Chairs in rows along both sides and round the ends. */
     var pcx = hx, pcz = 10.15, Ls = 8.0, R = 1.6, Rc = R + .7, gapT = .22, nSeats = 0;
@@ -590,8 +590,8 @@
     var hudT = new T.CanvasTexture(hudC); hudT.encoding = T.sRGBEncoding; S.hudCanvas = hudC; S.hudTex = hudT;
     box(5.4, 3.05, .1, '#111216', hx, 1.85, 5.3);
     var tv = new T.Mesh(new T.PlaneGeometry(5.2, 2.92), new T.MeshBasicMaterial({ map: hudT, toneMapped: false })); tv.position.set(hx, 1.85, 5.36); tv.userData.keep = 1; tv.userData.screen = 'huddle'; scene.add(tv); S.screenMeshes.push(tv);
-    plant(-21.4, 14.4, 1.1); plant(-8.8, 14.4, 1.1);
-    decal([{ text: 'HUDDLE ROOM', font: '800 120px Inter, system-ui, sans-serif', color: '#6b5a44', y: 80, ls: '14px' }], 3.6, .55, -6.4, 6.2, Math.PI / 2, .6);
+    plant(-30.0, 14.4, 1.1); plant(-17.4, 14.4, 1.1);
+    decal([{ text: 'HUDDLE ROOM', font: '800 120px Inter, system-ui, sans-serif', color: '#6b5a44', y: 80, ls: '14px' }], 3.6, .55, -23.7, 14.45, 0, .6);
 
     /* Indoor trees in big round planters */
     [[0, 1.6], [-5.6, 14.0]].forEach(function (q) {
@@ -635,7 +635,8 @@
     gwall(8.2, 9.6, 15.2, 9.6, []);   // splits the old lounge: Client Room (inner half) | Applicant Lounge (street half)
     plane(6.9, 5.3, '#d9cdbb', 11.7, .008, 6.9); plane(6.9, 5.3, '#cdbba3', 11.7, .008, 12.3); plane(6.9, 10.6, '#d9d2c6', 18.7, .008, 9.65);
     /* Client Room: a client who comes to the front desk is taken here and a Client Care rep assists them */
-    cyl(.6, .6, .05, '#efe9de', 11.7, .74, 6.9, null, 32); cyl(.06, .08, .72, frameC, 11.7, .37, 6.9, null, 12);
+    box(1.3, .06, .95, '#5b3d29', 11.7, .74, 6.9, null, { roughness: .35 }); [[-.55, -.38], [.55, -.38], [-.55, .38], [.55, .38]].forEach(function (q) { box(.05, .71, .05, frameC, 11.7 + q[0], .36, 6.9 + q[1]); });
+    cyl(.12, .1, .14, '#e9e2d6', 11.7, .84, 6.9, null, 16);
     crChairs.forEach(function (q) { put('modern_arm_chair_01', null, q[0], 0, q[1], q[2], { h: .95 }); });
     plant(14.6, 4.9, .9); plant(8.8, 5.0, .9);
     decal([{ text: 'CLIENT ROOM', font: '800 120px Inter, system-ui, sans-serif', color: '#7a6448', y: 80, ls: '14px' }], 3.2, .5, 11.7, 9.15, 0, .55);
@@ -693,23 +694,29 @@
     plant(39.6, 5.6, 1); plant(23, 5.6, 1);
     decal([{ text: 'GAME & LEISURE', font: '800 110px Inter, system-ui, sans-serif', color: '#55607a', y: 80, ls: '12px' }], 6, .9, 31.3, -1.4, 0, .5);
 
-    /* Game & Leisure carries on into the front half of the east wing: a console corner facing the big screen */
-    plane(17.8, 8.4, '#dfe3e8', 31.3, .008, 10.7); plane(7, 4.6, '#9aa6b8', 35.5, .012, 10.7);
-    sofa(35.2, 9.0, 0); sofa(35.2, 12.4, Math.PI); put('modern_coffee_table_01', null, 35.2, 0, 10.7, 0, { w: 1.1 });
-    box(.08, 1.25, 2.2, '#111216', 40.3, 1.65, 10.7);
-    box(2.2, .9, 1.2, '#2a1d14', 27.0, .45, 10.7); box(2.0, .05, 1.0, '#1f6b3a', 27.0, .91, 10.7);   // foosball-style table
-    put('steel_frame_shelves_01', null, 24.0, 0, 7.4, 0, { h: 2.1 });
-    plant(23, 14.3, 1.2); plant(39.6, 14.3, 1.1);
-    /* Staff Lounge (wing beside the Huddle Room) */
-    sofa(-26.45, 7.2, 0); sofa(-26.45, 12.7, Math.PI);
-    put('modern_arm_chair_01', null, -29.3, 0, 9.95, Math.PI / 2, { h: 1.0 }); put('modern_arm_chair_01', null, -23.6, 0, 9.95, -Math.PI / 2, { h: 1.0 });
-    if (!put('coffee_table_round_01', null, -26.45, 0, 9.95, 0, { w: 1.3 })) box(1.3, .4, 1.3, '#d8d4cb', -26.45, .2, 9.95);
-    put('side_table_01', null, -28.3, 0, 7.2, 0, {}); put('side_table_01', null, -24.6, 0, 12.7, 0, {});
-    put('modern_ceiling_lamp_01', null, -26.45, 2.35, 9.95, 0, { h: .95 });
-    sofa(-23.6, 13.95, Math.PI); put('steel_frame_shelves_01', null, -29.9, 0, 5.6, Math.PI / 2, { h: 2.1 });
-    box(2.2, 1.25, .08, '#111216', -26.45, 1.65, 5.0);
-    plant(-30.0, 14.4, 1.2); plant(-23.0, 5.5, 1.0); plant(-29.8, 12.2, .9);
-    decal([{ text: 'LOUNGE', font: '800 140px Inter, system-ui, sans-serif', color: '#7a6448', y: 85, ls: '20px' }], 3.2, .75, -27.6, 14.5, 0, .5);
+    /* Training Room: front half of the east wing (Game & Leisure keeps the back half). Rows of tables facing the big screen. */
+    gwall(22.2, 6.4, 40.4, 6.4, [[30.6, 32.0]]);
+    plane(17.8, 8.4, '#d9d2c6', 31.3, .008, 10.7);
+    [27.0, 30.0, 33.0].forEach(function (rx) {
+      box(.75, .06, 5.6, '#e9e2d6', rx, .76, 10.7, null, { roughness: .4 }); box(.6, .72, .05, frameC, rx, .38, 8.1); box(.6, .72, .05, frameC, rx, .38, 13.3);
+      [8.6, 9.95, 11.3, 12.65].forEach(function (cz) { hChair(rx - .62, cz, Math.PI / 2); });
+    });
+    box(.08, 1.6, 2.9, '#111216', 40.3, 1.7, 10.7);
+    var trTv = new T.Mesh(new T.PlaneGeometry(2.75, 1.48), new T.MeshBasicMaterial({ color: 0x0d2b86, toneMapped: false })); trTv.position.set(40.25, 1.7, 10.7); trTv.rotation.y = -Math.PI / 2; trTv.userData.keep = 1; scene.add(trTv);
+    box(.5, 1.1, .45, '#3e2a1d', 37.6, .55, 9.0);   // lectern
+    put('steel_frame_shelves_01', null, 23.0, 0, 7.4, 0, { h: 2.1 });
+    plant(23, 14.3, 1.2); plant(39.6, 14.3, 1.1); plant(39.6, 7.2, .9);
+    decal([{ text: 'TRAINING ROOM', font: '800 110px Inter, system-ui, sans-serif', color: '#6b6f8a', y: 80, ls: '12px' }], 4.4, .65, 30.0, 14.4, 0, .5);
+    /* Staff Lounge (right of the Huddle Room, next to reception) */
+    sofa(-12.45, 7.2, 0); sofa(-12.45, 12.7, Math.PI);
+    put('modern_arm_chair_01', null, -15.3, 0, 9.95, Math.PI / 2, { h: 1.0 }); put('modern_arm_chair_01', null, -9.6, 0, 9.95, -Math.PI / 2, { h: 1.0 });
+    if (!put('coffee_table_round_01', null, -12.45, 0, 9.95, 0, { w: 1.3 })) box(1.3, .4, 1.3, '#d8d4cb', -12.45, .2, 9.95);
+    put('side_table_01', null, -14.3, 0, 7.2, 0, {}); put('side_table_01', null, -10.6, 0, 12.7, 0, {});
+    put('modern_ceiling_lamp_01', null, -12.45, 2.35, 9.95, 0, { h: .95 });
+    sofa(-9.6, 13.95, Math.PI); put('steel_frame_shelves_01', null, -16.1, 0, 6.0, Math.PI / 2, { h: 2.1 });
+    box(2.2, 1.25, .08, '#111216', -12.45, 1.65, 5.0);
+    plant(-16.1, 14.4, 1.2); plant(-11.0, 5.4, 1.0); plant(-15.9, 12.4, .9);
+    decal([{ text: 'LOUNGE', font: '800 140px Inter, system-ui, sans-serif', color: '#7a6448', y: 85, ls: '20px' }], 3.2, .75, -13.6, 14.5, 0, .5);
     box(7, .1, 10, '#cdc8be', 44.3, -.22, 9);
     [[40.9, 9, .1, 10], [47.75, 9, .1, 10], [44.3, 4.05, 7, .1], [44.3, 13.95, 7, .1]].forEach(function (f) { box(f[2], .9, f[3], '#5b3d29', f[0], .4, f[1]); });
     put('outdoor_table_chair_set_01', null, 45.6, 0, 6.6, 0, {}); put('outdoor_table_chair_set_01', null, 45.6, 0, 11.4, 0, {});
@@ -769,15 +776,19 @@
     });
     plant(-12.6, 3.6, .9);
     /* West extension rooms */
-    // Training Room (back): long table, screen on the outer wall, glass to the Private Office
+    // Podcast & Video Studio (back): two chairs at a round table with mics, camera, ring lights, acoustic panels, logo backdrop
     gwall(-22.15, -15.1, -22.15, -9.0, []);
-    plane(7.9, 6.2, '#d9d2c6', -26.45, .008, -11.9);
-    box(4.6, .06, 1.3, '#3e2a1d', -26.45, .76, -11.6, null, { roughness: .4 }); box(.06, .72, 1.0, frameC, -28.5, .38, -11.6); box(.06, .72, 1.0, frameC, -24.4, .38, -11.6);
-    for (var tc = 0; tc < 4; tc++) { hChair(-28.0 + tc * 1.05, -12.55, 0); hChair(-28.0 + tc * 1.05, -10.65, Math.PI); }
-    box(3.2, 1.8, .06, '#111216', -26.45, 1.75, -14.9);
-    var trTv = new T.Mesh(new T.PlaneGeometry(3.0, 1.66), new T.MeshBasicMaterial({ color: 0x0d2b86, toneMapped: false })); trTv.position.set(-26.45, 1.75, -14.86); trTv.userData.keep = 1; scene.add(trTv);
-    plant(-30.0, -9.6, 1.0); plant(-22.8, -14.4, .9);
-    decal([{ text: 'TRAINING ROOM', font: '800 110px Inter, system-ui, sans-serif', color: '#6b6f8a', y: 80, ls: '12px' }], 3.6, .55, -26.45, -9.5, 0, .5);
+    plane(7.9, 6.2, '#3a3d46', -26.45, .008, -11.9); plane(4.6, 3.2, '#8a5a44', -26.45, .012, -12.2);
+    for (var ap = 0; ap < 6; ap++) box(1.05, 1.05, .08, ap % 2 ? '#2f6f78' : '#23262e', -29.1 + ap * 1.06, 1.75, -14.9, null, { roughness: 1 });
+    var stLogo = new T.Mesh(new T.PlaneGeometry(2.6, .71), texMat(logoW)); stLogo.position.set(-26.45, 2.75, -14.84); stLogo.userData.keep = 1; scene.add(stLogo);
+    cyl(.45, .45, .05, '#1b1e26', -26.45, .62, -12.2, null, 24); cyl(.05, .07, .6, frameC, -26.45, .3, -12.2, null, 10);
+    put('mid_century_lounge_chair', null, -27.6, 0, -12.2, Math.PI / 2, { h: 1.0 }); put('mid_century_lounge_chair', null, -25.3, 0, -12.2, -Math.PI / 2, { h: 1.0 });
+    [[-26.75, -12.2, -.5], [-26.15, -12.2, .5]].forEach(function (q) { var arm = box(.03, .03, .45, '#2a2d33', q[0], .95, q[1]); arm.rotation.y = q[2]; cyl(.035, .035, .14, '#111216', q[0] + (q[2] < 0 ? -.2 : .2), 1.0, q[1], null, 10); });
+    cyl(.02, .02, 1.4, frameC, -26.45, .7, -9.9, null, 6); box(.35, .22, .3, '#111216', -26.45, 1.45, -9.95);   // camera on a tripod
+    [[-28.8, -10.3], [-24.1, -10.3]].forEach(function (q) { cyl(.015, .015, 1.6, frameC, q[0], .8, q[1], null, 6); var rl = new T.Mesh(new T.TorusGeometry(.26, .03, 8, 36), new T.MeshBasicMaterial({ color: 0xfff6e0, toneMapped: false })); rl.position.set(q[0], 1.7, q[1]); rl.lookAt(-26.45, 1.2, -12.2); scene.add(rl); });
+    box(.06, .9, .06, '#c2416b', -22.6, 2.4, -9.6, null, { noShadow: true }); box(.42, .14, .03, new T.MeshBasicMaterial({ color: 0xff4d4d, toneMapped: false }), -24.0, 2.6, -9.06, null, { noShadow: true });   // ON AIR light
+    plant(-30.0, -9.6, 1.0);
+    decal([{ text: 'PODCAST & VIDEO STUDIO', font: '800 96px Inter, system-ui, sans-serif', color: '#c9cfe0', y: 75, ls: '10px' }], 4.4, .5, -26.45, -9.5, 0, .6);
     // AI & Tech extension (middle): a lab bench with monitors and a whiteboard
     box(3.6, .06, .8, '#e9e2d6', -27.4, .76, -7.2); box(.05, .72, .7, frameC, -29.1, .38, -7.2); box(.05, .72, .7, frameC, -25.7, .38, -7.2);
     [-28.5, -27.4, -26.3].forEach(function (mx) { box(.55, .34, .03, '#141519', mx, 1.1, -7.45); box(.05, .25, .05, '#2a2d33', mx, .9, -7.45); put('SchoolChair_01', null, mx, 0, -6.55, Math.PI, { h: .92 }, '#3a3a3c'); });
@@ -879,7 +890,7 @@
     }
     S.awaySeats = {
       pantry: [[24.85, -7.95, 0], [25.6, -7.95, 0], [26.35, -7.95, 0], [30.55, -7.95, 0], [31.3, -7.95, 0], [32.05, -7.95, 0], [24.85, -6.45, Math.PI], [25.6, -6.45, Math.PI], [30.55, -6.45, Math.PI], [31.3, -6.45, Math.PI], [36.25, -7.95, 0], [37, -7.95, 0]],
-      lounge: [[-27.1, 7.35, 0], [-26.45, 7.35, 0], [-25.8, 7.35, 0], [-27.1, 12.55, Math.PI], [-26.45, 12.55, Math.PI], [-25.8, 12.55, Math.PI], [-29.2, 9.95, Math.PI / 2], [-23.7, 9.95, -Math.PI / 2], [-24.2, 13.8, Math.PI], [-23.0, 13.8, Math.PI]],
+      lounge: [[-13.1, 7.35, 0], [-12.45, 7.35, 0], [-11.8, 7.35, 0], [-13.1, 12.55, Math.PI], [-12.45, 12.55, Math.PI], [-11.8, 12.55, Math.PI], [-15.2, 9.95, Math.PI / 2], [-9.7, 9.95, -Math.PI / 2], [-10.2, 13.8, Math.PI], [-9.0, 13.8, Math.PI]],
       smoke: [[45.6, 6.0, 0], [45.6, 7.2, Math.PI], [45.6, 10.8, 0], [45.6, 12.0, Math.PI], [43.6, 8.6, Math.PI / 2], [43.6, 9.4, Math.PI / 2]],
       client: [[12.75, 6.9, -Math.PI / 2], [10.65, 6.9, Math.PI / 2]],
       rr: [[-21.0, -1.75, Math.PI], [-20.3, -1.75, Math.PI], [-19.6, -1.75, Math.PI], [-17.0, -1.75, Math.PI], [-16.3, -1.75, Math.PI]]
