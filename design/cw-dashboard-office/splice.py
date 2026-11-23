@@ -38,5 +38,9 @@ once("main: ['Main dashboard', 'Service sales at a glance']", "today: ['Today ·
 once("if (id === 'office') officeOpen(); else officeClose();\n", "if (id === 'office') officeOpen(); else officeClose();\n    if (id === 'today') tdStart();\n    if (id === 'week') wkStart();\n")
 once('\n  }\n  liveLoad();\n})();', '\n' + tjs + '\n  }\n  liveLoad();\n})();')
 # office view: hide the date range + keep the main padding
+# collapsible left menu (icons-only rail)
+scss = open(os.path.join(d, 'side.css')).read(); sjs = open(os.path.join(d, 'side.js')).read()
+once('.tr-empty { background: var(--card); border: 1px dashed var(--line-2); border-radius: 12px; padding: 22px; text-align: center; color: var(--ink-2); }\n', '.tr-empty { background: var(--card); border: 1px dashed var(--line-2); border-radius: 12px; padding: 22px; text-align: center; color: var(--ink-2); }\n' + scss)
+once('\n  liveLoad();\n})();', '\n' + sjs + '\n  liveLoad();\n})();')
 open(out, 'w').write(s)
 print('spliced', len(s))

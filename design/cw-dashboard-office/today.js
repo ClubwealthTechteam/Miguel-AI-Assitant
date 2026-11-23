@@ -76,7 +76,7 @@
   })();
 
   /* ---------- Voice mode: speak a question, Claude answers from this dashboard's live data and reads it aloud ---------- */
-  var VC = { dict: null, turns: [], busy: false, mute: false, heard: '' };
+  var VC = { dict: null, turns: [], busy: false, mute: false, heard: '', tts: undefined };
   (function () {
     var el = document.createElement('div'); el.className = 'vc'; el.id = 'vc'; el.hidden = true; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Voice assistant');
     el.innerHTML = '<div class="vc-card"><div class="vc-top"><span><b>CW Voice</b><br><small>Answers from this dashboard’s live data · read-only · <span id="vc-voice">Voice: Kokoro · Heart</span></small></span><button type="button" class="vc-mute" id="vc-mute" aria-label="Mute the spoken answer" title="Mute">🔊</button><button type="button" id="vc-x" aria-label="Close">×</button></div>' +
@@ -98,7 +98,7 @@
     if (listen) vcListen(); else $('#vc-in').focus();
   }
   function vcListen() {
-    try { window.speechSynthesis && speechSynthesis.cancel(); } catch (e) {} kkStop();
+    vcHush();
     if (!VC.dict) { vcState('Voice input isn’t available in this app — type your question below.'); $('#vc-in').focus(); return; }
     if ($('#vc').classList.contains('listening')) { VC.dict.stop().catch(function () {}); return; }
     VC.heard = ''; vcState('Listening…');
@@ -106,8 +106,16 @@
   }
   function vcSpeak(text) {
     if (VC.mute) return;
+    vcHush();
     var clean = String(text).replace(/[*_#•]/g, '').replace(/\s+/g, ' ');
-    kkSpeak(clean).then(function (ok) { if (!ok && !VC.mute) vcBrowserSpeak(clean); }, function () { if (!VC.mute) vcBrowserSpeak(clean); });
+    kkSpeak(clean).then(function (ok) { if (!ok && !VC.mute) vcClaudeSpeak(clean); }, function () { if (!VC.mute) vcClaudeSpeak(clean); });
+  }
+  /* Claude's built-in voice (tts capability): used while Heart is still loading, or where it can't run */
+  function vcClaudeSpeak(text) {
+    var go = function (t) { VC.tts = t; if (!t) { vcBrowserSpeak(text); return; } t.speak(text.slice(0, 2000), { voice: 'airy' }).catch(function (e) { if (e && e.code === 'unavailable') { VC.tts = null; vcBrowserSpeak(text); } }); };
+    if (VC.tts !== undefined) go(VC.tts); else (window.claude && claude.use ? claude.use('tts') : Promise.resolve(null)).then(go, function () { go(null); });
+  }
+  function vcHush() { kkStop(); try { if (VC.tts) VC.tts.stop(); } catch (e) {} try { window.speechSynthesis && speechSynthesis.cancel(); } catch (e) {}
   }
   function vcBrowserSpeak(text) {
     if (!window.speechSynthesis) return;
@@ -156,8 +164,8 @@
     $('#voice-top').addEventListener('click', function () { vcOpen(!!VC.dict); });
     $('#td-voice').addEventListener('click', function () { vcOpen(!!VC.dict); });
     $('#vc-orb').addEventListener('click', vcListen);
-    $('#vc-x').addEventListener('click', function () { $('#vc').hidden = true; kkStop(); try { speechSynthesis.cancel(); } catch (e) {} if (VC.dict && $('#vc').classList.contains('listening')) VC.dict.stop().catch(function () {}); });
-    $('#vc-mute').addEventListener('click', function () { VC.mute = !VC.mute; this.textContent = VC.mute ? '🔇' : '🔊'; if (VC.mute) { kkStop(); try { speechSynthesis.cancel(); } catch (e) {} } });
+    $('#vc-x').addEventListener('click', function () { $('#vc').hidden = true; vcHush(); if (VC.dict && $('#vc').classList.contains('listening')) VC.dict.stop().catch(function () {}); });
+    $('#vc-mute').addEventListener('click', function () { VC.mute = !VC.mute; this.textContent = VC.mute ? '🔇' : '🔊'; if (VC.mute) vcHush(); });
     $('#vc-form').addEventListener('submit', function (e) { e.preventDefault(); vcAsk($('#vc-in').value); });
     $('#vc').addEventListener('click', function (e) { if (e.target.id === 'vc') $('#vc-x').click(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('#vc').hidden) $('#vc-x').click(); });
