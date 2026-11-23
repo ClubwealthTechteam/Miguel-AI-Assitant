@@ -547,27 +547,41 @@
     plane(5.4, 3.6, '#cfc6b6', 0, .012, 12.4);
     decal([{ text: 'RECEPTION · CLIENT CARE', font: '800 92px Inter, system-ui, sans-serif', color: '#8a8070', y: 70, ls: '10px' }], 6.4, .85, 0, 10.6, 0, .5);
 
-    /* Huddle Room: round table cut like a pie (Admins slice, ISA & RM slice) facing the huddle screen */
+    /* Huddle Room: racetrack conference table (Admins | ISA & RM) facing the huddle screen */
     var hx = -15;
     gwall(-8.15, 4.8, -8.15, 15, [[5.2, 7.6]]); gwall(-22, 4.8, -8.15, 4.8, []);
     gwall(-22.15, 4.8, -22.15, 15.15, [[9.0, 10.8]]);   // frosted wall + door between the Huddle Room and the Staff Lounge
-    var KX = 1.45, KZ = .92, pcx = hx, pcz = 10.15, rIn = 1.2, rOut = 3.3, rChair = 4.0, gap = 12 * Math.PI / 180, nSeats = 0;
+    /* Racetrack (stadium) conference table: straight sides, rounded ends, a dark cable slot down the middle.
+       Split across the table: Admins at the right end, ISA & RM at the left end. Chairs in rows along both sides and round the ends. */
+    var pcx = hx, pcz = 10.15, Ls = 8.0, R = 1.6, Rc = R + .7, gapT = .22, nSeats = 0;
     var nAdm = OF_ROSTER.filter(function (p) { return p.group === 'manager' || p.group === 'reception' || p.group === 'admin'; }).length + 2;
     var nIsa = OF_ROSTER.filter(function (p) { return p.group === 'isa' || p.group === 'rm'; }).length + 3;
-    var span = Math.PI * 2 - 2 * gap, aAdm = span * nAdm / (nAdm + nIsa), aIsa = span - aAdm, a0 = Math.PI / 2 - aAdm / 2;
-    function slice(from, len, col, label, seats) {
-      var sh = new T.Shape(), n = 40;
-      for (var i = 0; i <= n; i++) { var a = from + len * i / n; sh[i ? 'lineTo' : 'moveTo'](Math.sin(a) * rOut * KX, Math.cos(a) * rOut * KZ); }
-      for (var j = n; j >= 0; j--) { var bb = from + len * j / n; sh.lineTo(Math.sin(bb) * rIn * KX, Math.cos(bb) * rIn * KZ); }
-      var m = new T.Mesh(new T.ExtrudeGeometry(sh, { depth: .07, bevelEnabled: false, curveSegments: 4 }), mat(col, { roughness: .35 })); m.rotation.x = Math.PI / 2; m.position.set(pcx, .8, pcz); m.castShadow = m.receiveShadow = true; scene.add(m);
-      for (var k = 0; k < 3; k++) { var la = from + len * (k + .5) / 3; cyl(.05, .05, .74, frameC, pcx + Math.sin(la) * 2.3 * KX, .37, pcz + Math.cos(la) * 2.3 * KZ, null, 8); }
-      for (var c = 0; c < seats; c++) { var ca = from + len * (c + .5) / seats, x = pcx + Math.sin(ca) * rChair * KX, z = pcz + Math.cos(ca) * rChair * KZ; hChair(x, z, Math.atan2(pcx - x, pcz - z)); nSeats++; }
-      var mid = from + len / 2, cv = ofTextCanvas([{ text: label, font: '800 110px Inter, system-ui, sans-serif', color: '#f6efe2', y: 75, ls: '12px' }], 1024, 150);
-      var lm = new T.Mesh(new T.PlaneGeometry(2.6, .38), texMat(cv, { opacity: .95, depthWrite: false })); lm.rotation.x = -Math.PI / 2; lm.rotation.z = mid + (Math.sin(mid) < 0 ? Math.PI : 0);
-      lm.position.set(pcx + Math.sin(mid) * 2.3 * KX, .885, pcz + Math.cos(mid) * 2.3 * KZ); lm.userData.keep = 1; scene.add(lm);
+    var P = 2 * Ls + 2 * Math.PI * Rc, sp = P / (nAdm + nIsa + 2);
+    function pt(u) {   // a point on the chair line, u = distance from the middle of the right end, going round towards +z
+      u = ((u % P) + P) % P; var q = Math.PI * Rc / 2;
+      if (u < q) { var a = u / Rc; return [Ls / 2 + Rc * Math.cos(a), Rc * Math.sin(a)]; } u -= q;
+      if (u < Ls) return [Ls / 2 - u, Rc]; u -= Ls;
+      if (u < 2 * q) { var b = Math.PI / 2 + u / Rc; return [-Ls / 2 + Rc * Math.cos(b), Rc * Math.sin(b)]; } u -= 2 * q;
+      if (u < Ls) return [-Ls / 2 + u, -Rc]; u -= Ls;
+      var c = 3 * Math.PI / 2 + u / Rc; return [Ls / 2 + Rc * Math.cos(c), Rc * Math.sin(c)];
     }
-    slice(a0, aAdm, '#7a563a', 'ADMINS', nAdm); slice(a0 + aAdm + gap, aIsa, '#3e2b1f', 'ISA & RM', nIsa);
-    var ped = cyl(.75, .85, .5, '#e9e4da', pcx, .25, pcz); ped.scale.set(KX, 1, KZ); plant(pcx, pcz, .8);
+    // where the table splits: halfway between the last Admin chair and the first ISA chair along the top side
+    var ub = (nAdm / 2 + .5) * sp, xs = Math.max(-Ls / 2 + .5, Math.min(Ls / 2 - .5, Ls / 2 - (ub - Math.PI * R / 2)));
+    function piece(x0, right, col, label) {
+      var sh = new T.Shape(), n = 32, k, e = right ? x0 + gapT / 2 : x0 - gapT / 2, endX = right ? Ls / 2 : -Ls / 2;
+      sh.moveTo(e, -R); sh.lineTo(endX, -R);
+      for (k = 0; k <= n; k++) { var a = (right ? -Math.PI / 2 : 3 * Math.PI / 2) + (right ? 1 : -1) * Math.PI * k / n; sh.lineTo(endX + R * Math.cos(a), R * Math.sin(a)); }
+      sh.lineTo(e, R); sh.lineTo(e, -R);
+      var m = new T.Mesh(new T.ExtrudeGeometry(sh, { depth: .07, bevelEnabled: false, curveSegments: 4 }), mat(col, { roughness: .35 })); m.rotation.x = Math.PI / 2; m.position.set(pcx, .8, pcz); m.castShadow = m.receiveShadow = true; scene.add(m);
+      var mid = right ? (e + endX + R * .6) / 2 : (e + endX - R * .6) / 2, sl = Math.abs(endX - e) - .25;
+      box(Math.max(.4, sl), .012, .3, '#14110f', pcx + (right ? (e + endX) / 2 : (e + endX) / 2), .807, pcz, null, { noShadow: true });   // cable slot
+      [-.85, .85].forEach(function (dz) { cyl(.05, .05, .74, frameC, pcx + mid, .37, pcz + dz, null, 8); });
+      var cv = ofTextCanvas([{ text: label, font: '800 110px Inter, system-ui, sans-serif', color: '#f6efe2', y: 75, ls: '12px' }], 1024, 150);
+      var lm = new T.Mesh(new T.PlaneGeometry(2.2, .32), texMat(cv, { opacity: .95, depthWrite: false })); lm.rotation.x = -Math.PI / 2; lm.position.set(pcx + mid, .82, pcz + .95); lm.userData.keep = 1; scene.add(lm);
+    }
+    piece(xs, true, '#7a563a', 'ADMINS'); piece(xs, false, '#4a3222', 'ISA & RM');
+    function chairsAt(n, centre) { for (var c = 0; c < n; c++) { var p = pt(centre + (c - (n - 1) / 2) * sp), x = pcx + p[0], z = pcz + p[1], tx = pcx + Math.max(-Ls / 2, Math.min(Ls / 2, p[0])); hChair(x, z, Math.atan2(tx - x, pcz - z)); nSeats++; } }
+    chairsAt(nAdm, 0); chairsAt(nIsa, P / 2);
     S.huddleSeats = nSeats;
     var hudC = document.createElement('canvas'); hudC.width = 1024; hudC.height = 576;
     var hudT = new T.CanvasTexture(hudC); hudT.encoding = T.sRGBEncoding; S.hudCanvas = hudC; S.hudTex = hudT;
