@@ -1,224 +1,183 @@
-# TurboDial 2 move: game plan, week of Nov 23, 2026
+# Moving our phone numbers to TurboDial 2: the plan
 
-**Status:** DRAFT v1, 11/24. Built from the 11/17 backup file and the 11/17 email to TurboDial support. TurboDial's answers and Miguel's decisions are not in yet, so every day below is **proposed**.
-**Who does the work:** Miguel and the team make every change. This plan only says what to do.
-**Per-number checklist:** `turbodial/TD2_setup_checklist_by_batch.md`, also as `.csv` to paste into a sheet.
+**Week of Nov 23, 2026 · Draft 2, 11/24 · Club Wealth Tech Team**
+
+We are moving everyone's phone numbers from the old TurboDial (TurboDial 1) to the new one (TurboDial 2). Nothing copies over by itself, so the team sets up each person and each number by hand, a few at a time. We test after each person.
+
+The old TurboDial stays on the whole time. It keeps our old call history, voicemails and recordings. **Don't delete anything in it.**
+
+- **Who makes the changes:** Miguel and the team. This plan says what to do.
+- **The list of every number, with what to type:** at the back of this document.
+- **How to do each task in TurboDial 2:** see the separate guide, "TD2 App Features and SOPs".
 
 ---
 
-## 1. Before any batch: 4 gates
+## 1. Fix these 4 things before moving anyone
 
-Don't move a number until all 4 are true.
-
-| # | Gate | Why | Who |
+| # | Must be true | Why it matters | Who |
 |---|---|---|---|
-| G1 | **Caller ID fixed.** A test call and a test text from TD2 show the user's **own** number, not (253) 215-8426 ("Becky" / AIM Team, a PlusThis number). | On 11/17, Camille's calls and her text went out as 215-8426. Without this fix, every RM would call out as "Becky". | TurboDial support says how. Miguel sets it. |
-| G2 | **The route is ready before the number moves.** The number's Inbound Call Route exists in Call Route Builder **before** the number is switched. | On 11/17, a number with no route went straight to voicemail and nobody's phone rang. | Miguel |
-| G3 | **Texting works.** Voice and SMS are both ON for the number, and the "(calls only)" label is gone. | Most numbers show "(calls only)". We don't yet know what turns SMS on. | TurboDial support, then Miguel |
-| G4 | **The owner has a TD2 login,** with a Calling Device and a Caller ID set to their own number. | The Owner and Forward SMS To fields need a real TD2 user. **As of 11/23, TD2 has only 4 users:** Michael Hellickson, Camille Cruz, Client Care and Events Team (from the TD2 Daily Calls Report API). **None of the 4 RMs has a TD2 user yet.** | Miguel |
+| 1 | **Calls and texts go out from the person's own number.** | Today, calls and texts go out from (253) 215-8426. People who get them see the name "Becky". This happens because no main "caller ID" number is set for the account. | TurboDial support tells us how. Miguel sets it. |
+| 2 | **Each number knows who to ring before it moves.** | On 11/17, a moved number had no "who rings" setting. A caller went straight to voicemail and nobody's phone rang. | Miguel |
+| 3 | **Texting is turned on for the number.** | 167 of our numbers show "(calls only)" in TurboDial 2, so they can't text yet. | TurboDial support, then Miguel |
+| 4 | **The person has a TurboDial 2 login.** | Today only 4 logins exist: Michael, Camille, Client Care and Events Team. **None of the 4 RMs has one yet.** | Miguel |
 
-**If G1 isn't answered by TurboDial yet:** move only the pilot (B1). Each pilot user picks their own number in "Sending From" / Caller ID on every call and text, and checks it.
+**If #1 isn't fixed yet:** move only the 2 test numbers. Each tester picks their own number by hand before every call and text.
 
----
-
-## 2. Order of work, by day (proposed: Miguel to confirm)
-
-Thanksgiving is Thu 11/26. **Don't move anything Thu–Sun.** Nobody would be watching for missed calls.
-
-| Day | Batch | Numbers | What | Done when |
-|---|---|---|---|---|
-| **Tue 11/24** | **Prep** | none | Get TurboDial's answers (section 7). **Create TD2 users for Francis, Beula, Ebi and Marcia** (none exist yet), and for any Events/admin staff who get their own login. Make the Section 6 decisions. | Gates G1–G4 answered |
-| Tue 11/24 | **B0** Fix the 4 already on TD2 | 4 | Type the Name. Check each route. Decide whether Andrea's and Liz's numbers stay under "Events Team" or move to their own users. Re-test Camille's 215-8230 (this was the caller ID bug). | All 4 pass the tests in section 3 |
-| Tue PM / Wed AM | **B1 Pilot** | 2 | Beula (253) 201-8421 (low use) and Camille (253) 215-8864 (low use). | All tests pass. Wait 2 hours, and check that no call or text went to TD1 instead |
-| **Wed 11/25 AM** | **B2a** RMs: Francis + Beula | 17 | One person at a time. Test after each person, not at the end. | Tests pass for each person |
-| Wed 11/25 midday | **B2b** RMs: Ebi + Marcia | 19 | Same. | Same |
-| Wed 11/25 PM | **B3a** Events / Client Care / admin seats | 5 | Liz 312-1677, Am 242-6028 (redo the "Larch VM" greeting first), Jizel 201-6860, admin4 204-3895 and 343-5064. | Same |
-| **Mon 11/30 AM** | **B3b** Office / Client Care main line (206) 460-1572 | 1 | Alone, and early morning. This is the busiest shared line: it rings 6 seats, records calls and has voicemail. Re-record the "Office VM" greeting in TD2 first. | Ring group, voicemail and recording all tested |
-| Mon 11/30 | **B4** Other users: Andrew, Joe, Vanessa, Regine, Becky | 25 | One person at a time. | Same |
-| Tue 12/1 | **B5** In use, no owner | 6 | Only after Miguel names an owner for each. Note: (253) 353-7544 sent 1000+ texts in 30 days. | Same |
-| Tue 12/1 onward | **B6** Unused 30 days | 42 | Only the ones whose owner says "still needed". The rest stay on TD1 for now. | Same |
-| When decided | **HOLD** | 17 | Former staff: Anastasia 9, Dolly 1, Nyza 1. No owner, no label: 4. Parked wrong-number lines: 2. | Decision recorded |
-
-**Total TD1 numbers to set up:** 4 already on TD2, plus 128 to move (79 "Move" and 49 "unused"), plus up to 6 "Review" numbers if approved.
-
-**Rule for every batch:** one person at a time, at most 10 numbers in a row, then test. If any test fails, stop the batch (see section 4).
-
-### DO NOT SET UP, ever, in this project
-
-- **30 PlusThis numbers and 3 system numbers.** They are routed by the PlusThis and ListingAppointments Twilio apps. Don't add them to TD2 and don't change them in Twilio.
-  - This includes (253) 215-8426 "AIM Team" (the wrong caller ID number), (253) 201-1402 "Client Care", (727) 287-5993, (253) 447-5788 and (253) 793-1397.
-- **The 2 parked wrong-number lines**, (253) 201-3281 and (253) 205-0538 (Ebi's). Don't set them up unless Omerson says so.
-- **Don't change the Twilio apps or messaging services** used by PlusThis, ListingAppointments or CWU. Don't release any Twilio number.
-- Twilio marks these numbers "DO NOT MODIFY-MANAGED BY TURBODIAL ONLY". Changes happen in TurboDial, not in the Twilio console, except in the last-resort rollback in section 4.
+**Also found on the screens:**
+- The Events Team's voicemail has **no greeting recorded**. Callers hear nothing before the beep.
+- Each number's settings page has a **"Release Number" button**. **Never click it.** It gives the number away for good.
 
 ---
 
-## 3. Per-number steps and tests
+## 2. What we do each day (dates to be confirmed by Miguel)
 
-### Steps
+Thanksgiving is Thursday 11/26. **No moves Thursday to Sunday,** because nobody would be watching for missed calls.
 
-Exact clicks are **to check** on the real screen. The SOPs will confirm them.
+| Day | Group | How many numbers | What happens |
+|---|---|---|---|
+| **Tue 11/24** | Get ready | 0 | Get TurboDial support's answers (section 7). Create logins for Francis, Beula, Ebi and Marcia. Miguel makes the choices in section 6. |
+| Tue 11/24 | **Group 0:** the 4 numbers already moved | 4 | Type in their names. Check who they ring. Re-test Camille's number, since that's where the wrong-number problem showed up. |
+| Tue afternoon or Wed morning | **Group 1:** test run | 2 | Two quiet numbers: Beula (253) 201-8421 and Camille (253) 215-8864. Wait 2 hours and make sure nothing went to the old TurboDial. |
+| **Wed 11/25 morning** | **Group 2:** RMs, part 1 (Francis and Beula) | 17 | One person at a time. Test after each person. |
+| Wed 11/25 midday | **Group 3:** RMs, part 2 (Ebi and Marcia) | 19 | Same. |
+| Wed 11/25 afternoon | **Group 4:** Events, Client Care and shared office logins | 5 | Liz, Am, Jizel and 2 shared office numbers. Re-record Am's voicemail greeting first. |
+| **Mon 11/30, first thing** | **Group 5:** the main office line, (206) 460-1572 | 1 | On its own. It's the busiest line: it rings 6 people, records calls and has voicemail. Re-record its greeting first. |
+| Mon 11/30 | **Group 6:** everyone else | 25 | Andrew, Joe, Vanessa, Regine and Becky. One person at a time. |
+| Tue 12/1 | **Group 7:** busy numbers with no owner | 6 | Only after Miguel names an owner. One of them, (253) 353-7544, sent more than 1,000 texts last month. |
+| Tue 12/1 onward | **Group 8:** numbers not used in 30 days | 42 | Only the ones the owner says they still need. The rest stay on the old TurboDial for now. |
+| Once decided | **On hold** | 17 | Former staff (Anastasia, Dolly, Nyza): 11. No owner and no name: 4. Wrong-number lines: 2. |
 
-1. **Call Route Builder:** build the route.
-   - Ring the Owner (or the ring group listed for the number).
-   - If no answer, do what the checklist says:
-     - "Forward after 2 rings → (206) 300-1000" means a forward step to the office cell;
-     - "nothing" means it rings, then ends. Ask Miguel whether TD2 should add voicemail here.
-2. **Phone Numbers > Add Phone Number:** add the number. (To check: does this switch the Twilio number to TD2 at once?)
-3. Type the values from the checklist row:
-   - **Name**, exactly as shown, including any stars or tags;
-   - **Owner** and **Forward SMS To**;
-   - **Inbound Call Route**;
-   - **Public for Caller ID**;
-   - **Voice ON / SMS ON**;
-   - **Record inbound calls**.
-4. Tick R, A and F in the checklist.
+**Rule for every group:** one person at a time, no more than 10 numbers in a row, then test. If a test fails, stop and see section 4.
 
-### Tests the team runs after each person
+### ⛔ Never set these up in TurboDial 2
 
-Use a team test phone, not a contact.
+- **The 30 numbers used by PlusThis**, our automatic texting tool, and **3 system numbers.** Other tools run them, PlusThis and ListingAppointments among them. One of them is (253) 215-8426, the "Becky" number.
+- **The 2 wrong-number lines**, (253) 201-3281 and (253) 205-0538. Only Omerson can change this.
+- **Don't change anything in Twilio**, our phone company account, for PlusThis, ListingAppointments or CWU. **Never release (give up) a number.**
 
-| Test | How | Pass |
+---
+
+## 3. For each number: set it up, then test it
+
+**Set it up** (exact clicks are in the SOP guide):
+
+1. Set **who rings** when someone calls, and what happens if nobody answers. Do this **before** you add the number.
+2. Add the number in TurboDial 2.
+3. Type in what the list at the back says:
+   - the name;
+   - the owner;
+   - who gets its texts;
+   - calls and texts on;
+   - whether it can be used as a caller ID;
+   - whether to record calls.
+
+**Test it.** The team does this with a work test phone, never a client's number.
+
+| Test | How | It passed if |
 |---|---|---|
-| **In** | Call the number from the test phone. | The right person's TD2 rings. |
-| No answer | Call again and don't pick up. | It goes to the no-answer step (the office cell forward, or voicemail). |
-| **Out** | The owner calls the test phone from the TD2 Dialer. | The test phone shows the **owner's number**, not 215-8426 or another number. |
-| **TxO** | The owner texts the test phone from TD2 Contact Messages. | "Sending From" is the owner's number, and the test phone shows it. |
-| **TxI** | Reply to that text from the test phone. | The reply appears in TD2 for the owner. **Also check it did NOT land only in TD1** (see the texting risk below). |
+| Call in | Call the number. | The right person's TurboDial 2 rings. |
+| Nobody answers | Call again and don't answer. | It goes where the list says: the office cell (206) 300-1000, or voicemail. |
+| Call out | The owner calls the test phone from TurboDial 2. | The test phone shows **the owner's number**, not 215-8426. |
+| Text out | The owner texts the test phone. | The test phone shows **the owner's number**. |
+| Text in | Reply to that text. | The reply shows up **in TurboDial 2**, not only in the old TurboDial. |
 
-Write the date and initials in "Done in TD2" when all 5 pass.
+When all 5 pass, write the date and your initials in "Done" on the list.
 
-### ⚠ Texting risk: please read
+**Why the "text in" test matters:** our texts may still be set to go to the old TurboDial for many numbers at once. A moved number could keep sending replies to the old system. If this test fails, **don't try to fix it in Twilio.** Ask TurboDial support.
 
-In Twilio, **161 numbers share one messaging service, "TurboDial Numbers"**. That includes Camille's number, which is already on TD2. Incoming texts may follow that service's setting, not the number's TD2 setting. So a moved number could still deliver incoming texts to TD1, or vice versa.
-
-The TxI test catches this. If it fails, **don't touch the messaging service**. Ask TurboDial support (question Q4).
+**Each morning:** Miguel checks yesterday's call and text totals for each person (the TurboDial 2 daily report). If someone who has moved shows zero, their calls or texts may still be going to the old TurboDial. Check their numbers.
 
 ---
 
-## 4. Rollback: if a batch breaks
+## 4. If something goes wrong: how to undo
 
-Go in order. Stop at the first step that works.
+Try these in order and stop as soon as calls are working again.
 
-1. **Fastest safety net, inside TD2 (seconds).** Change that number's Inbound Call Route to forward straight to the office cell (206) 300-1000. Calls get answered while you fix things.
-2. **Point the number back to TD1.** (To check with TurboDial.) In TD1, open the number's settings (screens 1–3) and save them again with the values in the Numbers tab: Assigned User, Ring list, After no answer.
-   - TD1 already flags a moved number as "Number Incorrectly Configured in Twilio", so TD1 may offer to fix it.
-   - Ask TurboDial support whether removing the number from TD2 hands it back to TD1 automatically.
-3. **Last resort, only with TurboDial support on the line.** In the Twilio console, for that one number only, set Voice back from the "default-inbound" app to the TD1 webhook.
-   - The exact TD1 URLs are in the `raw/` folder next to the backup. Miguel, please share that folder.
-   - Never touch PlusThis, ListingAppointments or CWU numbers or apps.
-4. Write down what broke, which number and the time. Pause the remaining batches until it's understood.
-
-**TD1 stays on throughout.** Don't delete users, numbers, voicemails, recordings or greetings in TD1.
+1. **Quick fix, in TurboDial 2.** Change that number's "who rings" setting to send every call to the office cell, (206) 300-1000. Calls get answered while we fix the rest.
+2. **Hand the number back to the old TurboDial.** Exact steps are to be confirmed with TurboDial support. Ask them before the first move. The new number settings page has calls and texts on/off switches, which may be the way to do this.
+3. **Only with TurboDial support on the phone:** they help us point that one number back to the old TurboDial in Twilio.
+4. Write down which number, what went wrong and the time. Pause the rest until we understand it.
 
 ---
 
-## 5. Recordings: what to redo in TD2
+## 5. Voice recordings
 
-- **TD1 has 364 recordings.**
-  - 297 belong to logins that have left or aren't in this move. They stay in TD1 as records.
-  - 57 belong to current staff.
-- Audio isn't downloaded and TD2 Voice Drops is empty, so **people re-record their own in TD2**. That's simpler and gives fresh audio.
+The old TurboDial has **364 recordings**. Only **57** belong to people still here. Nothing copies over, so **people record their own again in TurboDial 2.** The old ones stay in the old TurboDial.
 
-**Must redo before the number moves (greetings in use):**
+**Must be re-recorded before the number moves:**
 
-| Greeting | Used on | Batch |
-|---|---|---|
-| "Larch VM" (10 s, admin2) | Am (253) 242-6028 | B3a |
-| "Office VM" (24 s) | Office (206) 460-1572 | B3b |
-
-**Voice drops: likely redo.** Each person confirms their own. Event-specific drops for dates already past can be skipped.
-
-| Person | Recordings to consider |
+| Greeting | Line |
 |---|---|
-| Francis | "FXN – Generic VM", "AI Summit invite", current event invites and reminders (AZ, VA, Fairfax: 11/16–11/17), "Attended Event FU", "Non-Attendees FU" |
-| Beula | "Beula EVERYDAY", "TX invite", "Saddle Brook" |
-| Ebi | "EBI Personalized." (09/23/2026), "EBI CW personalized" |
-| Marcia | "Marcia Everyday Updated" |
-| Andrew / Joe / Vanessa | "ANDREW EVERYDAY" / "Joe Every Day" / "VANESSA EVERYDAY", "Generic VM", "UNIONDALE NY", "WHITE PLAINS, NY" |
-| Regine | "Regine" (12/2025). Ask if still used. |
+| "Larch VM" | Am, (253) 242-6028 |
+| "Office VM" | Main office, (206) 460-1572 |
+| *(new)* a greeting for Events Team voicemail | It has none today |
 
-Skip the untitled, date-only clips like "09.29.26 (5s)". They look like tests or old greetings.
+**Pre-recorded voicemail messages ("voice drops") each person should look at and re-record if still used:**
 
-**Keeping TD1 records viewable:**
+- **Francis:** his general voicemail message; the AI Summit invite; current event invites and reminders (Arizona, Virginia, Fairfax); event follow-ups.
+- **Beula:** "Everyday", "TX invite", "Saddle Brook".
+- **Ebi:** the 2 "personalized" messages.
+- **Marcia:** "Everyday Updated".
+- **Andrew, Joe, Vanessa:** their "Everyday" messages. Vanessa also has 3 others: her general one and the 2 New York invites.
+- **Regine:** ask whether "Regine" is still used.
 
-- Don't cancel TD1 until TurboDial says how long voicemails, recordings and history stay viewable, and whether they can be exported (Q6).
-- The recordings have Twilio Recording SIDs, so the audio likely also lives in our Twilio account (to check). Nobody should delete Twilio recordings.
+Skip invites for events that are already over.
 
----
-
-## 6. Decisions for Miguel
-
-1. **Target days.** Confirm or change section 2.
-2. **Pilot numbers.** Beula 201-8421 and Camille 215-8864, or others?
-3. **Andrea's and Liz's numbers, and 201-0542.** Keep them on the "Events Team" user, or give each their own TD2 user?
-4. **"Am" and "Jizel".** Own TD2 logins, or keep the shared admin2 / admin3 seats?
-5. **Former staff numbers.** Anastasia ("Tasia", 9 numbers, 2 still in use: 201-1390 and 201-1567), Dolly (1), Nyza (201-1375, in use). For each: move to someone else, keep on TD1, or leave for Omerson to decide.
-6. **6 in-use numbers with no owner** (B5): who owns each? (253) 353-7544 sends 1000+ texts a month.
-7. **42 unused numbers** (B6): ask each owner, or skip them all for now?
-8. **"Nothing on no answer".** Many numbers just ring and then end. Add TD2 voicemail, or keep them as they are?
-9. **"Text Only" numbers** (Francis 201-1203, Marcia 215-8581): voice off, or on?
-10. **Account Default caller ID.** Pick it once TurboDial explains it. It must **not** be a PlusThis number. A neutral main line, such as the Office (206) 460-1572, is one option.
+**Keeping old records:** don't cancel the old TurboDial until support tells us how long voicemails, recordings and call history stay viewable, and whether we can download them.
 
 ---
 
-## 7. Open questions for TurboDial support
+## 6. Choices Miguel needs to make
 
-The 11/17 email was sent. Their reply isn't in this file. Miguel, please paste it in.
+1. **The days.** OK as in section 2?
+2. **The 2 test numbers.** OK, or different ones?
+3. **Andrea's and Liz's numbers.** They are under the shared "Events Team" login. Keep them there, or give each person their own login?
+4. **Am and Jizel.** Their own logins, or keep the shared office logins?
+5. **Former staff numbers.** For Anastasia (9 numbers, 2 still busy), Dolly (1) and Nyza (1, busy): give them to someone, keep them on the old TurboDial, or ask Omerson?
+6. **6 busy numbers with no owner.** Who gets each one?
+7. **42 numbers unused for 30 days.** Ask each owner, or leave them all for later?
+8. **No answer.** Many numbers just ring and then stop. Add voicemail, or leave them as they are?
+9. **2 "text only" numbers** (Francis and Marcia). Calls off, or on?
+10. **The main caller ID for the account.** Pick it once support explains it. **It must not be a PlusThis number.** One option is the main office line, (206) 460-1572.
 
-- **Q1. Caller ID.**
-  - How do we make each user call and text from their own number by default?
-  - What should the account Default caller ID be?
-  - Can we stop users from using numbers that aren't theirs?
-  - Can we hide the 32 PlusThis-app numbers?
-- **Q2. Moving a number.** Does "Add Phone Number" switch the number in Twilio at once? Can we build the route first so there's no gap?
-- **Q3. No route.** Is there a default route, or a warning, for a number with no Inbound Call Route?
-- **Q4. Texting.**
-  - What turns SMS on (the "(calls only)" label)?
-  - Do the 161 numbers in the "TurboDial Numbers" messaging service send incoming texts to TD1 or to TD2?
-  - Does a moved number need any change there? (They should make that change, not us.)
-- **Q5. Rollback.** What's the supported way to hand a number back to TD1?
-- **Q6. TD1 records.**
-  - How long do voicemails (~6,447), recordings (364), greetings and call history stay viewable?
-  - Can we export them?
-- **Q7. Voice drops.** Is there any upload path for audio files into TD2 Voice Drops?
-- **Q8. API.** The only read-only API feature is the Daily Calls Report (one row per user per day, with counts). Is there a read-only API or webhook for single calls, missed calls, dispositions, numbers and routes?
+---
 
-**Daily check during the move (read-only, already working):** each morning, pull the Daily Calls Report for yesterday. For every user whose numbers moved, calls and texts should show up in TD2. A moved user showing zeros may mean their calls or texts are still going to TD1. Check their numbers.
+## 7. Questions for TurboDial support
+
+We emailed them on 11/17. **Their answer isn't in yet.**
+
+1. How does each person call and text from **their own number** automatically? What should the account's main caller ID be? Can we stop people using numbers that aren't theirs? Can we hide the PlusThis numbers?
+2. When we add a number in TurboDial 2, does it switch over right away? Can we set up "who rings" first, so there's no gap?
+3. Is there a warning, or a backup, when a number has no "who rings" setting?
+4. What turns texting on (the "(calls only)" label)? Will replies to moved numbers go to TurboDial 2 or to the old one?
+5. What's the right way to hand a number back to the old TurboDial if something breaks?
+6. How long do old voicemails (~6,400), recordings and call history stay viewable? Can we download them?
+7. Can we upload audio files as voice drops?
+8. Is there a report or alert for **missed calls**, one call at a time? Today's daily report only gives totals.
 
 ---
 
 ## 8. Who does what
 
-| Who | Does |
+| Who | Job |
 |---|---|
-| **Miguel** | Makes the decisions in section 6. Creates TD2 users. Builds routes and types each number's settings from the checklist. Runs the rollback if needed. |
-| **Team (Camille and the Events / Client Care staff)** | Runs the test calls and texts after each person. Ticks the checklist. Re-records the Office and Larch greetings. |
-| **RMs (Francis, Beula, Ebi, Marcia)** | Confirm their number list. Re-record their own voice drops. Check that caller ID shows their own number on their first calls. |
-| **Omerson** | Decides on the parked lines and the former-staff numbers. |
-| **TurboDial support / Ahyr** | Answers Q1–Q7. Is on hand for the B1 pilot and for any Twilio-side rollback. |
+| **Miguel** | Makes the choices. Creates logins. Sets up each number from the list. Runs the undo steps if needed. |
+| **The team** (Camille, Events and Client Care) | Runs the 5 tests after each person. Ticks the list. Re-records the office, Am and Events greetings. |
+| **RMs** (Francis, Beula, Ebi, Marcia) | Check their number list. Re-record their own voice drops. Look at their first calls to make sure their own number shows. |
+| **Omerson** | Decides on the wrong-number lines and the former-staff numbers. |
+| **TurboDial support** (and Ahyr, Lava Automation) | Answers section 7. Is on hand for the test run and any undo. |
 
 ---
 
-## What this plan is based on
+**How sure we are:**
 
-**Checked in the files:**
+**Checked:**
+- The number counts and owners, from the 11/17 backup file.
+- The TurboDial 2 screens and the 4 logins, looked at on 11/24 without changing anything.
 
-- Counts per category, per person and per batch, taken from the TD2 Setup and Numbers tabs.
-- PlusThis and system numbers, and which Twilio app each is on.
-- The "TurboDial Numbers" messaging service holds 161 numbers.
-- The 2 greetings in use, and the 57 recordings that belong to current staff.
+**Not confirmed yet:**
+- How to undo a move.
+- How texting replies are routed.
+- What exactly happens when a number is added.
 
-**Assumed, to check:**
-
-- All TD2 click paths.
-- What "Add Phone Number" does in Twilio.
-- How rollback works.
-- How texting is routed.
-- That recording audio is kept in Twilio.
-
-- **Also checked,** through the TD2 Daily Calls Report API (one read-only request, 11/24): the TD2 user list for 11/23.
-
-**Not seen:** TurboDial support's reply and the `raw/` folder.
-
-**The app's features and the SOPs are in a separate document.**
+All of these are questions for TurboDial support.
