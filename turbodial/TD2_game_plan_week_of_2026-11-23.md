@@ -8,7 +8,7 @@ The old TurboDial stays on the whole time. It keeps our old call history, voicem
 
 - **Who makes the changes:** Miguel and the team. This plan says what to do.
 - **The list of every number, with what to type:** at the back of this document.
-- **How to do each task in TurboDial 2:** see the separate guide, "TD2 App Features and SOPs".
+- **How to do each task in TurboDial 2:** see the two separate guides, "TurboDial 2 SOP: Admin Guide" and "TurboDial 2 SOP: Agent Guide".
 
 ---
 
@@ -62,7 +62,7 @@ Thanksgiving is Thursday 11/26. **No moves Thursday to Sunday,** because nobody 
 **Set it up** (exact clicks are in the SOP guide):
 
 1. Set **who rings** when someone calls, and what happens if nobody answers. Do this **before** you add the number.
-2. Add the number in TurboDial 2.
+2. Open the number in TurboDial 2, turn on its **calls** and **texts** switches, and click **Apply**. (Don't use "Add Phone Number": that buys a new number.)
 3. Type in what the list at the back says:
    - the name;
    - the owner;
@@ -94,7 +94,7 @@ When all 5 pass, write the date and your initials in "Done" on the list.
 Try these in order and stop as soon as calls are working again.
 
 1. **Quick fix, in TurboDial 2.** Change that number's "who rings" setting to send every call to the office cell, (206) 300-1000. Calls get answered while we fix the rest.
-2. **Hand the number back to the old TurboDial.** Exact steps are to be confirmed with TurboDial support. Ask them before the first move. The new number settings page has calls and texts on/off switches, which may be the way to do this.
+2. **Hand the number back to the old TurboDial.** Open the number in TurboDial 2 (Settings › TurboDial › Phone Numbers › pencil). Turn **off** the two switches, "Use TurboDial 2.0 Voice" and "Use TurboDial 2.0 SMS", and click **Apply**. Calls and texts go back to the old TurboDial. TurboDial confirmed this in their setup guide (11/20).
 3. **Only with TurboDial support on the phone:** they help us point that one number back to the old TurboDial in Twilio.
 4. Write down which number, what went wrong and the time. Pause the rest until we understand it.
 
@@ -156,6 +156,14 @@ We emailed them on 11/17. **Their answer isn't in yet.**
 8. Is there a report or alert for **missed calls**, one call at a time? Today's daily report only gives totals.
 
 ---
+
+### Already answered by TurboDial (setup guide from the 11/20 call)
+
+- **Undo a move:** turn off the number's two TurboDial 2 switches and click Apply (section 4).
+- **Wrong name ("Becky") on the other phone:** the old TurboDial looks the calling number up in Keap and shows whichever contact has it. Search Keap for the number and remove it from the wrong contact. Also keep **Local Presence off**.
+- **Dispositions:** copy them from Keap with one button. No retyping.
+- **Keap tags:** a disposition now sends a signal to Keap, and a Keap campaign adds the tags.
+- **A number missing from the TurboDial 2 list:** send it to TurboDial support.
 
 ## 8. Who does what
 

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>$title$ · $audience$</title>
+<link rel="stylesheet" href="sop_style.css"></head>
+<body>
+<section class="cover">
+  <div class="band"></div>
+  <div class="cover-inner">
+    <div class="brand">CLUB WEALTH</div>
+    <div class="kicker">$audience$</div>
+    <h1 class="cover-title">$title$</h1>
+    <p class="cover-sub">$subtitle$</p>
+    <div class="cover-rule"></div>
+    <nav class="toc"><div class="toc-head">Contents</div><ol id="toc"></ol></nav>
+  </div>
+  <div class="cover-foot">Club Wealth Tech Team · Internal use only</div>
+</section>
+<main>
+$body$
+</main>
+<script>
+const ol=document.getElementById('toc');
+document.querySelectorAll('main h1').forEach((h,i)=>{h.id=h.id||('s'+i);const li=document.createElement('li');
+li.innerHTML='<span class="toc-eyebrow">'+(h.dataset.eyebrow||'')+'</span><span class="toc-title">'+h.textContent+'</span>';ol.appendChild(li);});
+</script>
+</body></html>
