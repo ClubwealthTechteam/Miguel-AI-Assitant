@@ -28,3 +28,21 @@ These apply to every plan, SOP and guide in this folder, now and in the future.
    - the "Do not set up" box (PlusThis numbers, system numbers, wrong-number lines);
    - the "Never click Release Number" warning;
    - "Keep Local Presence off".
+8. **Game plans:**
+   - written in **ASD-STE100 Simplified Technical English**:
+     - one instruction per sentence;
+     - active voice;
+     - steps in the imperative, 20 words or fewer;
+     - descriptions 25 words or fewer;
+     - a condition comes before its instruction;
+     - "Warning:" and "Note:" boxes.
+   - A plan holds only the plan:
+     - fixed dates and steps;
+     - owners;
+     - go/no-go criteria;
+     - tests;
+     - undo steps;
+     - communication;
+     - close criteria.
+   - No "to decide" items and no questions for vendors.
+9. **The phone number list is always its own PDF** (`TD2_Phone_Number_List`, landscape), separate from the plan.

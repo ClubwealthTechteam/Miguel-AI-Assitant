@@ -56,4 +56,19 @@ h1+figure:has(img.side)+*{clear:none}
 h3{border-left:3px solid var(--blue);padding-left:8px;font-size:11pt;}
 .warning h3,.tip h3{border:0;padding:0;margin:0 0 4px;font-size:10.4pt;}
 main h1{clear:both}
-.toc-eyebrow{width:92px;white-space:nowrap}
+.toc-eyebrow{width:150px;white-space:nowrap}
+/* number list: landscape, groups flow on */
+@page wide{size:Letter landscape;margin:12mm 12mm 14mm 12mm;}
+
+.list main h1{break-before:auto;margin-top:22px;font-size:15pt;}
+.list main h1:first-of-type{margin-top:0}
+.list main h1:nth-of-type(2){break-before:page}
+.list table{font-size:8pt;}
+.list td,.list th{padding:3px 5px;}
+.list td:nth-child(n+9){text-align:center;width:28px;}
+.list td:first-child{white-space:nowrap}
+main h1{break-after:avoid}
+.toc-eyebrow{width:180px}
+.list td:nth-child(2){min-width:120px}
+.list td:nth-child(4),.list td:nth-child(5){min-width:90px}
+.list td:nth-child(n+9){width:22px}

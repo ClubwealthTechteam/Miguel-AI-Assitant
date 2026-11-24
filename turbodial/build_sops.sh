@@ -2,7 +2,7 @@
 # Builds the SOP PDFs. Usage: ./build_sops.sh   (run from the turbodial folder)
 set -euo pipefail
 cd "$(dirname "$0")"
-for doc in TD2_SOP_Admins TD2_SOP_Agents; do
+for doc in ${@:-TD2_SOP_Admins TD2_SOP_Agents TD2_Rollout_Plan TD2_Phone_Number_List}; do
   footer=$(grep -m1 '^footer:' "$doc.md" | sed 's/^footer: *//')
   pandoc "$doc.md" -f markdown -t html5 -s --template sop_template.html -o "$doc.html"
   node -e '
