@@ -29,14 +29,14 @@ landscape: true
 :::
 
 
-# Pilot (2) {data-eyebrow="Phase 2 · Nov 25"}
+# Pilot (2) {data-eyebrow="Phase 1 · Nov 25"}
 
 | Number | Name in TD2 | Owner | Rings | If no answer | Rec. | Caller ID | Calls / texts | Route | Added | In | NA | Out | TxO | TxI | Done |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | (253) 201-8421 | \*Beula &#124; 2532018421 | Beula Jambalos | Beula Jambalos | After 2 rings: office cell | No | No | Both on | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | |
 | (253) 215-8864 | Camille &#124; 2532158864 | Camille Cruz | Camille | Rings, then stops | No | No | Both on | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | |
 
-# Events and Client Care (9) {data-eyebrow="Phase 4 · Nov 30"}
+# Events and Client Care (9) {data-eyebrow="Phase 3 · Nov 30, 7:45 AM"}
 
 | Number | Name in TD2 | Owner | Rings | If no answer | Rec. | Caller ID | Calls / texts | Route | Added | In | NA | Out | TxO | TxI | Done |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -50,13 +50,13 @@ landscape: true
 | (253) 204-3895 | Admin4 &#124; 2532043895 | Client Care | Client Care | Rings, then stops | No | No | Both on | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | |
 | (253) 343-5064 | Admin4 &#124; 2533435064 | Client Care | Client Care | Rings, then stops | No | No | Both on | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | |
 
-# Main office line (1) {data-eyebrow="Phase 5 · Dec 1, 7:00 AM"}
+# Main office line (1) {data-eyebrow="Phase 3 · Nov 30, 7:45 AM"}
 
 | Number | Name in TD2 | Owner | Rings | If no answer | Rec. | Caller ID | Calls / texts | Route | Added | In | NA | Out | TxO | TxI | Done |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | (206) 460-1572 | \*\*\*Office Do Not Touch! | Client Care | Client Care and Events Team users | After 3 rings: voicemail, greeting "Office VM" | Yes | Yes | Both on | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | |
 
-# RMs: Francis and Beula (17) {data-eyebrow="Phase 5 · Dec 1"}
+# RMs: Francis and Beula (17) {data-eyebrow="Phase 3 · Nov 30, 7:00 AM"}
 
 | Number | Name in TD2 | Owner | Rings | If no answer | Rec. | Caller ID | Calls / texts | Route | Added | In | NA | Out | TxO | TxI | Done |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -78,7 +78,7 @@ landscape: true
 | (253) 753-1209 | (RESTING) \*\*Francis &#124; 2537531209 | Francis Narciso | Francis Narciso | After 2 rings: office cell | No | No | Both on | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | |
 | (253) 785-6422 | \*\*Francis &#124; 2537856422 | Francis Narciso | Francis Narciso | After 2 rings: office cell | No | No | Both on | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | |
 
-# RMs: Ebi and Marcia (19) {data-eyebrow="Phase 5 · Dec 2"}
+# RMs: Ebi and Marcia (19) {data-eyebrow="Phase 3 · Nov 30, 7:00 AM"}
 
 | Number | Name in TD2 | Owner | Rings | If no answer | Rec. | Caller ID | Calls / texts | Route | Added | In | NA | Out | TxO | TxI | Done |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -102,7 +102,7 @@ landscape: true
 | (253) 893-6231 | \*\*Marcia &#124; 2538936231 | Marcia Jarvis | Marcia Jarvis | After 2 rings: office cell | No | No | Both on | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | |
 | (253) 893-6365 | \*\*Marcia &#124; 2538936365 | Marcia Jarvis | Marcia Jarvis | After 2 rings: office cell | No | No | Both on | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | |
 
-# Other staff (25) {data-eyebrow="Phase 6 · Dec 3"}
+# Other staff (25) {data-eyebrow="Phase 4 · Dec 3"}
 
 | Number | Name in TD2 | Owner | Rings | If no answer | Rec. | Caller ID | Calls / texts | Route | Added | In | NA | Out | TxO | TxI | Done |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -132,7 +132,7 @@ landscape: true
 | (253) 693-3710 | \*\*Vanessa &#124; 2536933710 | Vanessa Sembrano | Vanessa Sembrano | Rings, then stops | No | No | Both on | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | |
 | (253) 785-6448 | \*\*Vanessa &#124; 2537856448 | Vanessa Sembrano | Vanessa Sembrano | Rings, then stops | No | No | Both on | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | |
 
-# No owner: move only with a named owner (6) {data-eyebrow="Phase 7 · Dec 7–9"}
+# No owner: move only with a named owner (6) {data-eyebrow="Phase 5 · Dec 7–9"}
 
 | Number | Name in TD2 | Owner | Rings | If no answer | Rec. | Caller ID | Calls / texts | Route | Added | In | NA | Out | TxO | TxI | Done |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -143,7 +143,7 @@ landscape: true
 | (253) 321-1006 | Named by a manager | Named by a manager | office cell | Rings, then stops | No | No | Both on | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | |
 | (253) 353-7544 | Named by a manager | Named by a manager | main office line | Rings, then stops | No | No | Both on | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | |
 
-# Not used in 30 days: move only with a named owner (42) {data-eyebrow="Phase 7 · Dec 7–9"}
+# Not used in 30 days: move only with a named owner (42) {data-eyebrow="Phase 5 · Dec 7–9"}
 
 | Number | Name in TD2 | Owner | Rings | If no answer | Rec. | Caller ID | Calls / texts | Route | Added | In | NA | Out | TxO | TxI | Done |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -190,7 +190,7 @@ landscape: true
 | (253) 364-0015 | Vanessa &#124; 2533640015 | Vanessa Sembrano | Vanessa Sembrano | Rings, then stops | No | No | Both on | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | |
 | (253) 215-8436 | Admin4 &#124; 2532158436 | Client Care | Client Care | Rings, then stops | No | No | Both on | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | |
 
-# Former staff: move only with a named owner (11) {data-eyebrow="Phase 7 · Dec 7–9"}
+# Former staff: move only with a named owner (11) {data-eyebrow="Phase 5 · Dec 7–9"}
 
 | Number | Name in TD2 | Owner | Rings | If no answer | Rec. | Caller ID | Calls / texts | Route | Added | In | NA | Out | TxO | TxI | Done |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -206,7 +206,7 @@ landscape: true
 | (253) 215-8265 | Dolly &#124; 2532158265 | Dolly Solidarios | Dolly Solidarios | Rings, then stops | No | No | Both on | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | |
 | (253) 201-1375 | Nyza &#124; 2532011375 | Nyza Padaya | events1 | After 2 rings: office cell | No | No | Both on | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | |
 
-# No owner and no name: move only with a named owner (4) {data-eyebrow="Phase 7 · Dec 7–9"}
+# No owner and no name: move only with a named owner (4) {data-eyebrow="Phase 5 · Dec 7–9"}
 
 | Number | Name in TD2 | Owner | Rings | If no answer | Rec. | Caller ID | Calls / texts | Route | Added | In | NA | Out | TxO | TxI | Done |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|

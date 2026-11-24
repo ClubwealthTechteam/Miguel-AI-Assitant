@@ -7,20 +7,22 @@ footer: TurboDial 2 Rollout Plan · ASD-STE100
 
 # Summary {data-eyebrow="Section 1"}
 
-This plan moves the Club Wealth phone numbers from TurboDial 1 (TD1) to TurboDial 2 (TD2). The team moves the numbers one person at a time. The team tests each person before it starts the next person.
+This plan moves the Club Wealth phone numbers from TurboDial 1 (TD1) to TurboDial 2 (TD2).
 
-### Go-live dates
+- On November 25, the Project Head sets up all RM and Events users and numbers in TD2.
+- On November 30, the RMs and the Events team get training and start to use TD2.
 
-| Group | Go-live date | Numbers |
+### Key dates
+
+| Date | Activity | Numbers |
 |---|---|---|
-| **Pilot** | Wednesday, November 25, 2026 | 2 |
-| **Events and Client Care** | **Monday, November 30, 2026** | 9 |
-| **Main office line** (206) 460-1572 | Tuesday, December 1, 2026, 7:00 AM PST | 1 |
-| **RMs: Francis and Beula** | **Tuesday, December 1, 2026** | 17 |
-| **RMs: Ebi and Marcia** | **Wednesday, December 2, 2026** | 19 |
-| Other staff | Thursday, December 3, 2026 | 25 |
-| Remaining numbers with a named owner | December 7–9, 2026 | Up to 63 |
-| **Project close** | **Friday, December 11, 2026** | — |
+| **Wednesday, November 25, 2026** | **Setup day:** users, numbers, routes and pilot | 2 pilot |
+| November 26–29 | Change freeze (Thanksgiving) | — |
+| **Monday, November 30, 2026, 6:30–7:30 AM** | **RM training and go-live** | 37 |
+| **Monday, November 30, 2026, 7:30–8:00 AM** | **Events training and go-live** | 11 |
+| Thursday, December 3, 2026 | Other staff go-live | 25 |
+| December 7–9, 2026 | Remaining numbers with a named owner | Up to 63 |
+| **Friday, December 11, 2026** | **Project close** | — |
 
 All times are Pacific Time (PST).
 
@@ -45,9 +47,10 @@ TD1 stays on as the record of old calls, voicemails and recordings. Do not delet
 
 | Role | Person | Responsibility |
 |---|---|---|
-| **Sponsor** | Omerson | Gives the go-live approval for each group. |
-| **Rollout lead** | Miguel Ababon | Does the setup in TD2. Does the undo procedure. Sends the status messages. |
-| **Test team** | Camille Cruz and the Events team | Does the tests after each person. Records the results in the number list. |
+| **Project Head** | Miguel Ababon | Does the setup, the training, the tests and the undo procedure. Sends the status messages. |
+| **Principal** | Camille Cruz | Approves the go/no-go check and the project close. |
+| **Backup** | Omerson | Does the tasks of the Project Head when the Project Head is not available. |
+| **Backup** | Camille Cruz | Does the tasks of the Project Head when the Project Head and Omerson are not available. |
 | **Users** | RMs, Events staff and other staff | Go to training. Set their caller ID. Make the first test call and text. |
 | **Vendor support** | TurboDial support | Stays available during each go-live window. |
 
@@ -63,96 +66,108 @@ TD1 stays on as the record of old calls, voicemails and recordings. Do not delet
 
 | Phase | Dates | Result |
 |---|---|---|
-| 1. Prepare | Nov 24–25 | Users, routes, greetings and dispositions are ready. |
-| 2. Pilot | Nov 25 | 2 numbers work in TD2. |
-| 3. Change freeze | Nov 26–29 | No changes. Thanksgiving holiday. |
-| 4. Events go-live | Nov 30 | Events and Client Care work in TD2. |
-| 5. Main office line and RM go-live | Dec 1–2 | The main office line and the 4 RMs work in TD2. |
-| 6. Other staff go-live | Dec 3 | The other staff work in TD2. |
-| 7. Remaining numbers | Dec 7–9 | Numbers with a named owner work in TD2. |
-| 8. Stabilize | Nov 30–Dec 11 | Daily checks. Problems are fixed in one day. |
-| 9. Close | Dec 11 | The sponsor approves the project close. |
+| 1. Setup day | Nov 25 | All RM and Events users and numbers are set up in TD2. The pilot passes. |
+| 2. Change freeze | Nov 26–29 | No changes. Thanksgiving holiday. |
+| 3. RM and Events go-live | Nov 30 | The RMs and the Events team use TD2. |
+| 4. Other staff go-live | Dec 3 | The other staff use TD2. |
+| 5. Remaining numbers | Dec 7–9 | Numbers with a named owner work in TD2. |
+| 6. Stabilize | Nov 30–Dec 11 | Daily checks. Problems are fixed in one day. |
+| 7. Close | Dec 11 | The Principal approves the project close. |
 
-# Phase 1: Prepare (Nov 24–25) {data-eyebrow="Section 4"}
+# Phase 1: Setup day (Nov 25) {data-eyebrow="Section 4"}
 
-Do these steps before the pilot. Use the TD2 SOP: Admin Guide.
+The Project Head works on TD2 tasks for the full day. Do the tasks in this sequence. Use the TD2 SOP: Admin Guide and the TD2 Phone Number List.
+
+### Task 1: Set the priorities
+
+1. Open the TD2 Phone Number List.
+2. Mark the RM and Events numbers as priority 1.
+3. Mark all other numbers as priority 2.
+
+### Task 2: Move the setup from TD1 to TD2
+
+1. Make sure that Local Presence is off.
+2. Copy the call dispositions from Keap. Use Settings › TurboDial › Call Dispositions › Copy over Call Dispositions.
+3. Record the voicemail greeting for the Events Team.
+4. Record the greeting "Office VM" for the main office line.
+5. Record the greeting "Larch VM" for Am's line.
+6. For each RM and Events number, make the inbound call route. Use the ring and no-answer settings in the number list.
+
+::: tip
+**Note:** TD2 does not import data from TD1. Old calls, voicemails and recordings stay in TD1.
+:::
+
+### Task 3: Set up the users
 
 1. Add 13 user seats in Settings › Account › Billing.
 2. Add one TD2 user for each of these people: Francis, Beula, Ebi, Marcia, Andrea, Liz, Am and Jizel.
 3. Give each of these users the role **Agent**.
 4. Send each user their login in a private message.
-5. Make sure that Local Presence is off.
-6. Copy the call dispositions from Keap. Use Settings › TurboDial › Call Dispositions › Copy over Call Dispositions.
-7. Record the voicemail greeting for the Events Team.
-8. Record the greeting "Office VM" for the main office line.
-9. Record the greeting "Larch VM" for Am's line.
-10. For each number in the Events and RM groups, make the inbound call route. Use the number list for the ring and no-answer settings.
-11. Open the number list as a shared sheet for the test team.
 
-::: tip
-**Note:** Do not turn on the TD2 switches of a number in this phase. The number stays in TD1 until its go-live date.
-:::
+### Task 4: Give the numbers to the staff
 
-# Phase 2: Pilot (Nov 25) {data-eyebrow="Section 5"}
+1. For each RM and Events number, do steps 1 to 8 of the procedure in Section 8.
+2. Use the owner rules in Section 7.
+3. Do not turn on the TD2 switches. The numbers stay in TD1 until November 30.
+
+### Task 5: Do the pilot
 
 The pilot numbers are Beula (253) 201-8421 and Camille (253) 215-8864.
 
-1. At 9:00 AM, open the number in Settings › TurboDial › Phone Numbers.
-2. Set the values from the number list.
-3. Turn on "Use TurboDial 2.0 Voice" and "Use TurboDial 2.0 SMS".
-4. Click **Apply**.
-5. Do the 5 tests in Section 10.
-6. Do steps 1 to 5 for the second pilot number.
-7. At 11:00 AM, do the 5 tests again on the two numbers.
-8. At 3:00 PM, do the go/no-go check in Section 9 for the Events group.
+1. For each pilot number, do steps 9 to 12 of the procedure in Section 8.
+2. Do the 5 tests in Section 10.
+3. Two hours later, do the 5 tests again.
 
 ::: warning
-**Warning:** If a pilot test fails, do the undo procedure in Section 11. Do not start Phase 4 until the pilot passes all tests.
+**Warning:** If a pilot test fails, do the undo procedure in Section 11. Fix the cause before November 30.
 :::
 
-# Phase 3: Change freeze (Nov 26–29) {data-eyebrow="Section 6"}
+### Task 6: Prepare the training
+
+1. Do each step of the TD2 SOP: Agent Guide with a pilot number.
+2. Send the training invitations for November 30 to the RMs and the Events team.
+3. Tell each user to bring a headset.
+
+# Phase 2: Change freeze (Nov 26–29) {data-eyebrow="Section 5"}
 
 1. Do not change TD2 or TD1 from Thursday, November 26 to Sunday, November 29.
 2. Keep the pilot numbers in TD2.
 3. If a pilot number fails, do the undo procedure in Section 11.
 
-# Phases 4 to 7: Go-live (Nov 30–Dec 9) {data-eyebrow="Section 7"}
+# Phase 3: RM and Events go-live (Nov 30) {data-eyebrow="Section 6"}
 
-### Phase 4: Events and Client Care (Monday, November 30)
+### Monday, November 30
 
 | Time | Step |
 |---|---|
-| 7:00 AM | Do the go/no-go check (Section 9). |
-| 7:30 AM | Train the Events and Client Care staff. Use the Agent Guide. Each user sets their caller ID. |
-| 9:00 AM–12:00 PM | Move the 9 numbers. Do one person at a time. Do the 5 tests after each person. |
-| 3:00 PM | Send the end-of-day status message (Section 12). |
+| 6:00 AM | Do the go/no-go check (Section 9). The Principal approves "Go". |
+| **6:30 AM** | **RM training.** Train the 4 RMs with the Agent Guide. Each RM logs in, sets their caller ID and records their voice drops. |
+| 7:00 AM | **RM go-live.** Turn on the TD2 switches for the numbers of each RM. Do one RM at a time. |
+| 7:00–7:30 AM | Each RM makes a test call and a test text. Do the 5 tests on the main number of each RM. |
+| **7:30 AM** | **Events training.** Train the Events and Client Care staff with the Agent Guide. Each user logs in and sets their caller ID. |
+| 7:45 AM | **Events go-live.** Turn on the TD2 switches for the Events numbers and the main office line. |
+| 7:45–8:00 AM | Each Events user makes a test call and a test text. Do the 5 tests on the main office line. |
+| 8:00 AM | Set the account Default caller ID to the main office line, (206) 460-1572. |
+| 8:00 AM–12:00 PM | Do the 5 tests on all other moved numbers. |
+| 3:00 PM | Send the status message (Section 12). |
 
-The 9 numbers:
+### Numbers that go live on November 30
 
-- the 4 numbers that are already in TD2 (Andrea, Liz, Camille and the Events Team line);
-- Liz (206) 312-1677;
-- Am (253) 242-6028;
-- Jizel (253) 201-6860;
-- 2 Client Care numbers.
-
-### Phase 5: Main office line and RMs (Tuesday, December 1, and Wednesday, December 2)
-
-| Date and time | Step |
+| Group | Numbers |
 |---|---|
-| Dec 1, 7:00 AM | Move the main office line (206) 460-1572. Do the 5 tests. |
-| Dec 1, 7:30 AM | Set the account Default caller ID to (206) 460-1572. |
-| Dec 1, 8:00 AM | Do the go/no-go check for the RMs. |
-| Dec 1, 9:00 AM | Train the 4 RMs. Use the Agent Guide. Each RM sets their caller ID and records their voice drops. |
-| Dec 1, 10:00 AM–2:00 PM | Move the numbers of Francis and Beula (17 numbers). |
-| Dec 2, 9:00 AM–1:00 PM | Move the numbers of Ebi and Marcia (19 numbers). |
+| RMs: Francis, Beula, Ebi and Marcia | 37, including the Beula pilot number |
+| Events and Client Care | 10, including the 4 numbers already in TD2 and the Camille pilot number |
+| Main office line (206) 460-1572 | 1 |
 
-### Phase 6: Other staff (Thursday, December 3)
+# Phases 4 and 5: Other numbers (Dec 3–9) {data-eyebrow="Section 7"}
+
+### Phase 4: Other staff (Thursday, December 3)
 
 1. At 8:00 AM, add TD2 users for Andrew, Joe, Vanessa, Regine and Becky.
 2. At 9:00 AM, train these users.
 3. From 10:00 AM, move their 25 numbers. Do one person at a time.
 
-### Phase 7: Remaining numbers (December 7–9)
+### Phase 5: Remaining numbers (December 7–9)
 
 1. On December 7, send the list of the remaining numbers to the managers.
 2. Move a number only if a manager names its owner in writing.
@@ -172,8 +187,8 @@ The 9 numbers:
 ### Rules for each go-live
 
 1. Move one person at a time.
-2. Do not move more than 10 numbers before you do the tests.
-3. Do the 5 tests in Section 10 after each person.
+2. Test the main number of a person before you start the next person.
+3. Do the 5 tests on all numbers before 12:00 PM on the same day.
 4. If a test fails, stop. Do the undo procedure in Section 11.
 
 # Procedure for one number {data-eyebrow="Section 8"}
@@ -197,7 +212,7 @@ The 9 numbers:
 
 # Go/no-go check {data-eyebrow="Section 9"}
 
-Do this check before each go-live group. The sponsor approves "Go" only if all items are "Yes".
+Do this check before each go-live group. The Principal approves "Go" only if all items are "Yes".
 
 | # | Check | Result |
 |---|---|---|
@@ -255,10 +270,10 @@ If all 5 tests pass, record the date and your initials in "Done" in the number l
 
 | When | Who receives it | Message |
 |---|---|---|
-| Nov 25 | RMs, Events and Client Care staff | The go-live dates and the training times. |
+| Nov 25 | RMs, Events and Client Care staff | The training times on November 30: RMs 6:30 AM, Events 7:30 AM. |
 | Each go-live day, at the start | The group that goes live | "TD2 go-live starts now. Use TD2 for all calls and texts." |
-| Each go-live day, 3:00 PM | Sponsor and team | The numbers moved, the tests passed and the problems. |
-| Each day, Nov 30–Dec 11 | Sponsor | The result of the daily check (Section 13). |
+| Each go-live day, 3:00 PM | Principal, backups and team | The numbers moved, the tests passed and the problems. |
+| Each day, Nov 30–Dec 11 | Principal | The result of the daily check (Section 13). |
 | Dec 11 | All staff | The project close and the TD2 support contact. |
 
 ::: warning
@@ -277,7 +292,7 @@ If all 5 tests pass, record the date and your initials in "Done" in the number l
 
 ### Close criteria (December 11)
 
-The sponsor closes the project when all these items are true:
+The Principal closes the project when all these items are true:
 
 1. All Events, Client Care and RM numbers are in TD2.
 2. All moved numbers passed the 5 tests.
@@ -302,7 +317,7 @@ The sponsor closes the project when all these items are true:
 - Do not use these numbers as a caller ID.
 :::
 
-These numbers stay in TD1 until a manager names an owner (Phase 7):
+These numbers stay in TD1 until a manager names an owner (Phase 5):
 
 - the numbers of former staff;
 - the numbers without an owner;
