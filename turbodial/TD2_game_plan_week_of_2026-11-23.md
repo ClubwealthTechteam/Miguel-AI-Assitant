@@ -15,7 +15,7 @@ Don't move a number until all 4 are true.
 | G1 | **Caller ID fixed.** A test call and a test text from TD2 show the user's **own** number, not (253) 215-8426 ("Becky" / AIM Team, a PlusThis number). | On 11/17, Camille's calls and her text went out as 215-8426. Without this fix, every RM would call out as "Becky". | TurboDial support says how. Miguel sets it. |
 | G2 | **The route is ready before the number moves.** The number's Inbound Call Route exists in Call Route Builder **before** the number is switched. | On 11/17, a number with no route went straight to voicemail and nobody's phone rang. | Miguel |
 | G3 | **Texting works.** Voice and SMS are both ON for the number, and the "(calls only)" label is gone. | Most numbers show "(calls only)". We don't yet know what turns SMS on. | TurboDial support, then Miguel |
-| G4 | **The owner has a TD2 login,** with a Calling Device and a Caller ID set to their own number. | The Owner and Forward SMS To fields need a real TD2 user. | Miguel |
+| G4 | **The owner has a TD2 login,** with a Calling Device and a Caller ID set to their own number. | The Owner and Forward SMS To fields need a real TD2 user. **As of 11/23, TD2 has only 4 users:** Michael Hellickson, Camille Cruz, Client Care and Events Team (from the TD2 Daily Calls Report API). **None of the 4 RMs has a TD2 user yet.** | Miguel |
 
 **If G1 isn't answered by TurboDial yet:** move only the pilot (B1). Each pilot user picks their own number in "Sending From" / Caller ID on every call and text, and checks it.
 
@@ -27,7 +27,7 @@ Thanksgiving is Thu 11/26. **Don't move anything Thu–Sun.** Nobody would be wa
 
 | Day | Batch | Numbers | What | Done when |
 |---|---|---|---|---|
-| **Tue 11/24** | **Prep** | none | Get TurboDial's answers (section 7). Create or confirm TD2 users for the 4 RMs and Events/Client Care. Make the Section 6 decisions. | Gates G1–G4 answered |
+| **Tue 11/24** | **Prep** | none | Get TurboDial's answers (section 7). **Create TD2 users for Francis, Beula, Ebi and Marcia** (none exist yet), and for any Events/admin staff who get their own login. Make the Section 6 decisions. | Gates G1–G4 answered |
 | Tue 11/24 | **B0** Fix the 4 already on TD2 | 4 | Type the Name. Check each route. Decide whether Andrea's and Liz's numbers stay under "Events Team" or move to their own users. Re-test Camille's 215-8230 (this was the caller ID bug). | All 4 pass the tests in section 3 |
 | Tue PM / Wed AM | **B1 Pilot** | 2 | Beula (253) 201-8421 (low use) and Camille (253) 215-8864 (low use). | All tests pass. Wait 2 hours, and check that no call or text went to TD1 instead |
 | **Wed 11/25 AM** | **B2a** RMs: Francis + Beula | 17 | One person at a time. Test after each person, not at the end. | Tests pass for each person |
@@ -182,6 +182,9 @@ The 11/17 email was sent. Their reply isn't in this file. Miguel, please paste i
   - How long do voicemails (~6,447), recordings (364), greetings and call history stay viewable?
   - Can we export them?
 - **Q7. Voice drops.** Is there any upload path for audio files into TD2 Voice Drops?
+- **Q8. API.** The only read-only API feature is the Daily Calls Report (one row per user per day, with counts). Is there a read-only API or webhook for single calls, missed calls, dispositions, numbers and routes?
+
+**Daily check during the move (read-only, already working):** each morning, pull the Daily Calls Report for yesterday. For every user whose numbers moved, calls and texts should show up in TD2. A moved user showing zeros may mean their calls or texts are still going to TD1. Check their numbers.
 
 ---
 
@@ -214,4 +217,8 @@ The 11/17 email was sent. Their reply isn't in this file. Miguel, please paste i
 - How texting is routed.
 - That recording audio is kept in Twilio.
 
-**Not seen:** TurboDial support's reply, the current TD2 user list and the `raw/` folder.
+- **Also checked,** through the TD2 Daily Calls Report API (one read-only request, 11/24): the TD2 user list for 11/23.
+
+**Not seen:** TurboDial support's reply and the `raw/` folder.
+
+**The app's features and the SOPs are in a separate document.**
