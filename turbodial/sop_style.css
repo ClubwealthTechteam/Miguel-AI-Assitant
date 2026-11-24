@@ -72,3 +72,4 @@ main h1{break-after:avoid}
 .list td:nth-child(2){min-width:120px}
 .list td:nth-child(4),.list td:nth-child(5){min-width:90px}
 .list td:nth-child(n+9){width:22px}
+.toc-eyebrow{white-space:normal}

@@ -46,3 +46,4 @@ These apply to every plan, SOP and guide in this folder, now and in the future.
      - close criteria.
    - No "to decide" items and no questions for vendors.
 9. **The phone number list is always its own PDF** (`TD2_Phone_Number_List`, landscape), separate from the plan.
+10. **Always ask, never invent.** If Miguel didn't give a date, time, owner, number, threshold or rule, and the files don't hold it, ask him with a multiple-choice question before you write it. Never fill a gap with your own guess.
